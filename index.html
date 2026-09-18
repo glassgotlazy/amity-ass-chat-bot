@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amity Lucknow Admission Assistant</title>
+<style>
+  :root{
+    --navy:#0d1b4c;
+    --navy-2:#152a6e;
+    --gold:#e0a634;
+    --gold-light:#f4c860;
+    --bg:#f0f2fa;
+    --card:#ffffff;
+    --bot-bubble:#eef1fb;
+    --user-bubble:linear-gradient(135deg,var(--navy),var(--navy-2));
+    --text:#1c2340;
+    --muted:#6b7290;
+    --border:#e1e4f0;
+    --surface-alt:#fafbff;
+    --scrollbar:#d6dbee;
+    --typing-dot:#9aa1c4;
+    --radius:16px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --navy:#1a2d6e;
+      --navy-2:#24398c;
+      --gold:#e0a634;
+      --gold-light:#f4c860;
+      --bg:#0e1220;
+      --card:#161b2e;
+      --bot-bubble:#232a45;
+      --user-bubble:linear-gradient(135deg,var(--navy),var(--navy-2));
+      --text:#e7e9f5;
+      --muted:#9199c0;
+      --border:#2a3152;
+      --surface-alt:#12172a;
+      --scrollbar:#333b5c;
+      --typing-dot:#5b6390;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(224,166,52,0.12), transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(13,27,76,0.10), transparent 45%),
+      var(--bg);
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:20px;
+  }
+
+  .app{
+    width:100%;
+    max-width:480px;
+    height:88vh;
+    max-height:820px;
+    background:var(--card);
+    border-radius:22px;
+    box-shadow:0 25px 60px rgba(13,27,76,0.18), 0 2px 8px rgba(13,27,76,0.08);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    border:1px solid var(--border);
+  }
+
+  /* Header */
+  header{
+    background:linear-gradient(120deg,var(--navy) 0%,var(--navy-2) 60%, #1f3a8f 100%);
+    color:#fff;
+    padding:18px 20px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    position:relative;
+    flex-shrink:0;
+  }
+  .logo-badge{
+    width:46px;height:46px;border-radius:12px;
+    background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:17px;color:var(--navy);
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    flex-shrink:0;
+  }
+  header h1{
+    font-size:16.5px;
+    margin:0;
+    font-weight:700;
+    line-height:1.25;
+  }
+  header p{
+    margin:2px 0 0;
+    font-size:11.5px;
+    color:rgba(255,255,255,0.75);
+    display:flex;align-items:center;gap:5px;
+  }
+  .dot{
+    width:7px;height:7px;border-radius:50%;background:#4ade80;
+    box-shadow:0 0 0 0 rgba(74,222,128,.6);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(74,222,128,.55);}
+    70%{box-shadow:0 0 0 6px rgba(74,222,128,0);}
+    100%{box-shadow:0 0 0 0 rgba(74,222,128,0);}
+  }
+  .reset-btn{
+    margin-left:auto;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.25);
+    color:#fff;
+    font-size:11px;
+    padding:7px 11px;
+    border-radius:20px;
+    cursor:pointer;
+    transition:background .2s;
+    white-space:nowrap;
+  }
+  .reset-btn:hover{background:rgba(255,255,255,0.22);}
+
+  /* Chat area */
+  .chat{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 16px 8px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    scroll-behavior:smooth;
+  }
+  .chat::-webkit-scrollbar{width:6px;}
+  .chat::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:10px;}
+
+  .row{display:flex;gap:8px;align-items:flex-end;}
+  .row.user{justify-content:flex-end;}
+  .avatar{
+    width:28px;height:28px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,var(--gold),var(--gold-light));
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:800;color:var(--navy);
+  }
+  .bubble{
+    max-width:78%;
+    padding:11px 14px;
+    border-radius:var(--radius);
+    font-size:13.8px;
+    line-height:1.5;
+    white-space:pre-line;
+    box-shadow:0 1px 2px rgba(20,30,60,0.04);
+    animation:pop .18s ease;
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+  .row.bot .bubble{
+    background:var(--bot-bubble);
+    color:var(--text);
+    border-bottom-left-radius:4px;
+  }
+  .row.user .bubble{
+    background:var(--user-bubble);
+    color:#fff;
+    border-bottom-right-radius:4px;
+  }
+  .bubble a{color:inherit;font-weight:600;text-decoration:underline;}
+  .row.bot .bubble a{color:var(--navy-2);}
+
+  .typing{
+    display:flex;gap:4px;align-items:center;padding:12px 14px;
+  }
+  .typing span{
+    width:6px;height:6px;background:var(--typing-dot);border-radius:50%;
+    animation:blink 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2){animation-delay:.2s;}
+  .typing span:nth-child(3){animation-delay:.4s;}
+  @keyframes blink{0%,80%,100%{opacity:.25;transform:scale(.8);}40%{opacity:1;transform:scale(1);}}
+
+  /* Quick chips */
+  .chips{
+    display:flex;
+    gap:8px;
+    padding:10px 14px;
+    overflow-x:auto;
+    flex-shrink:0;
+    border-top:1px solid var(--border);
+    background:var(--surface-alt);
+  }
+  .chips::-webkit-scrollbar{height:4px;}
+  .chip{
+    flex-shrink:0;
+    background:var(--card);
+    border:1px solid var(--border);
+    color:var(--navy-2);
+    font-size:12px;
+    font-weight:600;
+    padding:8px 13px;
+    border-radius:20px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:all .15s;
+  }
+  .chip:hover{
+    background:var(--navy);
+    color:#fff;
+    border-color:var(--navy);
+    transform:translateY(-1px);
+  }
+
+  /* Input */
+  form.inputbar{
+    display:flex;
+    gap:8px;
+    padding:12px 14px 16px;
+    border-top:1px solid var(--border);
+    background:var(--card);
+    flex-shrink:0;
+  }
+  form.inputbar input{
+    flex:1;
+    border:1px solid var(--border);
+    background:var(--bg);
+    padding:12px 14px;
+    border-radius:24px;
+    font-size:13.5px;
+    outline:none;
+    color:var(--text);
+    transition:border .15s, box-shadow .15s;
+  }
+  form.inputbar input:focus{
+    border-color:var(--navy-2);
+    box-shadow:0 0 0 3px rgba(21,42,110,0.12);
+  }
+  form.inputbar button{
+    width:44px;height:44px;
+    border:none;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--navy),var(--navy-2));
+    color:#fff;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+    transition:transform .12s, box-shadow .12s;
+    box-shadow:0 4px 10px rgba(13,27,76,0.28);
+  }
+  form.inputbar button:hover{transform:scale(1.06);}
+  form.inputbar button:active{transform:scale(.94);}
+
+  footer.disclaimer{
+    text-align:center;
+    font-size:10px;
+    color:var(--muted);
+    padding:0 16px 12px;
+    flex-shrink:0;
+  }
+
+  @media (max-width:520px){
+    .app{height:100vh;max-height:none;border-radius:0;}
+    body{padding:0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <div class="logo-badge">AU</div>
+    <div>
+      <h1>Amity Lucknow &mdash; Admission Assistant</h1>
+      <p><span class="dot"></span> Unofficial helper &middot; instant offline answers, AI-assisted for the rest</p>
+    </div>
+    <button class="reset-btn" id="resetBtn" type="button">↻ Reset</button>
+  </header>
+
+  <div class="chat" id="chat" role="log" aria-live="polite" aria-label="Conversation"></div>
+
+  <div class="chips" id="chips"></div>
+
+  <form class="inputbar" id="form">
+    <input type="text" id="input" placeholder="Ask about courses, fees, hostel, eligibility…" autocomplete="off" autofocus />
+    <button type="submit" aria-label="Send">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12L21 3L14 21L11 13L3 12Z" stroke="white" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    </button>
+  </form>
+  <footer class="disclaimer">
+    Informational demo bot &middot; not an official Amity University service &middot; verify details at amity.edu/lucknow
+  </footer>
+</div>
+
+<script>
+/* =========================================================================
+   Amity Lucknow Admission Assistant
+   100% client-side, rule/keyword based — ZERO API calls, works fully offline.
+   Knowledge base below is a compact summary; always double check live figures
+   on the official site before relying on them for a real decision.
+   ========================================================================= */
+
+const KB = {
+  greeting: {
+    keywords: ["hi","hello","hey","namaste","good morning","good evening","good afternoon"],
+    answer: "Hello! 👋 I'm a quick-reference assistant for Amity University Lucknow admissions.\nAsk me about courses, eligibility, fees, hostel, entrance exams, placements, scholarships, or campus life — or tap a suggestion below. Anything outside that list gets passed to an AI assistant for a best-effort answer."
+  },
+  about: {
+    keywords: ["about amity","what is amity","amity lucknow","overview","university info","introduction","when was amity","established"],
+    answer: "Amity University Lucknow is a private university under the Ritnand Balved Education Foundation (Amity Education Group), established in 2010.\nCampus: Malhaur (near railway station), Gomti Nagar Extension, Lucknow – 226028, Uttar Pradesh.\nIt spans ~40 acres with 800+ faculty, 210+ hi-tech labs and a library of 70,000+ books."
+  },
+  courses: {
+    keywords: ["course","courses","program","programs","degree","degrees","stream","streams","branch","branches","specialization","specializations","offer","offered","offers","subject","subjects","what can i study"],
+    answer: "Popular programs at Amity Lucknow include:\n• Engineering — B.Tech (CSE, AI/ML, ECE, Mechanical, Civil, Biotech) & M.Tech\n• Management — BBA, MBA\n• Law — BA LLB (Hons), LLM\n• Commerce — B.Com (Hons)\n• Computer Applications — MCA\n• Design — M.Des\n• Also: Pharmacy, Biotechnology, Arts & Humanities, and PhD programs.\nAsk me 'eligibility for B.Tech' (or any course) for specifics."
+  },
+  eligibility_general: {
+    keywords: ["eligibility","eligible","criteria","who can apply","qualify","minimum marks"],
+    answer: "Eligibility depends on the course. Quick examples:\n• B.Tech: 10+2 with PCM + valid JEE Main / AUEET score\n• BBA / B.Com (Hons): 10+2 in any stream, usually 50%+\n• BA LLB (Hons): 10+2 with 50%+ marks\n• B.Arch: 10+2 with 45%+ NATA score\n• MBA / MCA / M.Tech: relevant bachelor's degree with min. 50%\nType a specific course name (e.g. 'eligibility for BBA') for details."
+  },
+  eligibility_btech: {
+    keywords: ["btech eligibility","b.tech eligibility","engineering eligibility","jee","auEET"],
+    answer: "B.Tech Eligibility: 10+2 with Physics, Chemistry & Mathematics (min. 50% aggregate), plus a valid JEE Main score OR Amity's own AUEET (Amity University Engineering Entrance Test) score. Direct admission via board merit is also considered in some categories."
+  },
+  eligibility_bba: {
+    keywords: ["bba eligibility","management eligibility","business eligibility"],
+    answer: "BBA Eligibility: Passed 10+2 in any stream with a minimum of 50% aggregate marks. Selection is typically via ASET (Amity's entrance test) or personal interview/merit, depending on the year's policy."
+  },
+  eligibility_law: {
+    keywords: ["llb eligibility","law eligibility","ballb eligibility","ba llb"],
+    answer: "BA LLB (Hons) Eligibility: 10+2 in any stream with minimum 50% marks. Admission is usually through a law aptitude test (like AULET or CLAT scores) plus personal interview."
+  },
+  eligibility_mba: {
+    keywords: ["mba eligibility","mba admission"],
+    answer: "MBA Eligibility: A bachelor's degree in any discipline with minimum 50% aggregate marks. Amity accepts CAT/MAT/CMAT/XAT scores or its own ASET-MBA entrance test, followed by group discussion & personal interview."
+  },
+  entrance_exam: {
+    keywords: ["auEET","entrance exam","entrance test","aset","admission test","exam pattern"],
+    answer: "Amity runs its own entrance/scholarship tests (commonly referred to as ASET or AUEET depending on the program) as an alternative for students who haven't taken JEE/CAT/CLAT etc. They typically cover subject aptitude, reasoning and English, and can often be taken online.\nNote: exact test names, formats and eligibility change every admission cycle — please confirm the current one on amity.edu/lucknow."
+  },
+  fees: {
+    keywords: ["fee","fees","cost","costs","tuition","how much","price","prices","expensive","charge","charges"],
+    answer: "Approximate total course fees (subject to yearly revision — always confirm on the official site):\n• B.Tech (4 yrs): ₹8.8L – ₹16.2L total\n• LLM (1 yr): ₹1.1L – ₹1.5L total\n• BBA / B.Com (Hons): generally lower than B.Tech, roughly ₹1.5–3L/year\n• MBA: varies by specialization, typically ₹4–8L total\nAsk about 'hostel fees' for accommodation costs separately."
+  },
+  hostel: {
+    keywords: ["hostel","hostels","accommodation","room","rooms","stay","dormitory","pg","residence"],
+    answer: "On-campus hostels are available for boys and girls separately (6 hostel blocks, ~2000 capacity):\n• Non-AC: ≈ ₹75,000 per year\n• AC: ≈ ₹1,25,000 per year\nRooms include bed, study table, almirah & fan; mess/cafeteria facilities are on campus."
+  },
+  scholarship: {
+    keywords: ["scholarship","scholarships","waiver","discount","financial aid","asat","merit scholarship"],
+    answer: "Amity offers merit-based scholarships through the Amity Scholarship Admission Test (ASAT) — based on entrance score or Class 12 percentage. Additional scholarships exist for sports achievers, defense personnel's wards, and siblings already studying at Amity. Exact % waivers are decided each admission cycle."
+  },
+  admission_process: {
+    keywords: ["admission","admission process","how to apply","apply","applying","application","application process","steps to admission","procedure","how do i get in"],
+    answer: "Typical admission process:\n1. Fill the online application at amity.edu/lucknow\n2. Take the relevant entrance test (JEE/AUEET/ASET/CAT/CLAT as applicable) or submit qualifying scores\n3. Shortlisting / merit list release\n4. Group discussion & personal interview (for management/law courses)\n5. Seat confirmation with fee payment\n6. Document verification & final admission"
+  },
+  placements: {
+    keywords: ["placement","placements","package","packages","salary","salaries","job","jobs","recruiter","recruiters","company","companies","hiring"],
+    answer: "Recent placement highlights (approx., verify current year data):\n• Highest package: ₹45 LPA\n• Average package: ₹5.5–6 LPA\n• Placement rate: ~94%\n• Top recruiters: Amazon, Accenture, Cognizant, HDFC Bank, Wipro, IBM, Pfizer, Groupon"
+  },
+  campus: {
+    keywords: ["campus","facility","facilities","infrastructure","library","libraries","lab","labs","wifi","sports","gym","campus life","college life"],
+    answer: "Campus facilities: 40-acre campus, 500 Mbps Wi-Fi, 210+ hi-tech labs, library with 70,000+ books & 17,000+ e-journals, sports complex (cricket, football, basketball, lawn tennis), multi-cuisine cafeteria, 24x7 clinic, ATM, salon & laundry services."
+  },
+  contact: {
+    keywords: ["contact","phone","phone number","contact number","helpline","email","address","location","where is","reach","call"],
+    answer: "📍 Address: Malhaur (Near Railway Station), Gomti Nagar Extension, Lucknow – 226028, Uttar Pradesh, India\n📞 Phone: +91-7303789789\n🌐 Website: amity.edu/lucknow\n(Please verify — contact numbers can change; this bot is unofficial.)"
+  },
+  thanks: {
+    keywords: ["thank","thanks","thank you"],
+    answer: "You're welcome! 😊 Anything else about admissions, courses, fees, or campus life?"
+  },
+  bye: {
+    keywords: ["bye","goodbye","see you","exit","quit"],
+    answer: "Good luck with your admission journey! 🎓 Feel free to come back anytime you have more questions."
+  }
+};
+
+// Fallback quick-suggestions shown as chips
+const SUGGESTIONS = [
+  "What courses are offered?",
+  "B.Tech eligibility?",
+  "What are the fees?",
+  "Tell me about hostel",
+  "How do I apply?",
+  "Placement record?",
+  "Campus facilities?",
+  "Contact details"
+];
+
+const chatEl = document.getElementById('chat');
+const formEl = document.getElementById('form');
+const inputEl = document.getElementById('input');
+const chipsEl = document.getElementById('chips');
+const resetBtn = document.getElementById('resetBtn');
+
+function scrollToBottom(){
+  chatEl.scrollTop = chatEl.scrollHeight;
+}
+
+function addMessage(text, who){
+  const row = document.createElement('div');
+  row.className = 'row ' + who;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = 'AU';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.innerHTML = linkify(text);
+
+  if(who === 'bot'){
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+  } else {
+    row.appendChild(bubble);
+  }
+  chatEl.appendChild(row);
+  scrollToBottom();
+}
+
+function linkify(text){
+  // escape basic HTML then linkify amity.edu mentions and phone numbers
+  const escaped = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return escaped
+    .replace(/(amity\.edu\/lucknow)/gi, '<a href="https://www.$1" target="_blank" rel="noopener">$1</a>')
+    .replace(/(\+91-\d{10})/g, '<a href="tel:$1">$1</a>');
+}
+
+function showTyping(){
+  const row = document.createElement('div');
+  row.className = 'row bot';
+  row.id = 'typingRow';
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = 'AU';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble typing';
+  bubble.innerHTML = '<span></span><span></span><span></span>';
+  row.appendChild(avatar);
+  row.appendChild(bubble);
+  chatEl.appendChild(row);
+  scrollToBottom();
+}
+
+function hideTyping(){
+  const row = document.getElementById('typingRow');
+  if(row) row.remove();
+}
+
+// Word-boundary-safe matching: prevents a short keyword from firing on a
+// mere substring of an unrelated word (e.g. "hi" inside "this"/"history",
+// "yo" inside "your", "room" inside "classroom", "law" inside "flaw"),
+// while still matching the keyword whenever it appears as its own word/phrase.
+function escapeRegExp(str){
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+function wordMatch(msg, rawKeyword){
+  const pattern = new RegExp('\\b' + escapeRegExp(rawKeyword.toLowerCase()) + '\\b');
+  return pattern.test(msg);
+}
+
+// Course words that can appear in any order relative to "eligibility" —
+// checked separately so e.g. "eligibility for btech" and "btech eligibility"
+// both route to the specific course answer instead of the generic one.
+// (Kept as a plain substring check — "eligib" is an intentional stem match
+// for "eligible"/"eligibility" and is narrow enough to carry no collision risk.)
+const ELIGIBILITY_TRIGGERS = ["eligib","criteria","qualify","minimum marks","who can apply"];
+const COURSE_ROUTES = [
+  { key: "eligibility_btech", words: ["btech","b.tech","engineering"] },
+  { key: "eligibility_bba",   words: ["bba","business administration"] },
+  { key: "eligibility_law",   words: ["llb","law","ba llb"] },
+  { key: "eligibility_mba",   words: ["mba"] }
+];
+
+// Returns a matched canned answer, or null if nothing in the local
+// knowledge base is a confident match (caller decides what to do then).
+function localAnswer(userText){
+  const msg = userText.toLowerCase();
+
+  // 1) Course-specific eligibility, regardless of word order.
+  if(ELIGIBILITY_TRIGGERS.some(t => msg.includes(t))){
+    for(const route of COURSE_ROUTES){
+      if(route.words.some(w => wordMatch(msg, w))){
+        return KB[route.key].answer;
+      }
+    }
+  }
+
+  // 2) Generic best-match keyword scoring across the rest of the knowledge base.
+  let bestKey = null;
+  let bestScore = 0;
+  for(const key in KB){
+    const entry = KB[key];
+    let score = 0;
+    for(const kw of entry.keywords){
+      if(wordMatch(msg, kw)) score += kw.length; // longer/more specific match wins
+    }
+    if(score > bestScore){
+      bestScore = score;
+      bestKey = key;
+    }
+  }
+
+  return (bestKey && bestScore > 0) ? KB[bestKey].answer : null;
+}
+
+const FALLBACK_MESSAGE = "I don't have a specific answer for that 🙏 (and the AI assistant isn't reachable right now — it only works when you run this via 'npm start' with an OpenAI key set up). Try asking about courses, eligibility, fees, hostel, entrance exams, scholarships, placements, or campus facilities — or contact the official admission office at +91-7303789789 / amity.edu/lucknow.";
+
+// Calls the local server's /api/chat proxy (server.js), which holds the
+// OpenAI key server-side. Only reached when the local knowledge base has no
+// confident match, keeping actual API calls to a minimum. If the proxy isn't
+// running (e.g. index.html opened directly as a file, or no key configured
+// yet) this fails harmlessly and falls back to FALLBACK_MESSAGE below.
+async function askAI(userText){
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: userText })
+  });
+  const data = await res.json().catch(() => ({}));
+  if(!res.ok || !data.reply){
+    throw new Error(data.error || 'AI request failed');
+  }
+  return data.reply + '\n\n(AI-generated — please verify important details at amity.edu/lucknow.)';
+}
+
+async function handleUserMessage(text){
+  const trimmed = text.trim();
+  if(!trimmed) return;
+  addMessage(trimmed, 'user');
+  inputEl.value = '';
+  showTyping();
+
+  const local = localAnswer(trimmed);
+  if(local){
+    const delay = 350 + Math.random() * 400; // feels human, still instant & offline
+    setTimeout(() => {
+      hideTyping();
+      addMessage(local, 'bot');
+      inputEl.focus();
+    }, delay);
+    return;
+  }
+
+  try{
+    const reply = await askAI(trimmed);
+    hideTyping();
+    addMessage(reply, 'bot');
+  } catch(err){
+    hideTyping();
+    addMessage(FALLBACK_MESSAGE, 'bot');
+  } finally {
+    inputEl.focus();
+  }
+}
+
+formEl.addEventListener('submit', (e) => {
+  e.preventDefault();
+  handleUserMessage(inputEl.value);
+});
+
+function renderChips(){
+  chipsEl.innerHTML = '';
+  SUGGESTIONS.forEach(q => {
+    const chip = document.createElement('button');
+    chip.className = 'chip';
+    chip.type = 'button';
+    chip.textContent = q;
+    chip.addEventListener('click', () => handleUserMessage(q));
+    chipsEl.appendChild(chip);
+  });
+}
+
+function initChat(){
+  chatEl.innerHTML = '';
+  addMessage(KB.greeting.answer, 'bot');
+}
+
+resetBtn.addEventListener('click', initChat);
+
+renderChips();
+initChat();
+</script>
+
+</body>
+</html>
