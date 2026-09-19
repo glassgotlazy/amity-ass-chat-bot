@@ -4,7 +4,7 @@ A chatbot that answers admission questions about **Amity University, Lucknow**:
 courses, eligibility, entrance tests, fees, scholarships, hostel, campus life,
 academics, placements and student services.
 
-It answers **159 topics offline**, from a knowledge base and retrieval engine
+It answers **197 topics offline**, from a knowledge base and retrieval engine
 built into `index.html`. No API key, no server and no internet connection are
 needed for those. An **optional AI fallback** covers the rest — but only for
 questions that are actually about Amity.
@@ -136,7 +136,7 @@ transcript.
    related topic rather than passed off as the answer, and the question goes to
    the AI fallback instead (when it is available).
 
-Self-check: **1472 of 1489** trigger phrases retrieve their own entry; the
+Self-check: **1748 of 1778** trigger phrases retrieve their own entry; the
 remainder land on a near-identical neighbour.
 
 ## Editing the knowledge base
@@ -159,11 +159,22 @@ reload — the index rebuilds on load, there is no build step.
 
 ## Interface
 
-Topic sidebar (drawer on mobile), starter questions, follow-up suggestions
-under every answer, light/dark theme following the OS with a saved override,
-conversation saved to `localStorage`, transcript download, copy-answer, and a
-composer with `Enter` to send / `Shift`+`Enter` for a new line. Responsive to
-360 px; respects `prefers-reduced-motion`.
+Editorial layout rather than a chat-widget look: **Fraunces** for display type,
+**IBM Plex Sans** for text and **IBM Plex Mono** for labels and figures. All
+three are self-hosted and embedded in the page as base64 woff2 (about 132 KB
+total), so the typography survives with no network and from a `file://` URL.
+
+Motion is used to show structure, not for decoration: the monogram draws in on
+load, the topic tally counts up, starter rows reveal as they scroll into the
+transcript, answer blocks fade up in sequence, the thinking indicator runs a
+scanning bar while the knowledge base is searched, and hover states animate the
+sidebar rule, chips and suggestions. Everything collapses to no motion under
+`prefers-reduced-motion`.
+
+Also: topic sidebar (drawer on mobile), follow-up suggestions under every
+answer, light/dark theme following the OS with a saved override, conversation
+saved to `localStorage`, transcript download, copy-answer, and a composer with
+`Enter` to send / `Shift`+`Enter` for a new line. Responsive to 360 px.
 
 ## Data disclaimer
 
