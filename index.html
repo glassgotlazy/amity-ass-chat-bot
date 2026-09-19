@@ -457,6 +457,83 @@
   }
   .toast.show{opacity:1;transform:translate(-50%,0);}
 
+
+  /* ============================== tables ============================== */
+  .table-wrap{
+    margin:0 0 14px;overflow-x:auto;border:1px solid var(--rule);border-radius:8px;
+    background:var(--surface);
+  }
+  .answer table{border-collapse:collapse;width:100%;font-size:13.5px;}
+  .answer thead th{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);font-weight:500;text-align:left;
+    padding:10px 14px;background:var(--wash);border-bottom:1px solid var(--rule);
+    white-space:nowrap;
+  }
+  .answer tbody td{
+    padding:10px 14px;border-bottom:1px solid var(--rule);vertical-align:top;line-height:1.5;
+  }
+  .answer tbody tr:last-child td{border-bottom:0;}
+  .answer tbody tr{transition:background .15s var(--ease);}
+  .answer tbody tr:hover{background:var(--wash);}
+  .answer tbody td:first-child{color:var(--ink-2);}
+  .answer tbody td + td{
+    font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1;
+  }
+
+  /* ============================= palette ============================= */
+  .rail-search{
+    display:flex;align-items:center;gap:8px;width:100%;
+    margin:0 0 4px;padding:9px 11px;
+    background:var(--surface);border:1px solid var(--rule);border-radius:7px;
+    color:var(--faint);font-size:12.5px;cursor:pointer;text-align:left;
+    transition:border-color .2s var(--ease), color .2s var(--ease);
+  }
+  .rail-search:hover{border-color:var(--rule-2);color:var(--muted);}
+  .rail-search .kbd{
+    margin-left:auto;font-family:var(--mono);font-size:9.5px;
+    border:1px solid var(--rule);border-radius:4px;padding:1px 5px;color:var(--faint);
+  }
+
+  .palette-wrap{
+    position:fixed;inset:0;z-index:70;display:none;
+    align-items:flex-start;justify-content:center;padding:12vh 20px 20px;
+    background:rgba(18,17,16,.5);backdrop-filter:blur(3px);
+  }
+  .palette-wrap.show{display:flex;animation:fadeIn .16s var(--ease) both;}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+  .palette{
+    width:100%;max-width:560px;background:var(--surface);
+    border:1px solid var(--rule-2);border-radius:12px;overflow:hidden;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,.45);
+    animation:paletteIn .22s var(--ease-out) both;
+  }
+  @keyframes paletteIn{from{opacity:0;transform:translateY(-10px) scale(.98);}to{opacity:1;transform:none;}}
+  .palette input{
+    width:100%;border:0;border-bottom:1px solid var(--rule);background:none;
+    padding:16px 18px;font-family:inherit;font-size:15px;color:var(--ink);outline:none;
+  }
+  .palette input::placeholder{color:var(--faint);}
+  .palette-list{max-height:min(52vh,420px);overflow-y:auto;padding:6px;}
+  .palette-item{
+    display:flex;align-items:baseline;gap:12px;width:100%;
+    background:none;border:0;border-radius:7px;padding:10px 12px;
+    text-align:left;cursor:pointer;color:var(--ink);font-size:14px;
+  }
+  .palette-item .pcat{
+    margin-left:auto;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--faint);white-space:nowrap;
+  }
+  .palette-item.active{background:var(--accent-soft);}
+  .palette-item.active .pcat{color:var(--accent);}
+  .palette-item mark{background:none;color:var(--gold);font-weight:600;}
+  .palette-empty{padding:22px 18px;color:var(--muted);font-size:13.5px;}
+  .palette-foot{
+    display:flex;gap:16px;padding:9px 16px;border-top:1px solid var(--rule);
+    background:var(--wash);font-family:var(--mono);font-size:9.5px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--faint);
+  }
+
   /* ============================== responsive ============================== */
   @media (max-width:880px){
     .app{grid-template-columns:1fr;border:0;}
@@ -475,6 +552,9 @@
     .topbar .where{display:none;}
     .topbar>div{min-width:0;}
     .turn.bot,.thinking{grid-template-columns:18px 1fr;gap:10px;}
+    .answer table{font-size:12.5px;}
+    .answer thead th,.answer tbody td{padding:8px 10px;}
+    .palette-wrap{padding:8vh 12px 12px;}
     .send{padding:11px 14px;}
     .send .label{display:none;}
   }
@@ -502,6 +582,11 @@
     </div>
 
     <div class="rail-scroll">
+      <button class="rail-search" id="searchBtn" type="button">
+        <span id="searchLabel">Search topics</span>
+        <span class="kbd">Ctrl K</span>
+      </button>
+
       <div class="rail-label">Topics</div>
       <div id="railTopics"></div>
 
@@ -562,6 +647,16 @@
     <div class="composer-foot">
       <span>Enter to send · Shift + Enter for a new line</span>
       <span id="kbCount"></span>
+    </div>
+  </div>
+</div>
+
+<div class="palette-wrap" id="paletteWrap" role="dialog" aria-modal="true" aria-label="Search topics">
+  <div class="palette">
+    <input id="paletteInput" type="text" placeholder="Search every topic…" autocomplete="off" spellcheck="false" aria-label="Search topics">
+    <div class="palette-list" id="paletteList"></div>
+    <div class="palette-foot">
+      <span>↑ ↓ to move</span><span>Enter to ask</span><span>Esc to close</span>
     </div>
   </div>
 </div>
@@ -682,8 +777,8 @@ It is part of the same university as the Noida campus, so degrees are awarded by
   q:['ugc approved','is amity recognised','recognition','accreditation','naac grade','aicte approved','bci approved','pci approved','is the degree valid','valid for government jobs','degree validity','is amity fake','is amity legit'],
   a:`### Recognition
 - Amity University Uttar Pradesh is a **state private university established by an Act of the UP legislature** and recognised by the **UGC**.
-- Professional programmes carry the relevant statutory approvals — **AICTE** (engineering/management), **BCI** (law), **PCI** (pharmacy), **COA** (architecture, where offered).
-- The university has **NAAC accreditation**; the exact grade and validity window are published on the official site.
+- The Lucknow campus lists recognition by **UGC, AICTE, NCTE, PCI and COA**, with **BCI** approval for the law programmes.
+- Amity University Uttar Pradesh holds **NAAC accreditation at grade A+** — awarded to the university, which the Lucknow campus sits under.
 
 ### What that means for you
 Degrees are valid for government jobs, higher studies and competitive exams like GATE, CAT, UPSC and NET, and for overseas admissions.
@@ -694,7 +789,7 @@ Degrees are valid for government jobs, higher studies and competitive exams like
 {
   id:'ranking', topic:'University', title:'Rankings & reputation',
   q:['ranking','rank','nirf','is amity good','reputation','how good is amity','best private university','rating','reviews','what do students say'],
-  a:`Amity University Uttar Pradesh regularly appears in **NIRF** listings in the university and management bands, and in private-university rankings by Indian magazines. The Lucknow campus is usually assessed as part of the parent university rather than separately, so a "Lucknow rank" on its own is rarely meaningful.
+  a:`Amity University Uttar Pradesh holds **NAAC A+** accreditation and appears in **NIRF** listings — the Noida campus placed **49th in the Management category in NIRF 2025**. The Lucknow campus files its own NIRF data report but is usually discussed under the parent university, so a standalone "Lucknow rank" is rarely meaningful.
 
 ### An honest read
 - **Strong points:** modern infrastructure, industry certifications built into the syllabus, a large recruiter base, active clubs and fests, strict discipline.
@@ -1480,15 +1575,19 @@ Also check your **registered email and SMS** (including spam) — deadlines are 
 {
   id:'fee_overview', topic:'Fees', title:'Fee structure',
   q:['fee','fees','fee structure','cost','how much does it cost','tuition','price','expensive','charges','total fees','annual fee','yearly fee','per semester fee','how much money'],
-  a:`Indicative **tuition** ranges (per year unless stated; revised every session):
+  a:`Tuition as listed for the **2026 cycle** by admission portals (the university's own fee sheet is the only binding version):
 
-- **B.Tech** — about **₹2.2–4.0 lakh/year**, roughly **₹9–16 lakh** for the full 4 years depending on branch
-- **BBA** — about **₹1.5–2.5 lakh/year**
-- **MBA** — about **₹4–8 lakh** in total, by specialisation
-- **BA LLB / BBA LLB** — about **₹1.5–2.5 lakh/year**; **LLM** roughly **₹1.1–1.5 lakh** total
-- **BCA / MCA** — about **₹1.2–2.0 lakh/year**
-- **B.Com (Hons) / BA (Hons)** — about **₹1.0–1.8 lakh/year**
-- **B.Sc / M.Sc / B.Pharm** — about **₹1.2–2.5 lakh/year**
+| Programme | Per year | Full course |
+| --- | --- | --- |
+| B.Tech (4 yr) | ₹2.2–4.06 lakh | ₹8.8–16.24 lakh |
+| BBA (3 yr) | about ₹3.84 lakh (first year) | about ₹11.52 lakh |
+| MBA (2 yr) | about ₹5.46 lakh (first year) | about ₹10.92 lakh |
+| BA LLB / BBA LLB | about ₹1.5–2.5 lakh | over 5 years |
+| BCA / MCA | about ₹1.2–2.0 lakh | — |
+| B.Com (Hons) / BA (Hons) | about ₹1.0–1.8 lakh | — |
+| B.Sc / M.Sc / B.Pharm | about ₹1.2–2.5 lakh | — |
+
+Portals differ on the management programmes in particular, so treat BBA/MBA figures as the **upper** end until the admission office confirms yours.
 
 Add to tuition: **one-time admission charges**, **exam fees**, a refundable **security deposit**, and **hostel (₹75,000–₹1,25,000/yr)** or **transport** if you opt in.
 
@@ -1504,7 +1603,7 @@ Add to tuition: **one-time admission charges**, **exam fees**, a refundable **se
 - **Tuition:** roughly **₹2.2–4.0 lakh per year**, varying by branch (CSE and AI/ML sit at the upper end)
 - **Full course (4 years):** roughly **₹9–16 lakh** in tuition
 - **One-time charges** at admission (registration, ID, insurance, etc.) on top
-- **Hostel:** ₹75,000 (non-AC) to ₹1,25,000 (AC) per year if you stay on campus
+- **Hostel:** commonly quoted at about **₹68,000 a year** for standard rooms, up to roughly **₹1.42 lakh** for AC/lower-occupancy — around ₹2.72 lakh across a 4-year B.Tech
 - **M.Tech:** roughly **₹1.5–2.5 lakh per year**; GATE-qualified candidates often get concessions
 
 ### Bringing it down
@@ -1573,9 +1672,10 @@ Design and media students should budget separately for materials, software, shoo
 {
   id:'fee_hostel', topic:'Fees', title:'Hostel fees',
   q:['hostel fees','hostel cost','how much is hostel','accommodation cost','room rent','hostel charges','ac room cost','non ac hostel','hostel fee per year'],
-  a:`### Indicative hostel charges (per year)
-- **Non-AC room:** about **₹75,000**
-- **AC room:** about **₹1,25,000**
+  a:`### Hostel charges (per year, as listed for the 2026 cycle)
+- **Standard room:** about **₹68,000** — the figure quoted for BBA and MBA students
+- **AC / lower-occupancy:** up to about **₹1.42 lakh**
+- Across a 4-year B.Tech, hostel alone is roughly **₹2.72 lakh**
 - Rates vary with **occupancy** — triple/double sharing is cheaper than a single room
 - A **refundable security deposit** is taken at allotment
 - **Mess/food** may be bundled or billed separately depending on the plan you choose
@@ -1674,9 +1774,19 @@ The admission/accounts office can issue the documents banks ask for — request 
   q:['scholarship','scholarships','waiver','fee waiver','discount','financial aid','concession','free seat','how to get scholarship','merit scholarship','reduce fees'],
   a:`Amity's scholarships are mostly **merit-linked through ASAT**, and they can move the fee substantially.
 
-### Main routes
-- **ASAT merit scholarship** — slabs based on your ASAT score and/or Class 12 percentage; higher scores map to higher waivers (partial to substantial on tuition)
-- **Board-merit scholarship** — for very high Class 12 aggregates (typically 90%+ bands)
+### The board-merit slabs
+The widely published Amity structure for CBSE Class 12 aggregate is:
+
+| Class 12 aggregate | Tuition waiver |
+| --- | --- |
+| 95% and above | 100% |
+| 90% – 94.99% | 50% |
+| 85% – 89.99% | 25% |
+
+Slabs differ between campuses and cycles (other Amity campuses publish 93%/90%/80% and 93%/88%/75% bands), so confirm the Lucknow figures for your year.
+
+### Other routes
+- **ASAT merit scholarship** — slabs based on your test score, for students whose board percentage misses the bands above
 - **Sports scholarship** — state/national level achievers, with certificates
 - **Defence/armed-forces category** — wards of serving, retired or martyred personnel
 - **Sibling/alumni concession** — where a brother/sister is studying or has studied at Amity
@@ -1694,8 +1804,8 @@ Apply early, take ASAT seriously (it *is* the scholarship exam), and submit cate
   q:['scholarship renewal','keep scholarship','maintain scholarship','cgpa for scholarship','will scholarship continue','scholarship every year','lose scholarship','conditions for scholarship'],
   a:`A scholarship is usually granted **for the full course but reviewed every year**, and it can be withdrawn.
 
-Typical continuation conditions:
-- Maintain a **minimum CGPA** (often around 7.0–8.0, as printed in your offer letter)
+Amity's published continuation rule is **rank-based**: to keep a 100% waiver you must stay in the **top 5%** of your merit list, **top 10%** for a 50% waiver, and **top 15%** for 25%. Alongside that:
+- Maintain the **minimum CGPA** printed in your offer letter
 - Meet the **attendance requirement** (commonly 75%)
 - **No backlogs** carried forward
 - No disciplinary action on record
@@ -2125,33 +2235,45 @@ Apply through Amizone or the office counter; most routine documents take a few w
 {
   id:'placement', topic:'Placements', title:'Placement record',
   q:['placement','placements','package','salary','job','jobs','average package','highest package','placement record','placement percentage','lpa','do they place students','campus placement','how many students get placed','placement statistics','is placement good'],
-  a:`Indicative recent figures (verify the current year's report with the placement cell):
+  a:`Figures from the **NIRF 2025 data report** for the Lucknow campus, as summarised by admission portals:
 
-- **Highest package:** around **₹45 LPA** (an outlier, usually a product/CSE offer)
-- **Average package:** roughly **₹5.5–6 LPA**, varying sharply by branch
-- **Placement rate:** reported around **90–94%** among eligible, participating students
-- **CSE/IT** sees the most offers; core branches (mechanical, civil) see fewer on-campus roles with lower averages
+| Measure | Figure |
+| --- | --- |
+| B.Tech median package | ₹5.5 LPA |
+| B.Tech students placed | 92 of 105 |
+| MBA median package | ₹5.5 LPA |
+| MBA students placed | 80 of 87 |
+| All UG median package | ₹4.08 LPA |
+| All PG median package | ₹4.4 LPA |
+| UG students placed | 259 |
+| PG students placed | 333 |
+| Highest package reported | ₹30 LPA (some portals cite ₹45 LPA) |
 
-### Read the numbers correctly
-"Average" excludes students who are ineligible, opt out, or go for higher studies. Ask the placement cell for:
-1. **Branch-wise** average and median (the median tells you more than the average)
-2. The **number of students placed vs. the batch size**
-3. Which companies actually visited **last year**, not the cumulative list`,
+### Read these correctly
+- The **median** is the number that matters. It says half the placed students earned less — unlike the "average", which one large offer can distort.
+- "Placed" counts students who **registered and participated**, not the whole batch. B.Tech's 92 of 105 is roughly **88%**; portals advertising "94% placement" are using a narrower base.
+- The **highest package** is a single outlier offer, usually a product/CSE role. Do not plan your finances around it.
+- Figures move every cycle and differ between portals — ask the placement cell for the **current year's branch-wise report in writing**.
+
+> Source: NIRF 2025 data report as published on admission portals. Not an official university statement.`,
   chips:['Top recruiters','Placement process','Which branch to choose','Internships & training']
 },
 {
   id:'recruiters', topic:'Placements', title:'Top recruiters',
   q:['recruiters','companies','which companies visit','hiring companies','top companies','who recruits','placement companies','mnc'],
-  a:`Companies that have recruited from Amity campuses include (indicative, varies by year and branch):
+  a:`Named repeatedly in recent Lucknow-campus placement reporting:
 
-- **IT & services:** TCS, Infosys, Wipro, Cognizant, Accenture, Capgemini, HCL, Tech Mahindra, IBM
-- **Product & analytics:** Amazon, Adobe, Oracle, Deloitte, EY, KPMG-type consulting roles
-- **BFSI:** HDFC Bank, ICICI, Axis Bank, Kotak, Bajaj Finserv
-- **FMCG/retail/sales:** Reliance, Berger, Dabur, Asian Paints
-- **Pharma/biotech:** Pfizer, Cipla, Dr. Reddy's, Biocon-type employers
-- **Media/design:** agencies, production houses and design studios
+**Amazon · HDFC Bank · Pfizer · Wipro · IBM · Samsung · JP Morgan · Infosys · HCL · Accenture**
 
-> Treat any list as the **cumulative** history of the group, not a guarantee for your branch and year. Ask for last year's actual visiting-company list.`,
+Wider pool reported across Amity campuses:
+- **IT & services:** TCS, Cognizant, Capgemini, Tech Mahindra, LTIMindtree
+- **Product, consulting & analytics:** Deloitte, EY, KPMG-type roles, Oracle, Adobe
+- **BFSI:** ICICI, Axis Bank, Kotak, Bajaj Finserv
+- **FMCG, retail & sales:** Reliance, Dabur, Berger, Asian Paints
+- **Pharma & biotech:** Cipla, Dr. Reddy's and similar employers
+- **Media & design:** agencies, production houses, design studios
+
+> A recruiter list is cumulative history, not a promise for your branch this year. Ask the placement cell which companies actually visited **last season**, and how many offers each made.`,
   chips:['Placement record','Placement process','Internships & training']
 },
 {
@@ -3193,6 +3315,526 @@ Do not let weak English decide your branch. Recruiters test communication in eve
 Agreeing a simple routine — a weekly call, and who to contact at the university if something seems wrong — prevents most first-year anxiety on both sides.`,
   chips:['Information for parents','Where parents can stay','Hostel rules','Campus visit']
 }
+,
+/* ============ placements: the numbers, and how to read them ============ */
+{
+  id:'pl_nirf', topic:'Placements', title:'The NIRF placement report',
+  q:['nirf data','nirf placement report','official placement data','where does placement data come from','nirf 2025','verified placement numbers','real placement data'],
+  a:`Every institution that participates files a **NIRF data report** with placement figures, and it is the most auditable number available — colleges submit it to a government framework rather than to their own brochure.
+
+From the **NIRF 2025** report for Amity Lucknow:
+
+| Programme | Median package | Placed |
+| --- | --- | --- |
+| B.Tech | ₹5.5 LPA | 92 of 105 |
+| MBA | ₹5.5 LPA | 80 of 87 |
+| All UG | ₹4.08 LPA | 259 students |
+| All PG | ₹4.4 LPA | 333 students |
+
+### Why this beats a brochure number
+NIRF asks for the **median**, the count placed and the count graduating — all three together. A marketing page can quote an average, pick a favourable subset, or count an internship stipend as a package. Ask for the NIRF report year on year and you can see the trend honestly.
+
+> Sourced from the NIRF 2025 data report as summarised by admission portals. Confirm with the placement cell.`,
+  chips:['Placement record','Median vs average package','What a package actually pays','Top recruiters']
+},
+{
+  id:'pl_median', topic:'Placements', title:'Median vs average package',
+  q:['median vs average','what is median package','why median','average package misleading','difference between median and average salary','which number should i trust'],
+  a:`They answer different questions, and the gap between them is where marketing lives.
+
+- **Average (mean)** — add every package, divide by the number placed. One ₹30 LPA offer in a batch of 100 lifts the average by ₹0.25 LPA on its own.
+- **Median** — line the offers up and take the middle one. Half the placed students earned less than this. Outliers cannot move it.
+
+At Amity Lucknow the NIRF 2025 **B.Tech median is ₹5.5 LPA**, while portals quote a highest package of ₹30–45 LPA. Both are true, and only the first describes a typical outcome.
+
+### Three questions that cut through any placement claim
+1. What is the **median**, not the average?
+2. How many students were **placed out of how many graduated** (not out of "eligible and participating")?
+3. How many offers were **above ₹10 LPA** — the count, not the maximum?`,
+  chips:['The NIRF placement report','Placement record','What a package actually pays']
+},
+{
+  id:'pl_ctc', topic:'Placements', title:'What a package actually pays',
+  q:['ctc breakdown','in hand salary','what is ctc','take home salary','5.5 lpa in hand','gross vs net','salary components','how much will i actually get'],
+  a:`A "package" is **CTC** — the company's total cost, not your bank credit. A rough split of a ₹5.5 LPA offer:
+
+| Component | Typical share | Notes |
+| --- | --- | --- |
+| Basic + allowances | ₹4.0–4.4 L | the taxable core |
+| Employer PF | ~₹0.2 L | goes to your PF, not your account |
+| Gratuity / insurance | ~₹0.2 L | accrues, not monthly cash |
+| Variable / bonus | ₹0.3–0.8 L | performance-linked, not guaranteed |
+
+**In hand** after PF and tax typically lands around **₹32,000–₹38,000 a month** on a ₹5.5 LPA CTC for a fresher.
+
+Watch for: joining bonuses counted in CTC, "retention" amounts payable after a year, relocation allowances, and stipend-during-training quoted separately. Always ask for the **written breakup** before accepting.`,
+  chips:['Median vs average package','Placement record','Total cost over the full course']
+},
+{
+  id:'pl_eligible', topic:'Placements', title:'Who counts as "placed"',
+  q:['placement eligibility criteria','who is eligible for placement','registered students','am i eligible for placement','placement percentage calculation','excluded from placement','opt out of placement'],
+  a:`"94% placed" and "92 of 105 placed" can describe the same batch. The difference is the denominator.
+
+Typically **excluded** from the count:
+- Students who did not **register** with the placement cell
+- Students below the **CGPA cut-off** (often 6.0–7.0) or carrying **backlogs**
+- Students who **opted out** for higher studies, family business or competitive exams
+- Students who missed the **attendance** requirement
+
+So a high advertised percentage can sit on top of a much smaller participating group. The number that matters to you is **offers made ÷ students who graduated**.
+
+Practical consequence: keep CGPA above 7, clear backlogs before the pre-final year, and register on time. Most students who miss placements were ineligible before the drives even began.`,
+  chips:['Placement process','Grading and CGPA','Exams & backlogs','The NIRF placement report']
+},
+{
+  id:'pl_season', topic:'Placements', title:'The placement season calendar',
+  q:['when do placements start','placement season','placement timeline','which year placement','drive schedule','when will i be placed','final year placement'],
+  a:`Roughly how the year runs for a final-year student:
+
+| Period | What happens |
+| --- | --- |
+| Jun – Jul | Registration with the cell, resume workshops, aptitude training |
+| Aug – Oct | Peak season — the largest recruiters run their drives |
+| Nov – Jan | Second wave, mid-size companies and startups |
+| Feb – Apr | Rolling drives, off-campus support, final-semester internships |
+| Throughout | PPO conversions from summer internships |
+
+Preparation that works backwards from this: **DSA and aptitude by the end of the pre-final year**, resume finalised by June, mock interviews in July. Students who start preparing when the first drive is announced are already a year late.`,
+  chips:['Placement process','Aptitude tests & interview rounds','Internship-to-job conversion (PPO)']
+},
+{
+  id:'pl_roi', topic:'Placements', title:'Is the fee worth the package?',
+  q:['roi','return on investment','is it worth the money','fee vs salary','payback period','value for money placement','worth the fees'],
+  a:`Do this arithmetic yourself before paying anything. Using the published figures:
+
+| | B.Tech |
+| --- | --- |
+| Tuition (4 yr) | ₹8.8 – 16.24 lakh |
+| Hostel + mess (4 yr) | about ₹5 – 7.5 lakh |
+| **Total outlay** | **roughly ₹16 – 27 lakh** |
+| Median package (NIRF 2025) | ₹5.5 LPA CTC |
+| In hand, year one | roughly ₹4 lakh |
+
+On the median outcome, the degree costs **three to six years of post-tax starting salary**. That is not a verdict — it is the arithmetic every family should do, and it moves sharply in your favour if a **scholarship** cuts tuition, or if you land well above the median.
+
+### What actually changes the ratio
+A board-merit or ASAT waiver, choosing a branch with stronger demand, and your own coding/internship record. Those three matter more than anything in a brochure.`,
+  chips:['Scholarship options','Total cost over the full course','Median vs average package','Fee structure']
+},
+{
+  id:'pl_roles', topic:'Placements', title:'What roles are actually offered',
+  q:['what job roles','job profile','which position','software engineer role','what work will i do','designation','profile offered','sales job'],
+  a:`Typical fresher profiles by stream:
+
+- **CSE / IT** — software engineer, associate developer, QA/test engineer, support engineer, data analyst; service-company roles dominate by volume, product roles by package
+- **ECE** — embedded/firmware, network engineer, plus most software roles
+- **Mechanical / Civil** — graduate engineer trainee, site engineer, design (CAD), production and quality
+- **MBA** — sales and business development, banking and financial services, HR generalist, marketing executive, business analyst
+- **BBA / B.Com** — operations, accounts, audit associate, banking front-line, analyst trainee
+- **Law** — associate at firms, legal/compliance executive, litigation chambers
+- **Biotech / Pharmacy** — QA/QC, clinical research associate, medical writing, production
+
+Sales-oriented roles are common in BFSI and FMCG offers — read the job description before accepting, not after.`,
+  chips:['Top recruiters','Placement process','Placements for non-CSE branches']
+},
+{
+  id:'pl_improve', topic:'Placements', title:'Year-by-year plan to get placed',
+  q:['how to get placed','how to improve placement chances','what should i do in first year','placement preparation plan','roadmap','year wise plan','how to prepare for placements'],
+  a:`### Year 1
+Keep CGPA above 7 (it is far easier to build than to repair), learn one language properly, join two clubs, start basic aptitude.
+
+### Year 2
+DSA seriously — a problem a day beats a monthly sprint. Build **two projects** you can demo. First summer internship, even unpaid.
+
+### Year 3
+A substantive internship, ideally one with a **PPO** path. Core subjects (OS, DBMS, networks) for interviews. Resume finalised. Mock interviews. Clear every backlog.
+
+### Year 4
+Register early, apply widely on and off campus, and treat each rejection as feedback rather than a verdict.
+
+Every year has one non-negotiable: **no backlogs, attendance above the line, CGPA above the recruiter floor**. Those three keep the door open; the rest decides which room you walk into.`,
+  chips:['Coding & technical prep','Internships & training','Resume, portfolio & LinkedIn','Who counts as "placed"']
+},
+{
+  id:'pl_cgpa_cut', topic:'Placements', title:'CGPA cut-offs recruiters set',
+  q:['cgpa for placement','minimum cgpa','what cgpa do i need','60 percent criteria','cgpa cutoff companies','does cgpa matter','low cgpa placement'],
+  a:`Most campus recruiters apply a floor before they look at anything else:
+
+| Typical floor | Who applies it |
+| --- | --- |
+| 60% / 6.0 CGPA | mass IT services recruiters |
+| 65–70% / 6.5–7.0 | mid-tier product and analytics firms |
+| 70%+ with no backlogs | premium product companies, some banks |
+| "No active backlogs" | almost everyone |
+
+Several also check **Class 10 and 12 marks** and a maximum education gap.
+
+If your CGPA is below the line, the realistic routes are off-campus applications where portfolio outweighs marks, startups, a strong internship converted to a PPO, or a master's to reset the record. Fix it early — a weak first year drags the cumulative number for the rest of the course.`,
+  chips:['Grading and CGPA','Who counts as "placed"','Off-campus jobs & internships']
+},
+{
+  id:'pl_cities', topic:'Placements', title:'Where placed students work',
+  q:['job location','which city','placement location','will i have to relocate','work from home','noida gurgaon jobs','city of posting'],
+  a:`Most on-campus offers are for metro locations — **Noida/Gurgaon/Delhi NCR, Bengaluru, Hyderabad, Pune and Mumbai**, with some roles based in Lucknow and other tier-2 cities (particularly banking, sales and core-industry jobs).
+
+Practical points:
+- The **offer letter names the location**, and many IT companies reserve the right to post you anywhere; ask before accepting if this matters
+- Training periods are often at a different site from your final posting
+- Relocation allowance is not standard for freshers — budget for the first month yourself
+- Remote/hybrid for freshers is much rarer now than in 2021
+
+If you have a location constraint (family, health), tell the placement cell early; it changes which drives are worth sitting.`,
+  chips:['What roles are actually offered','Placement process','What a package actually pays']
+},
+
+/* ========================= more questions, widely ========================= */
+{
+  id:'q_asat_syllabus', topic:'Entrance exams', title:'ASAT syllabus by stream',
+  q:['asat syllabus','what comes in asat','asat subjects','asat topics','what to study for asat','asat pattern engineering','asat for management'],
+  a:`The test is programme-specific, but the shape is consistent — subject aptitude plus reasoning plus English, objective, around an hour.
+
+- **Engineering (AUEET-type):** Physics, Chemistry and Mathematics at Class 11–12 level, plus reasoning and English
+- **Management (BBA/MBA):** quantitative aptitude, data interpretation, logical reasoning, verbal ability and general awareness
+- **Law:** legal reasoning, logical reasoning, English, general knowledge and current affairs
+- **Other UG programmes:** general aptitude, reasoning and English, with some subject questions relevant to the stream
+
+There is no negative-marking convention you can rely on across years — check the instruction sheet on the day. Since the same score sets your **scholarship slab**, prepare as if it were a fee-reduction exam.`,
+  chips:['ASAT test details','Preparing for the test','Scholarship options']
+},
+{
+  id:'q_jee_score', topic:'Entrance exams', title:'What JEE score helps here',
+  q:['jee percentile needed','jee score for amity','is jee mandatory','low jee score','jee rank required','can i get in with low jee','jee vs asat which is better'],
+  a:`Amity does **not** publish a JEE cut-off the way government counselling does — a valid JEE Main score is one accepted route, and admission is decided on a composite of that score, Class 12 marks and seat availability.
+
+In practice:
+- A **decent JEE percentile** strengthens your application and can help with branch allotment
+- A **weak or absent** JEE score is not a blocker — the **ASAT/AUEET** route exists precisely for this, and most applicants use it
+- Neither route guarantees CSE, which fills earliest
+
+If you are deciding where to put your preparation time: a strong ASAT is worth more here (it sets your scholarship), while JEE matters if you are also chasing NITs/IIITs.`,
+  chips:['Entrance exams accepted','ASAT test details','Admission without an entrance exam','B.Tech eligibility']
+},
+{
+  id:'q_offer_compare', topic:'Admissions', title:'Comparing two college offers',
+  q:['how to compare colleges','two offers','which college should i choose','decision help','compare offer letters','confused between colleges','how to decide'],
+  a:`Put both on one page and fill in every row. Feelings follow facts once you see it written down.
+
+| Ask | College A | College B |
+| --- | --- | --- |
+| Total cost after scholarship | | |
+| Median (not average) package, your branch | | |
+| Placed ÷ graduated, your branch | | |
+| Companies that visited last year | | |
+| Approvals for your programme | | |
+| Faculty count and qualifications in your department | | |
+| Hostel and lab condition (seen in person) | | |
+| Commute / distance from home | | |
+
+Two rules that save regret: insist on **branch-wise** numbers in writing, and weigh the **total cost** against the **median** outcome, never the headline package.`,
+  chips:['Is the fee worth the package?','Amity vs other colleges','Campus visit','Median vs average package']
+},
+{
+  id:'q_after_offer', topic:'Admissions', title:'You have the offer letter — now what',
+  q:['got the offer letter','what next after selection','after admission letter','next steps','i got selected','accepted now what','after paying fees'],
+  a:`In order:
+
+1. **Read the letter fully** — programme, branch, fee schedule, scholarship percentage and its continuation conditions, and the acceptance deadline.
+2. **Question anything unclear in writing** — especially whether the fee is fixed for the full course and what the scholarship applies to.
+3. **Pay the seat-confirmation amount** through the official portal only, and save the receipt.
+4. **Opt for hostel and transport** immediately if you want them — allotment is first-come.
+5. **Assemble documents** and get photocopies plus scans of everything.
+6. **Apply for the education loan** if you need one; the bank will want the offer letter and fee structure.
+7. **Diarise the reporting date** and book travel early.
+
+Keep one folder — physical and cloud — with every letter, receipt and email from this point on.`,
+  chips:['Seat confirmation & offer letter','Documents required','Education loan','Reporting day & induction']
+},
+{
+  id:'q_ask_on_visit', topic:'University', title:'Questions to ask on a campus visit',
+  q:['what to ask on campus visit','questions for admission office','what should i ask','visit checklist','questions to ask college','due diligence'],
+  a:`Take this list. Polite, specific questions get specific answers.
+
+### Money
+- Is the fee **fixed for the full course**, or revised annually — at what rate?
+- Does my scholarship apply to the **revised** fee?
+- The complete sheet: tuition, one-time, exam, hostel, mess, transport, deposits
+
+### Outcomes
+- **Branch-wise** median package and placed-vs-graduated, last two years, in writing
+- Which companies actually visited **last season**?
+- What is the CGPA floor for placement registration?
+
+### Daily life
+- Can I see the **actual hostel room** I would be allotted, and eat in the mess?
+- Attendance policy and how shortfalls are handled
+- Who is my faculty guide and how often do they meet students?
+
+If an answer is "we'll tell you later", note which one — that pattern is information too.`,
+  chips:['Campus visit','Comparing two college offers','Is the fee worth the package?','Contact the admission office']
+},
+{
+  id:'q_loan_detail', topic:'Fees', title:'Education loan, step by step',
+  q:['how to apply for education loan','loan process','which bank for loan','loan documents','loan interest rate','collateral','loan sanction time','vidya lakshmi'],
+  a:`### The sequence
+1. **Offer letter + official fee structure** from the university
+2. Apply at a bank — your family's existing bank is usually fastest — or through the government's **Vidya Lakshmi** portal, which fans one application out to several banks
+3. Submit **KYC, academic records, co-applicant income proof** (salary slips/ITR), and property papers if collateral is needed
+4. Bank sanctions a limit; money is **disbursed semester-wise directly to the university**
+
+### Terms to check before signing
+- **Collateral** is usually not required below about ₹7.5 lakh
+- **Moratorium** — course duration plus 6–12 months before repayment starts
+- Whether **interest accrues during the moratorium** (it usually does — paying simple interest while studying saves a lot)
+- Processing fee, prepayment penalty, and any **interest subsidy** scheme you qualify for
+
+Start at least a month before the fee deadline; sanction alone takes 2–4 weeks.`,
+  chips:['Education loan','Fee receipts & tax benefit','Total cost over the full course']
+},
+{
+  id:'q_certifications', topic:'Academics', title:'Certifications worth doing',
+  q:['which certification','extra courses worth it','coursera certificate','aws certification','google certificate','do certificates help','online courses'],
+  a:`Certificates do not get you hired; the skill behind one sometimes does. A rough order of usefulness for a fresher:
+
+1. **A deployed project with a URL** — worth more than any certificate
+2. **Cloud fundamentals** (AWS/Azure/GCP associate-level) — genuinely asked about in IT interviews
+3. **Data/analytics tooling** — SQL, Python for data, Power BI/Tableau for management students
+4. **Domain-specific** — GPAT prep for pharmacy, financial modelling for finance, a design tool stack for design students
+5. **Generic "completion" certificates** from video courses — near zero signal on their own
+
+Do two or three that you will actually use in a project, and put the project on your resume rather than the certificate.`,
+  chips:['Coding & technical prep','Certifications & skill training','Resume, portfolio & LinkedIn']
+},
+{
+  id:'q_email_faculty', topic:'Academics', title:'How to approach a professor',
+  q:['how to email professor','contact faculty','ask for research','approach teacher','request project guide','email format','talk to professor'],
+  a:`A short, specific email gets a reply; a long vague one does not.
+
+**Subject:** Interest in your work on <topic> — <your name>, <programme>, <year>
+
+**Body, four sentences:**
+1. Who you are — programme, year, enrolment number
+2. What of theirs you have actually read or seen, named specifically
+3. What you want — a project, a reading suggestion, 15 minutes of their time
+4. What you bring — a course you did well in, a project link, hours a week you can commit
+
+Attach nothing on the first email. Send from your university address. If there is no reply in a week, follow up once, then go to their office hours in person — which works better than email anyway.`,
+  chips:['Faculty & mentoring','Research, publications & patents','Projects & capstone']
+},
+{
+  id:'q_study_tips', topic:'Academics', title:'Studying effectively here',
+  q:['how to study','study tips','time management','how to score good cgpa','study plan','how to top the class','revision strategy'],
+  a:`What separates a 9 CGPA from a 6 here is rarely intelligence — it is the internal-assessment habit.
+
+- **Never skip internals.** They are 40% of the grade, spread over easy, predictable tasks
+- **Attend labs and keep records current.** Backdating a semester of lab files the night before a viva is a known disaster
+- **Previous-year papers** from the library predict the end-semester paper better than any guide
+- **Study in the 4–6 pm window** rather than after midnight; hostel evenings are noisy and late nights wreck attendance
+- **Form a group of three** — teaching a topic out loud is the fastest revision there is
+- **Two-week runway** before end-semesters, because papers are scheduled close together
+
+If a subject is slipping, go to the faculty in week three, not week twelve.`,
+  chips:['How internal marks are calculated','Grading and CGPA','Exam format & preparation']
+},
+{
+  id:'q_gate_cat_plan', topic:'Placements', title:'Planning for GATE or CAT',
+  q:['gate preparation plan','cat preparation','when to start gate','cat while btech','gate coaching','prepare for cat in college','mba after engineering'],
+  a:`### GATE (for M.Tech, PSUs and research)
+Start in the **5th semester**. The syllabus overlaps your core subjects, so revising for GATE also raises your CGPA. Aim to finish one full revision by the summer before the final year and spend the rest on mocks.
+
+### CAT (for MBA)
+Start **12–14 months out**, typically at the end of the second year. Quant and DI-LR need daily practice; verbal needs reading habits built over months. Sit mocks from month four, not month ten.
+
+### Doing it alongside placements
+You can prepare and still sit drives — but decide by the pre-final year which is your primary track, because both need the same evenings. Many students take a job, work two years, then do an MBA with work experience, which most B-schools value.`,
+  chips:['Higher studies support','Government jobs & competitive exams','Year-by-year plan to get placed']
+},
+{
+  id:'q_change_university', topic:'Admissions', title:'Leaving mid-course',
+  q:['want to leave','drop out','change university','transfer out','quit the course','discontinue','leaving in second year','regret joining'],
+  a:`It happens, and it is recoverable — but the mechanics matter.
+
+- **Fee refund** after a session has begun is usually minimal; the **security deposit** returns after dues clearance
+- You will need a **Transfer Certificate and Migration Certificate**, issued once dues are clear
+- The new institution decides on **credit transfer**; expect to lose a semester or a year unless the syllabi map closely
+- If you are re-taking an entrance exam, factor the **gap year** question into future interviews
+- Students leaving for medical or family reasons should apply in writing — some cases are handled as a temporary break rather than a withdrawal
+
+Talk to your faculty guide and the counsellor before deciding. A bad first semester is common and often not a reason to leave.`,
+  chips:['Cancellation & refund','Lateral entry & transfers','Counselling & wellbeing','Certificates after admission']
+},
+{
+  id:'q_backlog_placement', topic:'Placements', title:'Backlogs and placement eligibility',
+  q:['backlog placement','can i sit for placement with backlog','active backlog','cleared backlog','does backlog matter','history of backlogs'],
+  a:`Two different things, and students conflate them:
+
+- **Active backlog** — an uncleared paper right now. Almost every recruiter bars you outright.
+- **Backlog history** — papers you failed and later cleared. Many companies still ask, and some set a cap ("no more than two ever").
+
+What to do:
+- Clear everything **before the pre-final year ends**; carrying a paper into drive season costs you the season, not just the paper
+- Keep the **cleared-backlog certificate** from the exam cell; some companies want it at document verification
+- Be straight about it in interviews — it is on the transcript, and a denial found later ends the offer
+
+One failed paper in the first year, cleared promptly, is survivable and common. A pattern is what recruiters screen out.`,
+  chips:['Exams & backlogs','Who counts as "placed"','CGPA cut-offs recruiters set']
+},
+{
+  id:'q_soft_skills', topic:'Placements', title:'Communication & group discussions',
+  q:['group discussion tips','gd topics','how to speak in gd','communication skills','presentation skills','stage fear','how to improve english speaking'],
+  a:`### In a group discussion, assessors look for
+- **Entering early** with a clear framing of the topic
+- **Building on others** rather than repeating or shouting over them
+- Two or three **concrete facts or examples**
+- **Bringing in a quieter member** — it reads as leadership, not politeness
+- A **summary** near the end if no one else does it
+
+Not: talking the longest, or arguing to win.
+
+### Building it before you need it
+Debating and MUN societies, presenting in class, anchoring at a fest, one minute of recorded self-introduction a day played back. The improvement is measurable in weeks, and it transfers straight to interviews.
+
+Preparation topics: current affairs, business news, campus and social issues. Read one national daily for ten minutes a day from the second year.`,
+  chips:['Aptitude tests & interview rounds','Interview & GD-PI','Clubs and societies','Medium of instruction & English']
+},
+{
+  id:'q_international_fee_aid', topic:'Eligibility', title:'Studying abroad after this degree',
+  q:['ms abroad after btech','study abroad after graduation','gre ielts','foreign university application','wes evaluation','apply abroad','masters abroad'],
+  a:`An Amity degree is accepted by overseas universities; the paperwork is the work.
+
+### Timeline
+- **Pre-final year:** GRE/GMAT and IELTS/TOEFL; shortlist universities
+- **Final year, Aug–Dec:** applications, SOP, three recommendation letters
+- **Feb–Apr:** decisions, funding, visa
+
+### Documents from the university
+Sealed **transcripts**, degree/provisional certificate, **CGPA-to-percentage conversion**, bonafide letters, and course syllabi (some evaluators ask). **WES or similar evaluation** may be required — request documents early, since the exam cell takes time.
+
+### Money
+Budget realistically: tuition abroad plus living, minus assistantships. An education loan for overseas study usually needs collateral.
+
+Faculty who know you well write far better recommendation letters — which is the practical reason to build those relationships in year two, not year four.`,
+  chips:['Study abroad & exchange','Converting CGPA to percentage','Certificates after admission','How to approach a professor']
+},
+{
+  id:'q_bank_atm_money', topic:'Campus life', title:'Bank account & money on campus',
+  q:['bank account','which bank','atm on campus','upi','how to manage money','pocket money','student account','cash'],
+  a:`- Open or keep a **zero-balance student account** with net banking and UPI; most campus and local payments are UPI now.
+- There is an **ATM on campus** and several in Gomti Nagar Extension.
+- Fees are paid on the **university portal** — never to an individual's UPI, whatever anyone says.
+- Keep a small cash float for autos and small shops.
+- Practical budgeting: set a weekly limit for food and outings, and keep an emergency ₹5,000 untouched.
+
+Parents often prefer a monthly transfer to a separate account from the fee account — it makes both easier to track.`,
+  chips:['Monthly living cost','Fee payment options','Online safety & fee scams']
+},
+{
+  id:'q_weather_pack', topic:'Campus life', title:'Seasonal packing for Lucknow',
+  q:['what clothes to bring','winter clothes','summer heat','monsoon','seasonal packing','how cold does it get','do i need a jacket'],
+  a:`Lucknow has four distinct seasons and the academic year covers three of them.
+
+- **July–September, monsoon:** humid, heavy rain spells — umbrella, quick-dry footwear, mosquito repellent
+- **October–November:** the best weather of the year — light layers
+- **December–January, winter:** can drop to about **5°C** at night; hostels are not heated. Bring a proper jacket, a quilt or heavy blanket, thermals if you feel the cold, and socks
+- **March–June, summer:** builds to **40°C+** by May, though exams end and vacation starts before the worst of it
+
+Formal wear for class days, one set of formals for presentations and interviews, sportswear, and a rain layer covers everything.`,
+  chips:['Living in Lucknow','What to bring to hostel','Dress code & ID']
+},
+{
+  id:'q_placement_cell_contact', topic:'Placements', title:'Contacting the placement cell',
+  q:['placement cell contact','training and placement office','who handles placements','placement coordinator','crc','corporate resource centre','placement email'],
+  a:`Placements are run by the **Corporate Resource Centre / Training & Placement cell** on campus, with student coordinators in each department acting as the first line.
+
+- Prospective students: ask the **admission office** (+91-7303789789) to put your placement questions to the cell, and request the **branch-wise report in writing**
+- Current students: register at the start of the pre-final year, watch the notice channel daily during season, and keep your resume updated on their portal
+- Department **student coordinators** usually relay drive announcements fastest
+
+If you are comparing colleges, the quality of the answer you get from a placement cell — specific numbers versus vague reassurance — is itself a useful signal.`,
+  chips:['Placement process','The NIRF placement report','Contact the admission office']
+},
+{
+  id:'q_part_time_study', topic:'Courses', title:'Studying alongside a job',
+  q:['part time degree','work and study','weekend classes','evening programme','executive mba','distance mba','job with degree'],
+  a:`Campus programmes here are **full-time, attendance-bound and daytime** — they do not fit around a job.
+
+Realistic options for working people:
+- **Amity Online / distance programmes** — UGC-entitled online UG and PG degrees, a separate arm with its own admission and fee structure
+- **Part-time PhD** — for research-oriented professionals, subject to supervisor availability
+- **Executive and certificate programmes** — offered periodically
+
+If someone offers you a "regular degree with no attendance", treat it as a red flag: a regular degree obtained without attendance creates problems at verification, government-job applications and overseas evaluation.`,
+  chips:['Online & distance programmes','PhD & research','Attendance rules']
+},
+{
+  id:'q_campus_wifi_speed', topic:'Campus life', title:'Internet speed & usage rules',
+  q:['wifi speed','internet speed','is wifi good','bandwidth','streaming','gaming on campus wifi','vpn','data limit'],
+  a:`- The campus runs high-speed leased-line Wi-Fi across academic blocks, library and hostels, with per-student credentials.
+- Expect it to be **fine for coursework, video calls and normal streaming**, and to slow down in the evening peak when the whole hostel is online.
+- Some categories of traffic are filtered on institutional networks; heavy torrenting and cracked-software installs are against the acceptable-use policy and are traceable to your login.
+- Keep a **mobile data backup** for submission deadlines — a campus outage is not usually accepted as an excuse for a late submission.
+- Never share your network credentials; misuse is tracked to the account holder.
+
+For lab-heavy coursework, download large toolchains during off-peak hours.`,
+  chips:['Wi-Fi and IT','Amizone portal & login issues','IT helpdesk, printing & software']
+},
+{
+  id:'q_events_calendar', topic:'Campus life', title:'What happens through the year',
+  q:['annual events','event calendar','what events','fest dates','cultural calendar','activities through the year','college events list'],
+  a:`A rough rhythm of a session:
+
+| When | What |
+| --- | --- |
+| Jul – Aug | Induction, club recruitment, freshers' welcome |
+| Sep – Oct | Sports meets, department events, mid-terms |
+| Nov – Dec | Technical fest, hackathons, end-semester exams |
+| Jan | Founder's Day and national-day celebrations, new semester |
+| Feb – Mar | Cultural fest, inter-university tournaments |
+| Apr – May | Project exhibitions, end-semester exams, convocation |
+| Summer | Internships and training |
+
+Joining an organising committee — rather than only attending — is the single most CV-relevant thing available outside class.`,
+  chips:['Fests and events','Clubs and societies','Timetable, holidays & term dates']
+},
+{
+  id:'q_food_diet', topic:'Hostel', title:'Special diets & food preferences',
+  q:['pure veg','jain food','vegan','allergy','lactose','diet restriction','medical diet','food preference','non veg days'],
+  a:`- The mess menu is largely North Indian with vegetarian as the default and non-vegetarian on specified days; **pure-vegetarian** students are well catered for.
+- **Jain, vegan, allergy or medical diets** need a conversation with the mess manager and warden at the start of the session — raise it in writing so it is on record.
+- Serious allergies should also be told to the **medical room**, with a note from your doctor.
+- The campus cafeteria and nearby outlets fill gaps, and hostels usually permit basic dry stock in rooms (not cooking).
+- A **mess committee** with student representatives handles menu feedback — join it if food matters to you.
+
+Eat a meal in the mess during your campus visit; it tells you more than any description.`,
+  chips:['Mess & food','Hostel facilities','Medical facilities']
+},
+{
+  id:'q_anti_ragging_detail', topic:'Campus life', title:'What counts as ragging',
+  q:['what is ragging','is teasing ragging','seniors asking for introduction','ragging examples','is it ragging','report ragging','ragging punishment'],
+  a:`Under UGC regulations, ragging is **any act by a senior that causes a junior physical or psychological harm, apprehension or shame** — it does not need to involve violence.
+
+Covered: forced introductions, forced calls or errands, verbal abuse, financial extortion, forced singing/dancing, sexual harassment, physical assault, and online equivalents on WhatsApp or Instagram.
+
+Not covered: ordinary friendly conversation between seniors and juniors, and club-organised, supervised welcome events.
+
+### If it happens
+Report to the **anti-ragging committee, warden, student affairs office**, or the national helpline **1800-180-5522**. Complaints can be made by a witness, not only the victim, and retaliation against a complainant is itself an offence. Penalties run up to expulsion and FIR.
+
+Save messages and note dates — documented complaints are acted on quickly.`,
+  chips:['Anti-ragging policy','Grievance & complaints','Support for women students','Emergencies & who to call']
+},
+{
+  id:'q_alumni_verify', topic:'Placements', title:'Checking claims with students',
+  q:['talk to current students','alumni reviews','student reviews','how to verify claims','reddit quora reviews','honest opinion','ask a senior'],
+  a:`The most reliable due diligence available to you, and it costs nothing:
+
+- **LinkedIn search** — filter by school and graduation year, look at where people from *your branch* actually work two years out. That is your real placement statistic.
+- **Message 5–10 alumni** politely: "I'm considering <branch> at Amity Lucknow — would you share what your placement season was actually like?" Expect a 20–30% reply rate; the replies are candid.
+- **Current students on a campus visit** — away from the admission desk, ask about attendance strictness, mess, internal marking and how many of their seniors got placed.
+- **Forums** are useful for spotting repeated themes, not for individual claims — both praise and complaints are often posted by interested parties.
+
+Triangulate: brochure, NIRF report, and people. Where all three agree, you can rely on it.`,
+  chips:['Alumni network','The NIRF placement report','Questions to ask on a campus visit','Amity vs other colleges']
+}
 
 ];
 
@@ -3767,9 +4409,31 @@ function md(text){
   const closeList = () => { if(listTag){ html += '</' + listTag + '>'; listTag = null; } };
   const openList = tag => { if(listTag !== tag){ closeList(); html += '<' + tag + '>'; listTag = tag; } };
 
-  for(const raw of lines){
-    const line = raw.trim();
+  const cells = line => line.replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+  const isRow = line => /^\|.*\|$/.test(line);
+  const isDivider = line => /^\|[\s:\-|]+\|$/.test(line);
+
+  for(let i = 0; i < lines.length; i++){
+    const line = lines[i].trim();
     if(!line){ flushPara(); closeList(); continue; }
+
+    /* table: a header row, a |---| divider, then body rows */
+    if(isRow(line) && i + 1 < lines.length && isDivider(lines[i + 1].trim())){
+      flushPara(); closeList();
+      const head = cells(line);
+      let body = '';
+      let j = i + 2;
+      for(; j < lines.length && isRow(lines[j].trim()); j++){
+        body += '<tr>' + cells(lines[j].trim())
+          .map(c => '<td>' + inline(esc(c)) + '</td>').join('') + '</tr>';
+      }
+      html += '<div class="table-wrap"><table><thead><tr>' +
+        head.map(c => '<th>' + inline(esc(c)) + '</th>').join('') +
+        '</tr></thead><tbody>' + body + '</tbody></table></div>';
+      i = j - 1;
+      continue;
+    }
+
     if(line.startsWith('### ')){ flushPara(); closeList(); html += '<h4>' + inline(esc(line.slice(4))) + '</h4>'; continue; }
     if(line.startsWith('> ')){ flushPara(); closeList(); html += '<span class="note">' + inline(esc(line.slice(2))) + '</span>'; continue; }
     if(/^[-•]\s+/.test(line)){ flushPara(); openList('ul'); html += '<li>' + inline(esc(line.replace(/^[-•]\s+/, ''))) + '</li>'; continue; }
@@ -3780,7 +4444,14 @@ function md(text){
   return html;
 }
 
-const plain = t => String(t).replace(/\*\*/g, '').replace(/^### /gm, '').replace(/^> /gm, '');
+const plain = t => String(t)
+  .replace(/\*\*/g, '')
+  .replace(/^### /gm, '')
+  .replace(/^> /gm, '')
+  .replace(/^\|[\s:\-|]+\|$/gm, '')        // table dividers
+  .replace(/^\|(.*)\|$/gm, (m, row) =>      // table rows -> aligned text
+    row.split('|').map(c => c.trim()).filter(Boolean).join('  ·  '))
+  .replace(/\n{3,}/g, '\n\n');
 const clockTime = () => new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
 
 /* ------------------------------ turns ------------------------------ */
@@ -3889,6 +4560,12 @@ function hideThinking(){
 
 /* ------------------------------ answering ------------------------------ */
 const KB_CONFIDENCE = 0.5;   // below this the knowledge base hit is only 'related'
+
+/* Titles are used as navigation everywhere — the palette, the topic lists and the
+   follow-up chips all send one. An exact title is therefore a direct pick and
+   opens that entry, instead of being re-run through fuzzy retrieval (which can
+   land on a near neighbour). */
+const TITLE_INDEX = new Map(KB.map(e => [e.title.toLowerCase(), e]));
 const AI_FOOTER = '\n\n> AI-assisted answer, generated outside the offline knowledge base. Treat it as a pointer, not a quotation — confirm anything that matters with the admission office.';
 
 function kbTurns(results){
@@ -3926,6 +4603,17 @@ async function ask(text){
   closeDrawer();
 
   try{
+    /* ---- direct pick: the exact title of a knowledge-base entry ---- */
+    const picked = TITLE_INDEX.get(question.toLowerCase());
+    if(picked){
+      showThinking('Opening the knowledge base');
+      await pause(200);
+      hideThinking();
+      remember(picked);
+      pushTurn({ who:'bot', text:picked.a, topic:picked.topic, source:'kb', chips:followUps(picked).slice(0, 4) });
+      return;
+    }
+
     /* ---- gate 1: is this about Amity at all? ---- */
     const scope = scopeOf(question);
     if(scope === 'out'){
@@ -4225,6 +4913,90 @@ function paintStatus(){
   }
 }
 
+
+/* ------------------------------ command palette ------------------------------ */
+/* With 200+ topics a flat sidebar list stops being navigable, so every entry is
+   searchable by title from one place: Ctrl/Cmd+K, or the search button. */
+const PALETTE = KB.filter(e => !e.hidden).map(e => ({
+  title: e.title, topic: e.topic, hay: (e.title + ' ' + e.topic + ' ' + e.q.join(' ')).toLowerCase()
+}));
+let paletteIdx = 0, paletteHits = [];
+
+function paletteOpen(){
+  const wrap = $('paletteWrap');
+  wrap.classList.add('show');
+  $('paletteInput').value = '';
+  paletteRender('');
+  setTimeout(() => $('paletteInput').focus(), 20);
+}
+function paletteClose(){
+  $('paletteWrap').classList.remove('show');
+  if(window.matchMedia('(min-width: 880px)').matches) inputEl.focus();
+}
+function paletteRender(query){
+  const q = String(query).trim().toLowerCase();
+  const terms = q.split(/\s+/).filter(Boolean);
+  paletteHits = (!terms.length ? PALETTE.slice() : PALETTE.filter(item => terms.every(t => item.hay.includes(t))))
+    .sort((a, b) => {
+      if(!terms.length) return 0;
+      const at = a.title.toLowerCase(), bt = b.title.toLowerCase();
+      return (bt.startsWith(terms[0]) - at.startsWith(terms[0])) ||
+             (bt.includes(q) - at.includes(q)) || a.title.length - b.title.length;
+    })
+    .slice(0, 60);
+  paletteIdx = 0;
+
+  const list = $('paletteList');
+  list.innerHTML = '';
+  if(!paletteHits.length){
+    list.innerHTML = '<div class="palette-empty">Nothing matches that. Type the question in the box below instead — the assistant handles phrasing it has never seen.</div>';
+    return;
+  }
+  paletteHits.forEach((item, i) => {
+    const b = document.createElement('button');
+    b.className = 'palette-item' + (i === 0 ? ' active' : '');
+    b.type = 'button';
+    b.innerHTML = '<span>' + highlight(item.title, terms) + '</span>' +
+                  '<span class="pcat">' + esc(item.topic) + '</span>';
+    b.addEventListener('click', () => { paletteClose(); ask(item.title); });
+    b.addEventListener('mousemove', () => paletteMove(i, true));
+    list.appendChild(b);
+  });
+}
+function highlight(title, terms){
+  let out = esc(title);
+  terms.forEach(t => {
+    if(!t) return;
+    const re = new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
+    out = out.replace(re, '<mark>$1</mark>');
+  });
+  return out;
+}
+function paletteMove(to, absolute){
+  const items = $('paletteList').querySelectorAll('.palette-item');
+  if(!items.length) return;
+  items[paletteIdx] && items[paletteIdx].classList.remove('active');
+  paletteIdx = absolute ? to : (paletteIdx + to + items.length) % items.length;
+  const el = items[paletteIdx];
+  el.classList.add('active');
+  el.scrollIntoView({ block:'nearest' });
+}
+
+$('searchBtn').addEventListener('click', paletteOpen);
+$('paletteInput').addEventListener('input', e => paletteRender(e.target.value));
+$('paletteWrap').addEventListener('click', e => { if(e.target === $('paletteWrap')) paletteClose(); });
+$('paletteInput').addEventListener('keydown', e => {
+  if(e.key === 'ArrowDown'){ e.preventDefault(); paletteMove(1); }
+  else if(e.key === 'ArrowUp'){ e.preventDefault(); paletteMove(-1); }
+  else if(e.key === 'Enter'){
+    e.preventDefault();
+    const hit = paletteHits[paletteIdx];
+    if(hit){ paletteClose(); ask(hit.title); }
+    else { const typed = $('paletteInput').value.trim(); if(typed){ paletteClose(); ask(typed); } }
+  }
+  else if(e.key === 'Escape'){ e.preventDefault(); paletteClose(); }
+});
+
 /* ------------------------------ wiring ------------------------------ */
 formEl.addEventListener('submit', e => { e.preventDefault(); ask(inputEl.value); });
 inputEl.addEventListener('input', autoGrow);
@@ -4236,7 +5008,19 @@ $('saveBtn').addEventListener('click', downloadTranscript);
 $('resetBtn').addEventListener('click', newChat);
 $('menuBtn').addEventListener('click', () => railEl.classList.contains('open') ? closeDrawer() : openDrawer());
 scrimEl.addEventListener('click', closeDrawer);
-document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
+document.addEventListener('keydown', e => {
+  const typing = /^(INPUT|TEXTAREA)$/.test((e.target && e.target.tagName) || '');
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
+    e.preventDefault();
+    $('paletteWrap').classList.contains('show') ? paletteClose() : paletteOpen();
+    return;
+  }
+  if(e.key === '/' && !typing){ e.preventDefault(); inputEl.focus(); return; }
+  if(e.key === 'Escape'){
+    if($('paletteWrap').classList.contains('show')) paletteClose();
+    else closeDrawer();
+  }
+});
 toBottomEl.addEventListener('click', scrollToEnd);
 chatEl.addEventListener('scroll', () => {
   const far = chatEl.scrollHeight - chatEl.scrollTop - chatEl.clientHeight > 240;
@@ -4251,6 +5035,7 @@ applyTheme(currentTheme());
 buildRail();
 renderChips();
 $('kbCount').textContent = KB.length + ' topics offline';
+$('searchLabel').textContent = 'Search ' + PALETTE.length + ' topics';
 if(!restore()) showMasthead();
 paintStatus();
 probeAI().then(paintStatus);

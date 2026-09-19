@@ -4,7 +4,7 @@ A chatbot that answers admission questions about **Amity University, Lucknow**:
 courses, eligibility, entrance tests, fees, scholarships, hostel, campus life,
 academics, placements and student services.
 
-It answers **197 topics offline**, from a knowledge base and retrieval engine
+It answers **230 topics offline**, from a knowledge base and retrieval engine
 built into `index.html`. No API key, no server and no internet connection are
 needed for those. An **optional AI fallback** covers the rest — but only for
 questions that are actually about Amity.
@@ -136,8 +136,19 @@ transcript.
    related topic rather than passed off as the answer, and the question goes to
    the AI fallback instead (when it is available).
 
-Self-check: **1748 of 1778** trigger phrases retrieve their own entry; the
-remainder land on a near-identical neighbour.
+Self-check: **1974 of 2014** trigger phrases retrieve their own entry; the
+remainder land on a near-identical neighbour. Picking a topic by its exact
+title (palette, topic list, follow-up chip) bypasses retrieval and opens that
+entry directly.
+
+### Placement figures
+
+The placement, fee and scholarship answers carry figures from the **NIRF 2025
+data report** and published 2026 fee listings rather than invented ranges —
+B.Tech median ₹5.5 LPA with 92 of 105 placed, MBA median ₹5.5 LPA with 80 of
+87, UG median ₹4.08 LPA, PG median ₹4.4 LPA. Each such answer names its source
+and says to confirm with the placement cell. Sources are admission portals
+summarising the NIRF report, not an official university statement.
 
 ## Editing the knowledge base
 
@@ -170,6 +181,11 @@ transcript, answer blocks fade up in sequence, the thinking indicator runs a
 scanning bar while the knowledge base is searched, and hover states animate the
 sidebar rule, chips and suggestions. Everything collapses to no motion under
 `prefers-reduced-motion`.
+
+**Ctrl/Cmd + K** opens a command palette over all 226 visible topics, with
+type-ahead highlighting, arrow-key selection and Enter to ask; `/` jumps to the
+composer. Answers render **tables** (placement figures, fee structures, CTC
+breakdowns), which flatten back to aligned text when copied or exported.
 
 Also: topic sidebar (drawer on mobile), follow-up suggestions under every
 answer, light/dark theme following the OS with a saved override, conversation
