@@ -57,6 +57,24 @@ used (OpenAI wins if both are set):
 Set `OPENAI_MODEL` to any chat model your account can use; list them with
 `curl https://api.openai.com/v1/models -H "Authorization: Bearer $OPENAI_API_KEY"`.
 
+### Running it in GitHub Codespaces
+
+The key can live in a **Codespaces secret** instead of a local `.env`:
+
+1. github.com -> your avatar -> **Settings** -> **Codespaces** -> **Codespaces secrets**
+2. **New secret**, named `OPENAI_API_KEY`, and give this repository access to it
+3. Open the repo in a Codespace (create it *after* adding the secret, or rebuild
+   an existing one -- secrets are injected at container start)
+4. `npm start` in the Codespace terminal, then open the forwarded port 3000
+
+`server.js` reads `process.env.OPENAI_API_KEY` directly, so no `.env` file is
+needed there. `.devcontainer/devcontainer.json` handles `npm install` and the
+port forwarding.
+
+Note the distinction: a **Codespaces** secret reaches the running app; an
+**Actions** repository secret (Settings -> Secrets and variables -> Actions)
+only exists inside workflow runs and will not reach the server.
+
 **Changing the key later:** edit `.env`, then restart the server — the key is
 read once at startup. Check it took with `curl localhost:3000/api/health`,
 which reports `{"ai":true,"provider":"openai",...}` without revealing the key.

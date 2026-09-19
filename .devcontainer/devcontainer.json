@@ -1,0 +1,30 @@
+{
+  "name": "Amity Admission Assistant",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+
+  // installs the one SDK the AI fallback needs
+  "postCreateCommand": "npm install",
+
+  // the server listens on 3000; Codespaces opens it in a preview tab
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Admission assistant",
+      "onAutoForward": "openPreview"
+    }
+  },
+
+  // Your OPENAI_API_KEY comes from Codespaces secrets (Settings -> Codespaces
+  // -> Codespaces secrets), not from this file and not from the repo. It is
+  // injected as an environment variable, which server.js reads directly, so
+  // no .env file is needed in a Codespace.
+  "remoteEnv": {
+    "OPENAI_MODEL": "${localEnv:OPENAI_MODEL}"
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint"]
+    }
+  }
+}
