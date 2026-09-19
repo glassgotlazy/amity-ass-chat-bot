@@ -4,7 +4,7 @@ A chatbot that answers admission questions about **Amity University, Lucknow**:
 courses, eligibility, entrance tests, fees, scholarships, hostel, campus life,
 academics, placements and student services.
 
-It answers **230 topics offline**, from a knowledge base and retrieval engine
+It answers **258 topics offline**, from a knowledge base and retrieval engine
 built into `index.html`. No API key, no server and no internet connection are
 needed for those. An **optional AI fallback** covers the rest — but only for
 questions that are actually about Amity.
@@ -136,19 +136,29 @@ transcript.
    related topic rather than passed off as the answer, and the question goes to
    the AI fallback instead (when it is available).
 
-Self-check: **1974 of 2014** trigger phrases retrieve their own entry; the
+Self-check: **2160 of 2212** trigger phrases retrieve their own entry; the
 remainder land on a near-identical neighbour. Picking a topic by its exact
 title (palette, topic list, follow-up chip) bypasses retrieval and opens that
 entry directly.
 
 ### Placement figures
 
-The placement, fee and scholarship answers carry figures from the **NIRF 2025
-data report** and published 2026 fee listings rather than invented ranges —
-B.Tech median ₹5.5 LPA with 92 of 105 placed, MBA median ₹5.5 LPA with 80 of
-87, UG median ₹4.08 LPA, PG median ₹4.4 LPA. Each such answer names its source
-and says to confirm with the placement cell. Sources are admission portals
-summarising the NIRF report, not an official university statement.
+The placement, fee and scholarship answers carry researched figures rather than
+invented ranges. From the **NIRF 2025 data report**: B.Tech median ₹5.5 LPA
+with 92 of 105 placed, MBA median ₹5.5 LPA with 80 of 87, UG median ₹4.08 LPA
+(259 placed), PG median ₹4.4 LPA (333 placed).
+
+40 entries cover placements, including one that sets four published sources
+side by side and explains why they disagree — medians cluster at ₹5.5–6 LPA
+while advertised averages range from ₹5.5 L to ₹9.6 L and "highest package"
+runs from ₹30 L to ₹45 L. Others cover Lucknow-specific recruiters, MBA
+internship employers and stipends, what "100% placement" actually claims, CTC
+versus in-hand pay, recruiter CGPA floors, and offer-letter bonds.
+
+Every answer carrying a hard number names its source and dates it. These come
+from admission portals summarising NIRF filings and from published ranking
+surveys — **not** from an official university statement, and the answers say
+so.
 
 ## Editing the knowledge base
 
@@ -191,6 +201,18 @@ Also: topic sidebar (drawer on mobile), follow-up suggestions under every
 answer, light/dark theme following the OS with a saved override, conversation
 saved to `localStorage`, transcript download, copy-answer, and a composer with
 `Enter` to send / `Shift`+`Enter` for a new line. Responsive to 360 px.
+
+## Branding
+
+The interface uses Amity's published brand palette — Bahama Blue `#006690`,
+Supernova `#ffca08`, Peach Yellow `#f9dba9` — across links, buttons, user
+messages, section rules and the frame. Contrast is verified in both themes:
+body text 17.7:1 (light) and 14.4:1 (dark), with every label and badge at or
+above 4.5:1.
+
+The sidebar mark is the assistant's own, **not** the university emblem, for the
+reason given in `assets/README.md`. Swapping in the official logo is a
+one-file replacement (`assets/logo.svg`) if you have permission to use it.
 
 ## Data disclaimer
 
