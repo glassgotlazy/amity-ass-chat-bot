@@ -41,14 +41,30 @@ the knowledge base works; the AI fallback reports itself as unavailable.
 **With the AI fallback:**
 
 ```bash
-npm install                 # one dependency: @anthropic-ai/sdk
-cp .env.example .env        # then put your Anthropic key in .env
+npm install
+cp .env.example .env        # then put your key in .env
 npm start                   # -> http://localhost:3000
 ```
 
+Either provider works — set **one** key in `.env` and that decides which is
+used (OpenAI wins if both are set):
+
+| Key in `.env` | Provider | Model setting | Default |
+|---|---|---|---|
+| `OPENAI_API_KEY` | OpenAI | `OPENAI_MODEL` | `gpt-4o-mini` |
+| `ANTHROPIC_API_KEY` | Claude | `ANTHROPIC_MODEL` | `claude-opus-5` |
+
+Set `OPENAI_MODEL` to any chat model your account can use; list them with
+`curl https://api.openai.com/v1/models -H "Authorization: Bearer $OPENAI_API_KEY"`.
+
+**Changing the key later:** edit `.env`, then restart the server — the key is
+read once at startup. Check it took with `curl localhost:3000/api/health`,
+which reports `{"ai":true,"provider":"openai",...}` without revealing the key.
+A shell variable of the same name overrides the file, so `unset OPENAI_API_KEY`
+if an old exported value is shadowing your change.
+
 The key is read by `server.js` only. It is never sent to the browser, `.env`
-is git-ignored, and the server refuses to serve that file. Model defaults to
-`claude-opus-5`; override with `ANTHROPIC_MODEL` in `.env`.
+is git-ignored, and the server refuses to serve that file.
 
 Guard rails on the fallback: 15 questions per IP per 10 minutes, 200 per day,
 600-character limit per question, and a system prompt that restricts answers to

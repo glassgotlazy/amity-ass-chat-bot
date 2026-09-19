@@ -14,8 +14,11 @@
  *      to the model. Anything else is refused without an upstream call,
  *      so the key cannot be used as a general-purpose chatbot.
  *
- * Requires: npm install   (one dependency, @anthropic-ai/sdk)
+ * Requires: npm install
  * Configure: copy .env.example to .env and put your key in it.
+ *   OPENAI_API_KEY=...      uses OpenAI      (OPENAI_MODEL, default gpt-4o-mini)
+ *   ANTHROPIC_API_KEY=...   uses Claude      (ANTHROPIC_MODEL, default claude-opus-5)
+ * Whichever key is set decides the provider; OpenAI wins if both are.
  */
 
 const http = require('http');
@@ -38,21 +41,89 @@ const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 const ROOT = __dirname;
-const MODEL = process.env.ANTHROPIC_MODEL || 'claude-opus-5';
-const API_KEY = process.env.ANTHROPIC_API_KEY || '';
 
-/* The SDK is only needed when a key is configured, so the server still
-   serves the offline page on a machine that never ran `npm install`. */
-let client = null, sdkError = '';
-if(API_KEY){
-  try{
-    const mod = require('@anthropic-ai/sdk');
-    const Anthropic = mod.Anthropic || mod.default || mod;
-    client = new Anthropic({ apiKey: API_KEY });
-    client.__ctor = Anthropic;
-  }catch(e){
-    sdkError = 'run `npm install` to enable the AI fallback';
+/* ======================================================================
+   PROVIDER
+   Whichever key is present in .env decides which service is used.
+   OPENAI_API_KEY wins if both are set. With neither, the page still
+   works — it just runs as a pure offline knowledge base.
+   ====================================================================== */
+const OPENAI_KEY = (process.env.OPENAI_API_KEY || '').trim();
+const ANTHROPIC_KEY = (process.env.ANTHROPIC_API_KEY || '').trim();
+
+let provider = null;      // { name, model, ask(prompt) -> text }
+let sdkError = '';
+
+function initProvider(){
+  if(OPENAI_KEY){
+    const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+    let OpenAI;
+    try{
+      const mod = require('openai');
+      OpenAI = mod.OpenAI || mod.default || mod;
+    }catch(e){
+      sdkError = 'run `npm install` to enable the AI fallback';
+      return null;
+    }
+    const client = new OpenAI({ apiKey: OPENAI_KEY });
+    return {
+      name:'openai',
+      model,
+      ask: async prompt => {
+        const res = await client.chat.completions.create({
+          model,
+          /* max_completion_tokens (not the older max_tokens) so this keeps
+             working on the newer models; answers are capped at ~180 words
+             by the system prompt anyway. No temperature is sent: some
+             models only accept their default. */
+          max_completion_tokens: 900,
+          messages: [
+            { role:'system', content: SYSTEM },
+            { role:'user', content: prompt }
+          ]
+        });
+        const choice = res.choices && res.choices[0];
+        if(choice && choice.finish_reason === 'content_filter') throw Object.assign(new Error('declined'), { status: 502 });
+        return {
+          text: (choice && choice.message && choice.message.content || '').trim(),
+          model: res.model || model
+        };
+      }
+    };
   }
+
+  if(ANTHROPIC_KEY){
+    const model = process.env.ANTHROPIC_MODEL || 'claude-opus-5';
+    let Anthropic;
+    try{
+      const mod = require('@anthropic-ai/sdk');
+      Anthropic = mod.Anthropic || mod.default || mod;
+    }catch(e){
+      sdkError = 'run `npm install` to enable the AI fallback';
+      return null;
+    }
+    const client = new Anthropic({ apiKey: ANTHROPIC_KEY });
+    return {
+      name:'anthropic',
+      model,
+      ask: async prompt => {
+        const res = await client.messages.create({
+          model,
+          max_tokens: 1600,
+          output_config: { effort: 'low' },
+          system: SYSTEM,
+          messages: [{ role:'user', content: prompt }]
+        });
+        if(res.stop_reason === 'refusal') throw Object.assign(new Error('declined'), { status: 502 });
+        return {
+          text: res.content.filter(b => b.type === 'text').map(b => b.text).join('\n').trim(),
+          model: res.model || model
+        };
+      }
+    };
+  }
+
+  return null;
 }
 
 /* ======================================================================
@@ -135,6 +206,8 @@ STYLE:
 - Plain text with this light markup only: "### Heading" for a section label, "- " for bullets, "**bold**" for emphasis, "> " for a closing caveat line.
 - Indian English, direct and practical.`;
 
+provider = initProvider();
+
 /* ======================================================================
    API
    ====================================================================== */
@@ -162,8 +235,8 @@ function readBody(req){
 }
 
 async function handleAsk(req, res){
-  if(!client){
-    sendJSON(res, 503, { error:'ai_disabled', detail: sdkError || 'no ANTHROPIC_API_KEY in .env' });
+  if(!provider){
+    sendJSON(res, 503, { error:'ai_disabled', detail: sdkError || 'no API key in .env' });
     return;
   }
   const ip = (req.socket.remoteAddress || 'unknown');
@@ -190,35 +263,18 @@ async function handleAsk(req, res){
     : question;
 
   try{
-    const response = await client.messages.create({
-      model: MODEL,
-      max_tokens: 1600,               // answers are capped at ~180 words by the prompt
-      output_config: { effort: 'low' },
-      system: SYSTEM,
-      messages: [{ role:'user', content: prompt }]
-    });
-
-    if(response.stop_reason === 'refusal'){
-      sendJSON(res, 502, { error:'upstream_error', detail:'declined' });
-      return;
-    }
-    const answer = response.content
-      .filter(block => block.type === 'text')
-      .map(block => block.text)
-      .join('\n')
-      .trim();
-
-    if(!answer){ sendJSON(res, 502, { error:'upstream_error', detail:'empty' }); return; }
-    sendJSON(res, 200, { answer, model: response.model });
+    const result = await provider.ask(prompt);
+    if(!result || !result.text){ sendJSON(res, 502, { error:'upstream_error', detail:'empty' }); return; }
+    sendJSON(res, 200, { answer: result.text, model: result.model, provider: provider.name });
   }catch(err){
-    const A = client.__ctor || {};
-    let status = 502, code = 'upstream_error';
-    if(A.AuthenticationError && err instanceof A.AuthenticationError){ code = 'ai_disabled'; status = 503; }
-    else if(A.RateLimitError && err instanceof A.RateLimitError){ code = 'rate_limited'; status = 429; }
-    else if(A.BadRequestError && err instanceof A.BadRequestError){ code = 'upstream_error'; status = 400; }
-    else if(A.APIConnectionError && err instanceof A.APIConnectionError){ code = 'upstream_error'; status = 502; }
-    console.error('[ai error]', err && err.message ? err.message : err);
-    sendJSON(res, status, { error: code });
+    /* both SDKs put the HTTP status on err.status */
+    const status = err && err.status;
+    let code = 'upstream_error', httpStatus = 502;
+    if(status === 401 || status === 403){ code = 'ai_disabled'; httpStatus = 503; }
+    else if(status === 429){ code = 'rate_limited'; httpStatus = 429; }
+    else if(status === 400){ code = 'upstream_error'; httpStatus = 400; }
+    console.error('[ai error]', provider.name, status || '', err && err.message ? err.message : err);
+    sendJSON(res, httpStatus, { error: code });
   }
 }
 
@@ -260,9 +316,10 @@ http.createServer((req, res) => {
 
   if(url === '/api/health'){
     sendJSON(res, 200, {
-      ai: !!client,
-      model: client ? MODEL : '',
-      reason: client ? 'ready' : (sdkError || 'no api key configured')
+      ai: !!provider,
+      provider: provider ? provider.name : '',
+      model: provider ? provider.model : '',
+      reason: provider ? 'ready' : (sdkError || 'no api key configured')
     });
     return;
   }
@@ -277,7 +334,7 @@ http.createServer((req, res) => {
   serveStatic(req, res);
 }).listen(PORT, () => {
   console.log('Amity admission assistant  ->  http://localhost:' + PORT);
-  console.log(client
-    ? '  AI fallback: on  (' + MODEL + ', in-scope questions only)'
-    : '  AI fallback: off (' + (sdkError || 'no ANTHROPIC_API_KEY in .env') + ') — the offline knowledge base still works');
+  console.log(provider
+    ? '  AI fallback: on  (' + provider.name + ' / ' + provider.model + ', in-scope questions only)'
+    : '  AI fallback: off (' + (sdkError || 'no OPENAI_API_KEY or ANTHROPIC_API_KEY in .env') + ') — the offline knowledge base still works');
 });
