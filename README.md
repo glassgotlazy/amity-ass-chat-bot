@@ -4,7 +4,7 @@ A chatbot that answers admission questions about **Amity University, Lucknow**:
 courses, eligibility, entrance tests, fees, scholarships, hostel, campus life,
 academics, placements and student services.
 
-It answers **258 topics offline**, from a knowledge base and retrieval engine
+It answers **308 topics offline**, from a knowledge base and retrieval engine
 built into `index.html`. No API key, no server and no internet connection are
 needed for those. An **optional AI fallback** covers the rest — but only for
 questions that are actually about Amity.
@@ -136,7 +136,7 @@ transcript.
    related topic rather than passed off as the answer, and the question goes to
    the AI fallback instead (when it is available).
 
-Self-check: **2160 of 2212** trigger phrases retrieve their own entry; the
+Self-check: **2494 of 2560** trigger phrases retrieve their own entry; the
 remainder land on a near-identical neighbour. Picking a topic by its exact
 title (palette, topic list, follow-up chip) bypasses retrieval and opens that
 entry directly.
@@ -159,6 +159,13 @@ Every answer carrying a hard number names its source and dates it. These come
 from admission portals summarising NIRF filings and from published ranking
 surveys — **not** from an official university statement, and the answers say
 so.
+
+## Building
+
+`index.html` is assembled from sources kept outside the repo during
+development; `tools/lint-kb.py` guards the one mistake that recurs — an
+unescaped backtick inside an answer's template literal, which silently
+truncates the string.
 
 ## Editing the knowledge base
 
@@ -192,7 +199,16 @@ scanning bar while the knowledge base is searched, and hover states animate the
 sidebar rule, chips and suggestions. Everything collapses to no motion under
 `prefers-reduced-motion`.
 
-**Ctrl/Cmd + K** opens a command palette over all 226 visible topics, with
+**A cost estimator** runs inside its own answer (ask for "cost estimator"):
+pick a programme, where you will live and a scholarship percentage, and it
+works out tuition, living and extras across the full degree. Entirely offline —
+no API call, no server.
+
+**Every answer has a shareable link.** The address bar tracks the topic on
+screen (`#t/pl_conflict`), and the *Link* button copies a URL that reopens the
+page on that answer.
+
+**Ctrl/Cmd + K** opens a command palette over all visible topics, with
 type-ahead highlighting, arrow-key selection and Enter to ask; `/` jumps to the
 composer. Answers render **tables** (placement figures, fee structures, CTC
 breakdowns), which flatten back to aligned text when copied or exported.
@@ -210,9 +226,9 @@ messages, section rules and the frame. Contrast is verified in both themes:
 body text 17.7:1 (light) and 14.4:1 (dark), with every label and badge at or
 above 4.5:1.
 
-The sidebar mark is the assistant's own, **not** the university emblem, for the
-reason given in `assets/README.md`. Swapping in the official logo is a
-one-file replacement (`assets/logo.svg`) if you have permission to use it.
+The sidebar carries the Amity emblem supplied by the project owner, embedded in
+the page and also present as `assets/logo.png` so it can be replaced without a
+rebuild. See `assets/README.md`.
 
 ## Data disclaimer
 
