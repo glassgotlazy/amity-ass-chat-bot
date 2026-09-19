@@ -4,7 +4,7 @@ A chatbot that answers admission questions about **Amity University, Lucknow**:
 courses, eligibility, entrance tests, fees, scholarships, hostel, campus life,
 academics, placements and student services.
 
-It answers **308 topics offline**, from a knowledge base and retrieval engine
+It answers **310 topics offline**, from a knowledge base and retrieval engine
 built into `index.html`. No API key, no server and no internet connection are
 needed for those. An **optional AI fallback** covers the rest — but only for
 questions that are actually about Amity.
@@ -136,7 +136,7 @@ transcript.
    related topic rather than passed off as the answer, and the question goes to
    the AI fallback instead (when it is available).
 
-Self-check: **2494 of 2560** trigger phrases retrieve their own entry; the
+Self-check: **2509 of 2576** trigger phrases retrieve their own entry; the
 remainder land on a near-identical neighbour. Picking a topic by its exact
 title (palette, topic list, follow-up chip) bypasses retrieval and opens that
 entry directly.
@@ -199,10 +199,23 @@ scanning bar while the knowledge base is searched, and hover states animate the
 sidebar rule, chips and suggestions. Everything collapses to no motion under
 `prefers-reduced-motion`.
 
-**A cost estimator** runs inside its own answer (ask for "cost estimator"):
-pick a programme, where you will live and a scholarship percentage, and it
-works out tuition, living and extras across the full degree. Entirely offline —
-no API call, no server.
+**Three interactive tools** run inside their own answers, entirely offline — no
+API call, no server:
+
+- **Cost estimator** ("cost estimator") — programme, living arrangement,
+  scholarship and the yearly fee rise produce tuition, living and extras across
+  the whole degree. The rise **compounds**: 5% a year is the default working
+  assumption, and the output shows year-1 tuition, final-year tuition, and what
+  the escalation alone adds (about ₹77,000–₹1,24,000 over a 4-year B.Tech).
+- **Eligibility checker** ("eligibility checker") — Class 12 stream, whether
+  you took Maths, and your aggregate; lists which programmes you meet the
+  indicative minimums for, flagging borderline cases within 5%.
+- **Admission checklist** ("admission checklist") — 14 steps from shortlisting
+  to induction, ticked off and saved in your browser so progress survives a
+  reload.
+
+Every answer also has **Copy**, **Link** and **Print** (print styles strip the
+chrome and expand link URLs, so "save as PDF" produces something readable).
 
 **Every answer has a shareable link.** The address bar tracks the topic on
 screen (`#t/pl_conflict`), and the *Link* button copies a URL that reopens the

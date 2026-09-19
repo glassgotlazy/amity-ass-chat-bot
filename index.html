@@ -554,6 +554,62 @@
   }
   .est-note{padding:10px 14px;font-size:12px;color:var(--muted);}
 
+  .est-controls input[type="number"]{
+    font-family:var(--sans);font-size:13.5px;color:var(--ink);
+    background:var(--surface);border:1px solid var(--rule-2);border-radius:6px;
+    padding:8px 9px;width:100%;
+  }
+  .est-controls input[type="number"]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+  .est-out tr.est-rise td{color:var(--muted);font-size:12.5px;}
+  .est-out tr.elig-yes td:last-child{color:#2f7d4f;font-weight:500;}
+  :root[data-theme="dark"] .est-out tr.elig-yes td:last-child{color:#7fc79b;}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .est-out tr.elig-yes td:last-child{color:#7fc79b;}}
+  .est-out tr.elig-maybe td:last-child{color:var(--gold);}
+  .est-out tr.elig-no td:last-child{color:var(--muted);}
+  .est-out .elig-note{display:block;font-size:11.5px;color:var(--muted);margin-top:3px;}
+
+  /* ============================= checklist ============================= */
+  .check-head{
+    display:flex;align-items:center;gap:12px;padding:12px 14px;
+    background:var(--wash);border-bottom:1px solid var(--rule);
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .check-reset{
+    margin-left:auto;background:none;border:1px solid var(--rule-2);border-radius:5px;
+    padding:4px 10px;font:inherit;color:var(--muted);cursor:pointer;
+    transition:color .2s,border-color .2s;
+  }
+  .check-reset:hover{color:var(--ink);border-color:var(--accent);}
+  .check-list{list-style:none;margin:0;padding:0;counter-reset:step;}
+  .check-list li{border-bottom:1px solid var(--rule);transition:background .2s var(--ease);}
+  .check-list li:last-child{border-bottom:0;}
+  .check-list li:hover{background:var(--wash);}
+  .check-list label{
+    display:flex;gap:12px;align-items:flex-start;padding:11px 14px;cursor:pointer;
+  }
+  .check-list input{
+    margin:2px 0 0;width:16px;height:16px;flex:none;accent-color:var(--accent);cursor:pointer;
+  }
+  .check-list b{display:block;font-size:13.8px;font-weight:500;color:var(--ink);}
+  .check-list em{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5;}
+  .check-list li.done b{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--rule-2);}
+  .check-list li.done em{opacity:.65;}
+
+  /* ============================== printing ============================== */
+  @media print{
+    .rail,.chips,.composer,.composer-foot,.topbar-actions,.to-bottom,.suggest,
+    .turn-meta button,.palette-wrap,.scrim,.toast,.est-controls,.check-reset{display:none !important;}
+    body,.app,.main,.chat{display:block;height:auto;background:#fff;color:#000;}
+    .app{max-width:none;border:0;}
+    .app::before{display:none;}
+    .chat{position:static;overflow:visible;padding:0;}
+    .thread{max-width:none;gap:18px;}
+    .turn.user .said{background:#eee;color:#000;}
+    .answer a{color:#000;}
+    .answer a::after{content:' (' attr(href) ')';font-size:10px;color:#555;}
+  }
+
   /* ============================= palette ============================= */
   .rail-search{
     display:flex;align-items:center;gap:8px;width:100%;
@@ -5183,11 +5239,38 @@ For anything binding — a fee quote, a deadline, an eligibility ruling — the 
 - **Tuition** uses the published per-year range for the programme, multiplied by its duration, with your scholarship percentage applied to tuition only
 - **Living** adds hostel and mess, or transport for a day scholar
 - **Extras** covers books, materials, exam fees, one-time charges and personal spending
+- **The yearly rise** compounds. Private universities commonly revise fees for continuing students, and **5% a year is the usual working assumption** — over a 4-year B.Tech that is roughly a fifth more than four times the first-year fee
 
 Ranges, not a quote: the low figure is the cheaper branch or specialisation, the high figure the dearer one.
 
 > Based on the 2026 fee listings this assistant carries. The university's own fee sheet is the binding version — ask the admission office for yours before planning around any number here.`,
   chips:['Fee structure','Scholarship options','Education loan, step by step','Is the fee worth the package?']
+}
+,
+{
+  id:'tool_eligibility', topic:'Eligibility', title:'Eligibility checker',
+  q:['am i eligible checker','check my eligibility','eligibility tool','what can i apply for','which course can i get','with my marks','check courses for my percentage','eligibility calculator'],
+  a:`Enter your Class 12 stream and aggregate, and this lists which programmes you meet the indicative minimums for.
+
+[[eligibility]]
+
+### How to read it
+- **Meets the indicative bar** — you clear the published minimum. It does not guarantee a seat; popular branches close on merit well above the minimum.
+- **Borderline** — within 5% of the bar. Worth a call to the admission office, since minimums are sometimes relaxed by category or in later rounds.
+- **Below / stream mismatch** — the programme expects a subject or a level you do not have.
+
+> Indicative minimums only, drawn from published eligibility norms. The admission office decides, and actual cut-offs move with demand each year.`,
+  chips:['Eligibility at a glance','Entrance exams accepted','Cost estimator','How the merit list works']
+},
+{
+  id:'tool_checklist', topic:'Admissions', title:'Admission checklist',
+  q:['checklist','admission checklist','step by step checklist','track my admission','what do i need to do','tick list','to do list for admission','progress tracker'],
+  a:`Fourteen steps from shortlisting to induction. Tick them off as you go — your progress is saved in this browser, so it is still here when you come back.
+
+[[checklist]]
+
+> Nothing here is sent anywhere. The ticks live in your browser's local storage on this device only, and the Clear button removes them.`,
+  chips:['Admission process','Documents required','Education loan, step by step','Reporting day & induction']
 }
 
 ];
@@ -5788,7 +5871,11 @@ function md(text){
       continue;
     }
 
-    if(line === '[[estimator]]'){ flushPara(); closeList(); html += '<div class="widget" data-widget="estimator"></div>'; continue; }
+    if(/^\[\[(estimator|eligibility|checklist)\]\]$/.test(line)){
+      flushPara(); closeList();
+      html += '<div class="widget" data-widget="' + line.slice(2, -2) + '"></div>';
+      continue;
+    }
     if(line.startsWith('### ')){ flushPara(); closeList(); html += '<h4>' + inline(esc(line.slice(4))) + '</h4>'; continue; }
     if(line.startsWith('> ')){ flushPara(); closeList(); html += '<span class="note">' + inline(esc(line.slice(2))) + '</span>'; continue; }
     if(/^[-•]\s+/.test(line)){ flushPara(); openList('ul'); html += '<li>' + inline(esc(line.replace(/^[-•]\s+/, ''))) + '</li>'; continue; }
@@ -5878,6 +5965,14 @@ function turnNode(msg){
     });
     meta.appendChild(link);
   }
+
+  const print = document.createElement('button');
+  print.type = 'button';
+  print.textContent = 'Print';
+  print.title = 'Print or save this conversation as a PDF';
+  print.addEventListener('click', () => window.print());
+  meta.appendChild(print);
+
   body.appendChild(meta);
 
   if(msg.chips && msg.chips.length){
@@ -6333,6 +6428,10 @@ function mountEstimator(host){
         '<label>Scholarship<select data-f="scholarship">' +
           [0, 25, 50, 100].map(v => '<option value="' + v + '">' + (v ? v + '% of tuition' : 'None') + '</option>').join('') +
         '</select></label>' +
+        '<label>Fee rise each year<select data-f="inflation">' +
+          [['5','5% a year (typical)'], ['0','No rise'], ['7','7% a year'], ['10','10% a year']]
+            .map(o => '<option value="' + o[0] + '">' + o[1] + '</option>').join('') +
+        '</select></label>' +
       '</div>' +
       '<div class="est-out" data-out></div>' +
     '</div>';
@@ -6341,31 +6440,177 @@ function mountEstimator(host){
     const course = COURSE_COST[host.querySelector('[data-f="course"]').value];
     const living = LIVING_COST[host.querySelector('[data-f="living"]').value];
     const waiver = Number(host.querySelector('[data-f="scholarship"]').value) / 100;
+    const rise   = Number(host.querySelector('[data-f="inflation"]').value) / 100;
 
-    const tuition = course.tuition.map(v => v * course.years * (1 - waiver));
-    const live    = living.perYear.map(v => v * course.years);
-    const extras  = EXTRAS_PER_YEAR.map(v => v * course.years);
+    /* Fees are revised upward each year, so year 2 costs more than year 1.
+       Each year is compounded rather than multiplying the first-year fee by
+       the course length. Living costs and extras rise with it. */
+    const compound = base => {
+      let total = 0;
+      for(let y = 0; y < course.years; y++) total += base * Math.pow(1 + rise, y);
+      return total;
+    };
+    const flat = base => base * course.years;
+
+    const tuition = course.tuition.map(v => compound(v) * (1 - waiver));
+    const live    = living.perYear.map(compound);
+    const extras  = EXTRAS_PER_YEAR.map(compound);
     const total   = tuition.map((v, i) => v + live[i] + extras[i]);
-    const saved   = course.tuition.map(v => v * course.years * waiver);
+    const saved   = course.tuition.map(v => compound(v) * waiver);
+    const noRise  = course.tuition.map((v, i) => flat(v) * (1 - waiver) + flat(living.perYear[i]) + flat(EXTRAS_PER_YEAR[i]));
+    const riseCost = total.map((v, i) => v - noRise[i]);
+
+    const firstYear = course.tuition.map(v => v * (1 - waiver));
+    const lastYear  = course.tuition.map(v => v * Math.pow(1 + rise, course.years - 1) * (1 - waiver));
 
     host.querySelector('[data-out]').innerHTML =
       '<table><thead><tr><th>Over ' + course.years + ' years</th><th>Low</th><th>High</th></tr></thead><tbody>' +
       '<tr><td>Tuition' + (waiver ? ' (after ' + (waiver * 100) + '% waiver)' : '') + '</td><td>' + rupees(tuition[0]) + '</td><td>' + rupees(tuition[1]) + '</td></tr>' +
       '<tr><td>' + esc(living.label) + '</td><td>' + rupees(live[0]) + '</td><td>' + rupees(live[1]) + '</td></tr>' +
       '<tr><td>Books, exams, personal</td><td>' + rupees(extras[0]) + '</td><td>' + rupees(extras[1]) + '</td></tr>' +
+      (rise ? '<tr class="est-rise"><td>of which the ' + (rise * 100) + '% yearly rise adds</td><td>' +
+        rupees(riseCost[0]) + '</td><td>' + rupees(riseCost[1]) + '</td></tr>' : '') +
       '</tbody></table>' +
       '<div class="est-total"><span>Total cost of the degree</span>' +
         '<strong>' + lakhs(total[0]) + ' – ' + lakhs(total[1]) + '</strong></div>' +
-      '<div class="est-note">About ' + rupees(total[0] / course.years) + ' – ' + rupees(total[1] / course.years) + ' a year' +
-        (waiver ? ' · scholarship saves ' + lakhs(saved[0]) + ' – ' + lakhs(saved[1]) : '') + '</div>';
+      '<div class="est-note">' +
+        'Tuition in year 1: ' + rupees(firstYear[0]) + ' – ' + rupees(firstYear[1]) +
+        (rise ? ' · by the final year: ' + rupees(lastYear[0]) + ' – ' + rupees(lastYear[1]) : '') +
+        (waiver ? ' · scholarship saves ' + lakhs(saved[0]) + ' – ' + lakhs(saved[1]) : '') +
+      '</div>';
   };
 
   host.querySelectorAll('select').forEach(sel => sel.addEventListener('change', recalc));
   recalc();
 }
 
+/* ------------------------------ eligibility check ------------------------------ */
+const ELIGIBILITY = [
+  { name:'B.Tech — CSE, AI/ML, IT, ECE, Mechanical, Civil', streams:['science'], maths:true,  min:60, note:'PCM, plus JEE Main or ASAT' },
+  { name:'B.Tech Biotechnology',        streams:['science'], maths:false, min:60, note:'PCM or PCB accepted' },
+  { name:'B.Pharm',                      streams:['science'], maths:false, min:50, note:'PCM or PCB, PCI norms' },
+  { name:'B.Sc — Biotech, Microbiology, Forensic Science', streams:['science'], maths:false, min:50 },
+  { name:'BCA',                          streams:['science','commerce','arts'], maths:true,  min:50, note:'Maths or Computer Science at Class 12' },
+  { name:'BBA',                          streams:['science','commerce','arts'], maths:false, min:50 },
+  { name:'B.Com (Hons)',                 streams:['science','commerce','arts'], maths:false, min:50 },
+  { name:'BA (Hons) Economics',          streams:['science','commerce','arts'], maths:true,  min:50, note:'Maths at Class 12 usually expected' },
+  { name:'BA LLB / BBA LLB (Hons)',      streams:['science','commerce','arts'], maths:false, min:50, note:'plus a law aptitude test and interview' },
+  { name:'BA (Hons) Psychology, English, Political Science', streams:['science','commerce','arts'], maths:false, min:50 },
+  { name:'Journalism & Mass Communication', streams:['science','commerce','arts'], maths:false, min:50 },
+  { name:'Design — fashion, interior, product', streams:['science','commerce','arts'], maths:false, min:50, note:'portfolio and/or design aptitude test' }
+];
+
+function mountEligibility(host){
+  host.innerHTML =
+    '<div class="est">' +
+      '<div class="est-controls">' +
+        '<label>Class 12 stream<select data-f="stream">' +
+          '<option value="science">Science</option><option value="commerce">Commerce</option><option value="arts">Arts / Humanities</option>' +
+        '</select></label>' +
+        '<label>Maths at Class 12<select data-f="maths"><option value="yes">Yes</option><option value="no">No</option></select></label>' +
+        '<label>Aggregate %<input data-f="marks" type="number" min="33" max="100" step="0.1" value="70"></label>' +
+      '</div>' +
+      '<div class="est-out" data-out></div>' +
+    '</div>';
+
+  const recalc = () => {
+    const stream = host.querySelector('[data-f="stream"]').value;
+    const maths  = host.querySelector('[data-f="maths"]').value === 'yes';
+    const marks  = Number(host.querySelector('[data-f="marks"]').value) || 0;
+
+    const rows = ELIGIBILITY.map(p => {
+      const streamOk = p.streams.includes(stream);
+      const mathsOk  = !p.maths || maths;
+      let status, cls;
+      if(!streamOk){ status = 'Stream does not match'; cls = 'no'; }
+      else if(!mathsOk){ status = 'Needs Maths at Class 12'; cls = 'no'; }
+      else if(marks >= p.min){ status = 'Meets the indicative bar'; cls = 'yes'; }
+      else if(marks >= p.min - 5){ status = 'Borderline — worth asking'; cls = 'maybe'; }
+      else { status = 'Below the indicative ' + p.min + '%'; cls = 'no'; }
+      return { p, status, cls };
+    });
+    const yes = rows.filter(r => r.cls === 'yes').length;
+
+    host.querySelector('[data-out]').innerHTML =
+      '<table><thead><tr><th>Programme</th><th>With ' + marks + '%</th></tr></thead><tbody>' +
+      rows.map(r =>
+        '<tr class="elig-' + r.cls + '"><td>' + esc(r.p.name) +
+        (r.p.note ? '<span class="elig-note">' + esc(r.p.note) + '</span>' : '') +
+        '</td><td>' + esc(r.status) + '</td></tr>').join('') +
+      '</tbody></table>' +
+      '<div class="est-note">' + yes + ' of ' + rows.length + ' programmes match on the indicative minimums. ' +
+      'These are guidance figures, not the published cut-off — the admission office decides, and actual cut-offs can sit higher when demand is strong.</div>';
+  };
+
+  host.querySelectorAll('select, input').forEach(el => {
+    el.addEventListener('change', recalc);
+    el.addEventListener('input', recalc);
+  });
+  recalc();
+}
+
+/* ------------------------------ admission checklist ------------------------------ */
+const CHECKLIST = [
+  ['Shortlist your programme and branch', 'Compare the median package and fee for the exact branch, not the university.'],
+  ['Register on amity.edu/lucknow', 'Use an email and phone you check daily — every deadline arrives there.'],
+  ['Pay the application fee', 'Official portal only. Save the receipt.'],
+  ['Book and take ASAT', 'Or submit your JEE / CAT / CLAT score. The same score sets your scholarship slab.'],
+  ['Attend the interview or GD-PI', 'Required for management, law, design, media and most PG programmes.'],
+  ['Read the offer letter fully', 'Fee schedule, scholarship percentage, its continuation conditions, acceptance deadline.'],
+  ['Pay the seat-confirmation amount', 'Diarise the deadline — missing it can release the seat.'],
+  ['Opt for hostel and transport', 'Allotment is first-come; AC and low-occupancy rooms go first.'],
+  ['Apply for an education loan', 'The bank needs the offer letter and official fee structure. Allow 2–4 weeks.'],
+  ['Assemble documents', 'Originals plus two photocopy sets, 8–10 photographs, and scans in cloud storage.'],
+  ['Claim category concessions', 'Sports, defence, sibling certificates must go in with the application.'],
+  ['Attend document verification', 'Get written acknowledgement for anything the university retains.'],
+  ['Pack for the hostel', 'Bedding, formals, winter layers, laptop, lock, medicines with prescriptions.'],
+  ['Report and complete induction', 'Collect the ID card and Amizone credentials.']
+];
+
+function mountChecklist(host){
+  let saved = {};
+  try{ saved = JSON.parse(localStorage.getItem('amity-checklist') || '{}') || {}; }catch(e){ saved = {}; }
+
+  host.innerHTML =
+    '<div class="est check">' +
+      '<div class="check-head"><span data-progress></span>' +
+        '<button type="button" data-reset class="check-reset">Clear</button></div>' +
+      '<ol class="check-list">' +
+        CHECKLIST.map((item, i) =>
+          '<li><label><input type="checkbox" data-i="' + i + '"' + (saved[i] ? ' checked' : '') + '>' +
+          '<span><b>' + esc(item[0]) + '</b><em>' + esc(item[1]) + '</em></span></label></li>').join('') +
+      '</ol>' +
+    '</div>';
+
+  const persist = () => { try{ localStorage.setItem('amity-checklist', JSON.stringify(saved)); }catch(e){} };
+  const paint = () => {
+    const done = Object.values(saved).filter(Boolean).length;
+    host.querySelector('[data-progress]').textContent =
+      done + ' of ' + CHECKLIST.length + ' done' + (done === CHECKLIST.length ? ' — you are ready' : '');
+    host.querySelectorAll('.check-list li').forEach((li, i) => li.classList.toggle('done', !!saved[i]));
+  };
+
+  host.querySelectorAll('input[type="checkbox"]').forEach(box => {
+    box.addEventListener('change', () => {
+      saved[box.dataset.i] = box.checked;
+      persist(); paint();
+    });
+  });
+  host.querySelector('[data-reset]').addEventListener('click', () => {
+    saved = {}; persist();
+    host.querySelectorAll('input[type="checkbox"]').forEach(b => { b.checked = false; });
+    paint();
+    toast('Checklist cleared');
+  });
+  paint();
+}
+
+const WIDGETS = { estimator: mountEstimator, eligibility: mountEligibility, checklist: mountChecklist };
 function mountWidgets(scope){
-  scope.querySelectorAll('[data-widget="estimator"]').forEach(mountEstimator);
+  scope.querySelectorAll('[data-widget]').forEach(host => {
+    const fn = WIDGETS[host.getAttribute('data-widget')];
+    if(fn) fn(host);
+  });
 }
 
 /* ------------------------------ command palette ------------------------------ */
