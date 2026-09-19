@@ -1,0 +1,21 @@
+# Deployment payload: only the page, the functions and their dependencies.
+# These vendored package folders are left over from an old upload and are
+# not used by anything.
+accepts/
+array-flatten/
+body-parser/
+bytes/
+call-bind-apply-helpers/
+call-bound/
+content-type/
+cookie/
+cookie-signature/
+debug/
+destroy/
+es-define-property/
+escape-html/
+
+amity-admission-chatbot.zip
+1
+.devcontainer/
+.env

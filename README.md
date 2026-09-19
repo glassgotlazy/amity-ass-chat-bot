@@ -57,6 +57,36 @@ used (OpenAI wins if both are set):
 Set `OPENAI_MODEL` to any chat model your account can use; list them with
 `curl https://api.openai.com/v1/models -H "Authorization: Bearer $OPENAI_API_KEY"`.
 
+### Deploying to Vercel
+
+Vercel does not run `server.js` — it serves `index.html` as a static file and
+runs anything under `api/` as serverless functions. Those functions are
+`api/ask.js` and `api/health.js`; both call the same `lib/assistant.js` as the
+local server, so the scope gate and the prompt are identical either way.
+
+Two things are needed for the AI fallback to work there:
+
+1. **Set the key in Vercel, not in a file.** Project -> **Settings** ->
+   **Environment Variables** -> add `OPENAI_API_KEY` (and optionally
+   `OPENAI_MODEL`) for Production, Preview and Development. `.env` is
+   git-ignored, so it is never uploaded and the deployment cannot see it.
+2. **Redeploy after adding it.** Environment variables are baked in at build
+   time; an existing deployment keeps running without them. Deployments ->
+   latest -> **Redeploy**.
+
+Check the result at `https://<your-project>.vercel.app/api/health` — it should
+report `{"ai":true,"provider":"openai",...}`. If it reports `ai:false`, the
+variable is missing or the deployment predates it. If it 404s, the `api/`
+folder was not deployed.
+
+If the site only ever gives knowledge-base answers and the sidebar reads
+"Offline knowledge base", that is this exact situation: the page probed
+`/api/health`, got nothing usable, and correctly fell back to offline-only.
+
+Note that serverless instances are short-lived, so the in-memory rate limit is
+per instance there rather than global. Set a spending limit on your provider
+account as the real backstop.
+
 ### Running it in GitHub Codespaces
 
 The key can live in a **Codespaces secret** instead of a local `.env`:
