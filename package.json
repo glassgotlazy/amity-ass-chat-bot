@@ -1,12 +1,14 @@
 {
   "name": "amity-admission-chatbot",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
-  "description": "Offline admission assistant for Amity University Lucknow — a single-file chatbot with a built-in knowledge base and retrieval engine. No API key, no network calls.",
+  "description": "Admission assistant for Amity University Lucknow: a single-file offline chatbot with 159 built-in topics, plus an optional, scope-gated AI fallback for in-scope questions the knowledge base does not cover.",
   "main": "index.html",
   "scripts": {
-    "start": "node serve.js"
+    "start": "node server.js"
   },
-  "keywords": ["chatbot", "offline", "admissions", "amity", "no-api"],
-  "dependencies": {}
+  "keywords": ["chatbot", "offline", "admissions", "amity", "knowledge-base"],
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.127.0"
+  }
 }

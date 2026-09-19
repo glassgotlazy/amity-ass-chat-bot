@@ -3,476 +3,377 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="Offline admission assistant for Amity University Lucknow — courses, eligibility, fees, hostel, scholarships, placements. Works with no internet and no API.">
+<meta name="description" content="Admission assistant for Amity University Lucknow — courses, eligibility, fees, hostel, scholarships and placements, answered offline.">
 <meta name="color-scheme" content="light dark">
 <title>Amity Lucknow — Admission Assistant</title>
 <style>
-  /* ====================== Design tokens ====================== */
+  /* ========================== tokens ========================== */
   :root{
-    --navy:#0d1b4c;
-    --navy-2:#1b3184;
-    --navy-3:#2a49b8;
-    --gold:#d99b22;
-    --gold-2:#f4c860;
+    --paper:#faf9f6;
+    --surface:#ffffff;
+    --surface-2:#f4f2ed;
+    --ink:#1b1a18;
+    --ink-2:#3d3b36;
+    --muted:#77746c;
+    --faint:#9a968d;
+    --rule:#e3e0d8;
+    --rule-2:#d3cfc4;
+    --accent:#1e3c70;
+    --accent-2:#2f5596;
+    --gold:#a9822c;
+    --user-bg:#1e3c70;
+    --user-ink:#ffffff;
+    --sel:rgba(30,60,112,.14);
 
-    --bg:#eef1f9;
-    --bg-2:#e3e8f6;
-    --panel:#ffffff;
-    --panel-2:#f7f9ff;
-    --rail:#0d1b4c;
-    --rail-text:#e9ecfb;
-    --rail-muted:#a7b0dd;
-    --rail-hover:rgba(255,255,255,.10);
-    --rail-active:rgba(244,200,96,.16);
-
-    --text:#161c33;
-    --text-2:#39406a;
-    --muted:#6d7597;
-    --border:#e2e6f3;
-    --border-2:#d3d9ee;
-
-    --bot-bubble:#f2f4fc;
-    --bot-bubble-br:#e4e8f7;
-    --user-bubble:linear-gradient(135deg,#17265f,#2a49b8);
-
-    --chip-bg:#ffffff;
-    --chip-br:#dbe0f2;
-    --chip-text:#26346f;
-
-    --ok:#16a34a;
-    --shadow-lg:0 30px 70px rgba(13,27,76,.16), 0 2px 10px rgba(13,27,76,.06);
-    --shadow-sm:0 1px 2px rgba(20,30,60,.06);
-    --r-lg:20px;
-    --r-md:14px;
-    --r-sm:10px;
-    --font:'Segoe UI',system-ui,-apple-system,"Helvetica Neue",Roboto,Arial,sans-serif;
+    --serif:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   }
   :root[data-theme="dark"]{
-    --bg:#0b0f1d;
-    --bg-2:#0e1428;
-    --panel:#141a2e;
-    --panel-2:#111729;
-    --rail:#0b1124;
-    --rail-text:#e7eaf8;
-    --rail-muted:#8d97c6;
-    --rail-hover:rgba(255,255,255,.07);
-    --rail-active:rgba(244,200,96,.14);
-
-    --text:#e8ebf8;
-    --text-2:#c3c9e6;
-    --muted:#8d95bb;
-    --border:#252c48;
-    --border-2:#2e365a;
-
-    --bot-bubble:#1d2440;
-    --bot-bubble-br:#28304f;
-    --user-bubble:linear-gradient(135deg,#25397f,#3a5ad0);
-
-    --chip-bg:#1a2039;
-    --chip-br:#2c3454;
-    --chip-text:#cdd5f5;
-
-    --shadow-lg:0 30px 70px rgba(0,0,0,.45), 0 2px 10px rgba(0,0,0,.3);
-    --shadow-sm:0 1px 2px rgba(0,0,0,.25);
+    --paper:#141413;
+    --surface:#1b1b1a;
+    --surface-2:#211f1d;
+    --ink:#eae7e0;
+    --ink-2:#c9c5bc;
+    --muted:#928d83;
+    --faint:#6f6b63;
+    --rule:#2e2d2a;
+    --rule-2:#3c3a36;
+    --accent:#9db6e4;
+    --accent-2:#b7c9ee;
+    --gold:#c9a75a;
+    --user-bg:#2c4a86;
+    --user-ink:#ffffff;
+    --sel:rgba(157,182,228,.18);
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#0b0f1d; --bg-2:#0e1428; --panel:#141a2e; --panel-2:#111729;
-      --rail:#0b1124; --rail-text:#e7eaf8; --rail-muted:#8d97c6;
-      --rail-hover:rgba(255,255,255,.07); --rail-active:rgba(244,200,96,.14);
-      --text:#e8ebf8; --text-2:#c3c9e6; --muted:#8d95bb;
-      --border:#252c48; --border-2:#2e365a;
-      --bot-bubble:#1d2440; --bot-bubble-br:#28304f;
-      --user-bubble:linear-gradient(135deg,#25397f,#3a5ad0);
-      --chip-bg:#1a2039; --chip-br:#2c3454; --chip-text:#cdd5f5;
-      --shadow-lg:0 30px 70px rgba(0,0,0,.45), 0 2px 10px rgba(0,0,0,.3);
-      --shadow-sm:0 1px 2px rgba(0,0,0,.25);
+      --paper:#141413; --surface:#1b1b1a; --surface-2:#211f1d;
+      --ink:#eae7e0; --ink-2:#c9c5bc; --muted:#928d83; --faint:#6f6b63;
+      --rule:#2e2d2a; --rule-2:#3c3a36;
+      --accent:#9db6e4; --accent-2:#b7c9ee; --gold:#c9a75a;
+      --user-bg:#2c4a86; --sel:rgba(157,182,228,.18);
     }
   }
 
-  /* ====================== Base ====================== */
+  /* ========================== base ========================== */
   *{box-sizing:border-box;}
   html,body{height:100%;}
   body{
     margin:0;
-    font-family:var(--font);
-    color:var(--text);
-    background:
-      radial-gradient(1100px 500px at 12% -5%, rgba(217,155,34,.16), transparent 60%),
-      radial-gradient(900px 520px at 100% 100%, rgba(42,73,184,.16), transparent 55%),
-      linear-gradient(160deg,var(--bg),var(--bg-2));
-    display:flex; align-items:center; justify-content:center;
-    padding:22px;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:15px;
     -webkit-font-smoothing:antialiased;
+    display:flex;
+    justify-content:center;
   }
-  button{font-family:inherit;}
-  ::selection{background:rgba(42,73,184,.22);}
+  button{font-family:inherit;color:inherit;}
+  ::selection{background:var(--sel);}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 
-  /* ====================== App shell ====================== */
   .app{
     width:100%;
-    max-width:1160px;
-    height:min(92vh, 900px);
+    max-width:1180px;
+    height:100dvh;
     display:grid;
-    grid-template-columns:286px 1fr;
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:26px;
-    box-shadow:var(--shadow-lg);
-    overflow:hidden;
+    grid-template-columns:264px 1fr;
+    background:var(--surface);
+    border-left:1px solid var(--rule);
+    border-right:1px solid var(--rule);
   }
 
-  /* ====================== Sidebar ====================== */
+  /* ========================== rail ========================== */
   .rail{
-    background:linear-gradient(185deg,var(--rail),#111c46 60%,#16224f);
-    color:var(--rail-text);
-    display:flex; flex-direction:column;
-    min-width:0; min-height:0;
+    display:flex;flex-direction:column;
+    min-width:0;min-height:0;
+    background:var(--surface-2);
+    border-right:1px solid var(--rule);
   }
-  .brand{
-    display:flex; align-items:center; gap:12px;
-    padding:20px 18px 16px;
-    border-bottom:1px solid rgba(255,255,255,.08);
+  .brand{padding:22px 20px 18px;border-bottom:1px solid var(--rule);}
+  .brand .eyebrow{
+    font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;
   }
-  .brand-badge{
-    width:44px;height:44px;border-radius:13px;flex-shrink:0;
-    background:linear-gradient(135deg,var(--gold),var(--gold-2));
-    color:#14204d;font-weight:800;font-size:16px;letter-spacing:.5px;
-    display:flex;align-items:center;justify-content:center;
-    box-shadow:0 6px 16px rgba(0,0,0,.28);
+  .brand h1{
+    font-family:var(--serif);
+    font-size:20px;line-height:1.2;margin:7px 0 0;font-weight:600;
+    letter-spacing:-.01em;
   }
-  .brand-text strong{display:block;font-size:14.5px;line-height:1.25;}
-  .brand-text span{display:block;font-size:11px;color:var(--rail-muted);margin-top:3px;}
+  .brand .sub{margin-top:7px;font-size:11.5px;color:var(--muted);line-height:1.5;}
 
-  .rail-scroll{flex:1;overflow-y:auto;padding:14px 12px 8px;}
+  .rail-scroll{flex:1;overflow-y:auto;padding:14px 12px 10px;}
   .rail-label{
-    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--rail-muted);margin:12px 8px 8px;font-weight:700;
+    font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--faint);font-weight:700;margin:16px 8px 7px;
   }
   .rail-label:first-child{margin-top:2px;}
   .nav-btn{
-    width:100%;display:flex;align-items:center;gap:10px;
-    background:transparent;border:0;color:var(--rail-text);
-    text-align:left;font-size:13px;font-weight:500;
-    padding:9px 10px;border-radius:11px;cursor:pointer;
-    transition:background .15s, transform .12s;
+    width:100%;display:flex;align-items:baseline;gap:8px;
+    background:none;border:0;text-align:left;cursor:pointer;
+    font-size:13.5px;color:var(--ink-2);
+    padding:7px 8px;border-radius:5px;
+    transition:background .12s,color .12s;
   }
-  .nav-btn:hover{background:var(--rail-hover);}
-  .nav-btn:active{transform:scale(.985);}
-  .nav-btn .ico{
-    width:26px;height:26px;border-radius:8px;flex-shrink:0;
-    background:var(--rail-active);
-    display:flex;align-items:center;justify-content:center;font-size:13px;
-  }
-  .nav-btn .cnt{
-    margin-left:auto;font-size:10px;color:var(--rail-muted);
-    background:rgba(255,255,255,.07);padding:2px 7px;border-radius:9px;
-  }
-  .rail-foot{
-    padding:12px 16px 16px;border-top:1px solid rgba(255,255,255,.08);
-    font-size:10.5px;line-height:1.5;color:var(--rail-muted);
-  }
-  .rail-foot a{color:var(--gold-2);text-decoration:none;}
-  .rail-foot a:hover{text-decoration:underline;}
-  .offline-pill{
-    display:inline-flex;align-items:center;gap:6px;
-    background:rgba(74,222,128,.14);color:#86efac;
-    border:1px solid rgba(74,222,128,.28);
-    padding:4px 9px;border-radius:999px;font-size:10px;font-weight:700;
-    margin-bottom:9px;letter-spacing:.02em;width:fit-content;
-  }
-  .rail-foot .offline-pill{display:flex;}
+  .nav-btn:hover{background:var(--surface);color:var(--ink);}
+  .nav-btn .cnt{margin-left:auto;font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums;}
 
-  /* ====================== Main column ====================== */
-  .main{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--panel);}
+  .rail-foot{
+    padding:14px 20px 18px;border-top:1px solid var(--rule);
+    font-size:11px;line-height:1.6;color:var(--muted);
+  }
+  .rail-foot a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--rule-2);}
+  .rail-foot a:hover{border-bottom-color:currentColor;}
+  .status-line{
+    display:flex;align-items:center;gap:7px;
+    font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;margin-bottom:9px;
+  }
+  .status-dot{width:5px;height:5px;border-radius:50%;background:#4f9d69;flex:none;}
+  .status-dot.off{background:var(--rule-2);}
+
+  /* ========================== main ========================== */
+  .main{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--surface);}
+
   .topbar{
     display:flex;align-items:center;gap:12px;
-    padding:14px 18px;
-    border-bottom:1px solid var(--border);
-    background:var(--panel);
-    flex-shrink:0;
+    padding:14px 24px;border-bottom:1px solid var(--rule);flex:none;
   }
-  .hamburger{display:none;}
-  .topbar-avatar{
-    width:40px;height:40px;border-radius:12px;flex-shrink:0;
-    background:linear-gradient(135deg,var(--navy-2),var(--navy-3));
-    color:#fff;display:flex;align-items:center;justify-content:center;
-    font-size:18px;box-shadow:var(--shadow-sm);
+  .topbar h2{
+    font-family:var(--serif);font-size:16px;font-weight:600;margin:0;letter-spacing:-.01em;
   }
-  .topbar-title{min-width:0;flex:1;overflow:hidden;}
-  .topbar-title h1{margin:0;font-size:15px;font-weight:700;letter-spacing:-.1px;}
-  .topbar-title p{
-    margin:2px 0 0;font-size:11.5px;color:var(--muted);
-    display:flex;align-items:center;gap:6px;
+  .topbar .where{
+    font-size:11px;color:var(--muted);margin-top:2px;
+    letter-spacing:.02em;
   }
-  .dot{
-    width:7px;height:7px;border-radius:50%;background:#22c55e;flex-shrink:0;
-    animation:pulse 2.4s infinite;
+  .topbar-actions{margin-left:auto;display:flex;gap:4px;}
+  .ghost-btn{
+    background:none;border:1px solid transparent;border-radius:5px;
+    padding:6px 10px;font-size:12px;color:var(--muted);cursor:pointer;
+    transition:color .12s,border-color .12s,background .12s;
   }
-  @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(34,197,94,.5);}
-    70%{box-shadow:0 0 0 7px rgba(34,197,94,0);}
-    100%{box-shadow:0 0 0 0 rgba(34,197,94,0);}
-  }
-  .topbar-actions{margin-left:auto;display:flex;gap:7px;}
-  .icon-btn{
-    width:36px;height:36px;border-radius:11px;
-    background:var(--panel-2);border:1px solid var(--border);
-    color:var(--text-2);cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    font-size:14px;line-height:1;
-    transition:background .15s,border-color .15s,transform .12s,color .15s;
-  }
-  .icon-btn:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;}
-  .icon-btn:active{transform:scale(.93);}
+  .ghost-btn:hover{color:var(--ink);border-color:var(--rule-2);background:var(--surface-2);}
+  .menu-btn{display:none;}
 
-  /* ====================== Chat ====================== */
+  /* ========================== transcript ========================== */
   .chat-wrap{position:relative;flex:1;min-height:0;}
   .chat{
-    position:absolute;inset:0;
-    overflow-y:auto;overscroll-behavior:contain;
-    padding:22px 22px 10px;
-    display:flex;flex-direction:column;gap:16px;
-    scroll-behavior:smooth;
+    position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;
+    padding:28px 24px 12px;
   }
-  .chat::-webkit-scrollbar,.rail-scroll::-webkit-scrollbar,.chips::-webkit-scrollbar{width:8px;height:6px;}
+  .thread{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:26px;}
+
+  .chat::-webkit-scrollbar,.rail-scroll::-webkit-scrollbar,.chips::-webkit-scrollbar{width:9px;height:5px;}
   .chat::-webkit-scrollbar-thumb,.rail-scroll::-webkit-scrollbar-thumb,.chips::-webkit-scrollbar-thumb{
-    background:var(--border-2);border-radius:10px;
+    background:var(--rule-2);border-radius:0;
   }
-  .rail-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);}
 
-  .msg{display:flex;gap:11px;align-items:flex-start;max-width:min(760px,100%);animation:rise .22s ease both;}
-  .msg.user{align-self:flex-end;flex-direction:row-reverse;}
-  .msg.bot{align-self:flex-start;}
-  @keyframes rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .turn{animation:fade .2s ease both;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
 
-  .av{
-    width:32px;height:32px;border-radius:10px;flex-shrink:0;margin-top:2px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:11.5px;font-weight:800;
-  }
-  .msg.bot .av{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#14204d;}
-  .msg.user .av{background:linear-gradient(135deg,var(--navy-2),var(--navy-3));color:#fff;}
-
-  .msg-col{min-width:0;display:flex;flex-direction:column;gap:5px;}
-  .msg.user .msg-col{align-items:flex-end;}
-
-  .bubble{
-    padding:12px 15px;
-    border-radius:16px;
-    font-size:14px;line-height:1.62;
-    box-shadow:var(--shadow-sm);
+  /* user turn */
+  .turn.user{display:flex;justify-content:flex-end;}
+  .turn.user .said{
+    background:var(--user-bg);color:var(--user-ink);
+    padding:10px 15px;border-radius:4px;
+    font-size:14.5px;line-height:1.55;max-width:85%;
     word-wrap:break-word;overflow-wrap:anywhere;
   }
-  .msg.bot .bubble{
-    background:var(--bot-bubble);
-    border:1px solid var(--bot-bubble-br);
-    border-top-left-radius:5px;
-    color:var(--text);
+
+  /* assistant turn — no bubble, an editorial block with a rule */
+  .turn.bot{display:grid;grid-template-columns:22px 1fr;gap:12px;}
+  .turn.bot .mark{
+    font-family:var(--serif);font-size:13px;color:var(--gold);
+    line-height:1.7;user-select:none;
   }
-  .msg.user .bubble{
-    background:var(--user-bubble);
-    color:#fff;
-    border-top-right-radius:5px;
+  .answer{min-width:0;font-size:15px;line-height:1.7;color:var(--ink);}
+  .answer p{margin:0 0 11px;}
+  .answer p:last-child{margin-bottom:0;}
+  .answer h4{
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);font-weight:700;margin:18px 0 8px;
   }
-  .bubble p{margin:0 0 9px;}
-  .bubble p:last-child{margin-bottom:0;}
-  .bubble h4{
-    margin:12px 0 6px;font-size:12.5px;font-weight:800;
-    letter-spacing:.05em;text-transform:uppercase;color:var(--navy-3);
+  .answer h4:first-child{margin-top:0;}
+  .answer ul,.answer ol{margin:0 0 11px;padding-left:17px;}
+  .answer ul{list-style:none;padding-left:14px;}
+  .answer ul li{position:relative;padding-left:2px;}
+  .answer ul li::before{
+    content:'';position:absolute;left:-12px;top:.72em;
+    width:4px;height:1px;background:var(--rule-2);
   }
-  :root[data-theme="dark"] .bubble h4{color:var(--gold-2);}
-  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bubble h4{color:var(--gold-2);}}
-  .bubble h4:first-child{margin-top:0;}
-  .bubble ul{margin:0 0 9px;padding-left:18px;}
-  .bubble ul:last-child{margin-bottom:0;}
-  .bubble li{margin:3px 0;}
-  .bubble li::marker{color:var(--gold);}
-  .bubble strong{font-weight:700;}
-  .bubble code{
-    background:rgba(127,140,190,.18);padding:1px 6px;border-radius:6px;
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;
-  }
-  .bubble a{color:var(--navy-3);font-weight:600;text-decoration:underline;text-underline-offset:2px;}
-  .msg.user .bubble a{color:#fff;}
-  :root[data-theme="dark"] .bubble a{color:var(--gold-2);}
-  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .msg.bot .bubble a{color:var(--gold-2);}}
-  .bubble .note{
-    display:block;margin-top:10px;padding-top:9px;
-    border-top:1px dashed var(--border-2);
-    font-size:11.5px;color:var(--muted);
+  .answer li{margin:5px 0;}
+  .answer strong{font-weight:650;color:var(--ink);}
+  .answer code{font-family:var(--mono);font-size:13px;background:var(--surface-2);padding:1px 5px;border-radius:3px;}
+  .answer a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--rule-2);}
+  .answer a:hover{border-bottom-color:currentColor;}
+  .answer .note{
+    display:block;margin-top:13px;padding-left:12px;
+    border-left:2px solid var(--rule-2);
+    font-size:13px;color:var(--muted);line-height:1.6;
   }
 
-  .meta{
-    display:flex;align-items:center;gap:8px;
-    font-size:10.5px;color:var(--muted);padding:0 4px;
+  .turn-meta{
+    display:flex;align-items:center;gap:12px;margin-top:11px;
+    font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--faint);font-weight:600;
   }
-  .meta .tag{
-    background:var(--chip-bg);border:1px solid var(--chip-br);
-    color:var(--chip-text);border-radius:999px;padding:1px 8px;font-weight:700;
-    font-size:10px;
+  .turn-meta .src{color:var(--muted);}
+  .turn-meta .src.ai{color:var(--gold);}
+  .turn-meta button{
+    background:none;border:0;padding:0;cursor:pointer;
+    font:inherit;color:var(--faint);letter-spacing:.1em;
+    opacity:0;transition:opacity .15s,color .15s;
   }
-  .meta button{
-    background:none;border:0;color:var(--muted);cursor:pointer;
-    font-size:10.5px;padding:2px 4px;border-radius:6px;
-  }
-  .meta button:hover{color:var(--navy-3);background:var(--panel-2);}
+  .turn.bot:hover .turn-meta button,.turn-meta button:focus-visible{opacity:1;}
+  .turn-meta button:hover{color:var(--ink);}
 
-  /* follow-up chips under a bot answer */
-  .followups{display:flex;flex-wrap:wrap;gap:7px;padding:2px 2px 0;}
-  .followups button{
-    background:var(--chip-bg);border:1px solid var(--chip-br);color:var(--chip-text);
-    font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;cursor:pointer;
-    transition:all .15s;
+  .suggest{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+  .suggest button{
+    background:none;border:1px solid var(--rule-2);border-radius:4px;
+    color:var(--ink-2);font-size:12.5px;padding:6px 11px;cursor:pointer;
+    transition:border-color .12s,color .12s,background .12s;
   }
-  .followups button:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;transform:translateY(-1px);}
+  .suggest button:hover{border-color:var(--accent);color:var(--accent);background:var(--surface-2);}
 
-  /* typing indicator */
-  .typing{display:flex;gap:5px;align-items:center;padding:14px 16px;}
-  .typing i{
-    width:7px;height:7px;border-radius:50%;background:var(--muted);display:block;
-    animation:blink 1.25s infinite ease-in-out;
+  /* thinking line */
+  .thinking{
+    display:grid;grid-template-columns:22px 1fr;gap:12px;
+    font-size:13.5px;color:var(--muted);
   }
-  .typing i:nth-child(2){animation-delay:.18s;}
-  .typing i:nth-child(3){animation-delay:.36s;}
-  @keyframes blink{0%,80%,100%{opacity:.25;transform:scale(.75);}40%{opacity:1;transform:scale(1);}}
+  .thinking .mark{font-family:var(--serif);font-size:13px;color:var(--gold);}
+  .thinking em{font-style:normal;position:relative;}
+  .thinking em::after{
+    content:'';display:inline-block;width:1px;height:1em;
+    background:var(--muted);margin-left:3px;vertical-align:-2px;
+    animation:caret 1s steps(2) infinite;
+  }
+  @keyframes caret{0%,49%{opacity:1;}50%,100%{opacity:0;}}
 
-  /* welcome / empty state */
-  .welcome{
-    border:1px solid var(--border);
-    background:linear-gradient(160deg,var(--panel-2),var(--panel));
-    border-radius:var(--r-lg);
-    padding:20px;
-    animation:rise .3s ease both;
+  /* ========================== masthead ========================== */
+  .masthead{padding-bottom:4px;}
+  .masthead .kicker{
+    font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--gold);font-weight:700;
   }
-  .welcome h2{margin:0 0 6px;font-size:17px;letter-spacing:-.2px;}
-  .welcome p{margin:0 0 14px;font-size:13px;color:var(--muted);line-height:1.6;}
-  .topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:9px;}
-  .topic-card{
-    display:flex;align-items:center;gap:10px;text-align:left;
-    background:var(--panel);border:1px solid var(--border);border-radius:var(--r-md);
-    padding:11px 12px;cursor:pointer;color:var(--text);
-    transition:all .16s;
+  .masthead h3{
+    font-family:var(--serif);font-weight:600;
+    font-size:27px;line-height:1.24;letter-spacing:-.015em;
+    margin:12px 0 0;
   }
-  .topic-card:hover{border-color:var(--navy-3);transform:translateY(-2px);box-shadow:0 8px 20px rgba(13,27,76,.12);}
-  .topic-card .ico{
-    width:32px;height:32px;border-radius:10px;flex-shrink:0;font-size:15px;
-    background:linear-gradient(135deg,rgba(217,155,34,.2),rgba(42,73,184,.16));
-    display:flex;align-items:center;justify-content:center;
+  .masthead p{
+    margin:12px 0 0;font-size:14.5px;line-height:1.65;color:var(--muted);
+    max-width:56ch;
   }
-  .topic-card b{display:block;font-size:12.8px;font-weight:700;}
-  .topic-card span{display:block;font-size:11px;color:var(--muted);margin-top:1px;}
+  .starters{margin-top:24px;border-top:1px solid var(--rule);}
+  .starter{
+    display:flex;align-items:baseline;gap:14px;width:100%;
+    background:none;border:0;border-bottom:1px solid var(--rule);
+    padding:13px 4px;text-align:left;cursor:pointer;
+    transition:background .12s,padding .12s;
+  }
+  .starter:hover{background:var(--surface-2);padding-left:9px;}
+  .starter .idx{
+    font-family:var(--mono);font-size:10.5px;color:var(--faint);
+    min-width:20px;font-variant-numeric:tabular-nums;
+  }
+  .starter .q{font-size:14.5px;color:var(--ink);}
+  .starter .cat{
+    margin-left:auto;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--faint);white-space:nowrap;
+  }
 
-  /* scroll-to-bottom */
-  .to-bottom{
-    position:absolute;right:18px;bottom:14px;
-    width:38px;height:38px;border-radius:50%;
-    background:var(--panel);border:1px solid var(--border-2);
-    color:var(--text-2);cursor:pointer;display:none;
-    align-items:center;justify-content:center;
-    box-shadow:0 8px 20px rgba(13,27,76,.18);
-    animation:rise .2s ease both;
-  }
-  .to-bottom.show{display:flex;}
-  .to-bottom:hover{background:var(--navy-2);color:#fff;border-color:var(--navy-2);}
-
-  /* ====================== Suggestion strip + composer ====================== */
+  /* ========================== composer ========================== */
   .chips{
-    display:flex;gap:8px;padding:11px 18px;overflow-x:auto;flex-shrink:0;
-    border-top:1px solid var(--border);background:var(--panel-2);
-    scrollbar-width:thin;
+    display:flex;gap:6px;padding:10px 24px;overflow-x:auto;flex:none;
+    border-top:1px solid var(--rule);
   }
   .chip{
-    flex-shrink:0;background:var(--chip-bg);border:1px solid var(--chip-br);
-    color:var(--chip-text);font-size:12px;font-weight:600;
-    padding:7px 13px;border-radius:999px;cursor:pointer;white-space:nowrap;
-    transition:all .15s;
+    flex:none;background:none;border:1px solid var(--rule);border-radius:4px;
+    color:var(--muted);font-size:12px;padding:5px 11px;cursor:pointer;white-space:nowrap;
+    transition:color .12s,border-color .12s;
   }
-  .chip:hover{background:var(--navy-2);border-color:var(--navy-2);color:#fff;transform:translateY(-1px);}
+  .chip:hover{color:var(--ink);border-color:var(--rule-2);}
 
   .composer{
-    display:flex;gap:10px;align-items:flex-end;
-    padding:12px 18px 10px;border-top:1px solid var(--border);
-    background:var(--panel);flex-shrink:0;
+    display:flex;gap:10px;align-items:flex-end;flex:none;
+    padding:12px 24px 10px;border-top:1px solid var(--rule);
   }
   .field{
-    flex:1;display:flex;align-items:flex-end;gap:8px;
-    background:var(--panel-2);border:1px solid var(--border-2);
-    border-radius:18px;padding:6px 8px 6px 14px;
-    transition:border-color .15s, box-shadow .15s;
+    flex:1;display:flex;align-items:flex-end;
+    border:1px solid var(--rule-2);border-radius:6px;
+    background:var(--surface);
+    padding:8px 12px;
+    transition:border-color .12s;
   }
-  .field:focus-within{border-color:var(--navy-3);box-shadow:0 0 0 4px rgba(42,73,184,.12);}
+  .field:focus-within{border-color:var(--accent);}
   .field textarea{
-    flex:1;border:0;background:transparent;resize:none;outline:none;
-    color:var(--text);font-family:inherit;font-size:14px;line-height:1.5;
-    padding:8px 0;max-height:132px;min-height:24px;
+    flex:1;border:0;background:none;resize:none;outline:none;
+    font-family:inherit;font-size:14.5px;line-height:1.55;color:var(--ink);
+    max-height:128px;min-height:22px;padding:0;
   }
-  .field textarea::placeholder{color:var(--muted);}
+  .field textarea::placeholder{color:var(--faint);}
   .send{
-    width:42px;height:42px;border:0;border-radius:14px;flex-shrink:0;
-    background:linear-gradient(135deg,var(--navy-2),var(--navy-3));
-    color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
-    box-shadow:0 6px 16px rgba(27,49,132,.32);
-    transition:transform .12s, opacity .15s;
+    border:1px solid var(--accent);background:var(--accent);color:#fff;
+    border-radius:6px;padding:10px 18px;font-size:13px;font-weight:600;
+    cursor:pointer;flex:none;transition:opacity .12s;
   }
-  .send:hover{transform:translateY(-1px) scale(1.03);}
-  .send:active{transform:scale(.94);}
-  .send:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+  :root[data-theme="dark"] .send{color:#141413;}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .send{color:#141413;}}
+  .send:hover{opacity:.88;}
+  .send:disabled{opacity:.4;cursor:not-allowed;}
+
   .composer-foot{
-    padding:0 20px 12px;font-size:10.5px;color:var(--muted);
-    display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-  }
-  .kbd{
-    border:1px solid var(--border-2);border-radius:5px;padding:0 5px;
-    font-size:10px;background:var(--panel-2);color:var(--text-2);
+    flex:none;padding:0 24px 14px;
+    display:flex;gap:16px;flex-wrap:wrap;align-items:center;
+    font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);
   }
 
-  /* ====================== Drawer (mobile) ====================== */
+  .to-bottom{
+    position:absolute;right:22px;bottom:14px;
+    border:1px solid var(--rule-2);background:var(--surface);
+    color:var(--muted);border-radius:5px;padding:5px 11px;font-size:11px;
+    cursor:pointer;display:none;
+  }
+  .to-bottom.show{display:block;}
+  .to-bottom:hover{color:var(--ink);}
+
+  /* ========================== misc ========================== */
   .scrim{
-    position:fixed;inset:0;background:rgba(9,14,34,.5);
-    backdrop-filter:blur(2px);opacity:0;pointer-events:none;
-    transition:opacity .2s;z-index:40;
+    position:fixed;inset:0;background:rgba(20,20,19,.42);
+    opacity:0;pointer-events:none;transition:opacity .18s;z-index:40;
   }
   .scrim.show{opacity:1;pointer-events:auto;}
-
   .toast{
-    position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);
-    background:var(--navy);color:#fff;font-size:12.5px;font-weight:600;
-    padding:10px 16px;border-radius:999px;box-shadow:0 12px 30px rgba(0,0,0,.28);
-    opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;z-index:60;
+    position:fixed;left:50%;bottom:24px;transform:translate(-50%,10px);
+    background:var(--ink);color:var(--paper);font-size:12px;
+    padding:8px 14px;border-radius:4px;opacity:0;pointer-events:none;
+    transition:opacity .18s,transform .18s;z-index:60;letter-spacing:.02em;
   }
   .toast.show{opacity:1;transform:translate(-50%,0);}
 
-  /* ====================== Responsive ====================== */
-  @media (max-width:900px){
-    body{padding:0;}
-    .app{
-      max-width:none;height:100dvh;border-radius:0;border:0;
-      grid-template-columns:1fr;
-    }
+  /* ========================== responsive ========================== */
+  @media (max-width:880px){
+    .app{grid-template-columns:1fr;border:0;}
     .rail{
-      position:fixed;z-index:50;top:0;left:0;bottom:0;width:284px;
-      transform:translateX(-102%);transition:transform .24s ease;
-      box-shadow:0 0 50px rgba(0,0,0,.4);
+      position:fixed;z-index:50;inset:0 auto 0 0;width:270px;
+      transform:translateX(-101%);transition:transform .2s ease;
     }
     .rail.open{transform:none;}
-    .hamburger{display:flex;}
-    .chat{padding:16px 14px 8px;}
-    .composer{padding:10px 12px 8px;}
-    .chips{padding:10px 12px;}
-    .composer-foot{padding:0 14px 10px;}
-    .msg{max-width:100%;}
-    .bubble{font-size:13.6px;}
-    .topbar{padding:12px 12px;gap:10px;}
-    .topbar-avatar{width:36px;height:36px;border-radius:10px;font-size:16px;}
-    .topbar-title h1{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .topbar-title p{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .topbar-actions{gap:5px;}
-    .icon-btn{width:33px;height:33px;border-radius:10px;}
+    .menu-btn{display:block;margin-left:-6px;}
+    .chat{padding:22px 18px 10px;}
+    .chips,.composer{padding-left:18px;padding-right:18px;}
+    .composer-foot{padding-left:18px;padding-right:18px;}
+    .masthead h3{font-size:23px;}
+    .topbar{padding:12px 18px;}
+    .topbar h2{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .topbar .where{display:none;}
+    .topbar>div{min-width:0;}
+    .turn.bot{grid-template-columns:16px 1fr;gap:9px;}
+    .thinking{grid-template-columns:16px 1fr;gap:9px;}
   }
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.001ms !important;transition-duration:.001ms !important;}
-    .chat{scroll-behavior:auto;}
   }
 </style>
 </head>
@@ -482,62 +383,54 @@
 
 <div class="app">
 
-  <!-- ================= Sidebar ================= -->
-  <aside class="rail" id="rail" aria-label="Topic browser">
+  <aside class="rail" id="rail" aria-label="Topics">
     <div class="brand">
-      <div class="brand-badge">AU</div>
-      <div class="brand-text">
-        <strong>Admission Assistant</strong>
-        <span>Amity University, Lucknow</span>
-      </div>
+      <div class="eyebrow">Amity University</div>
+      <h1>Lucknow Admission Assistant</h1>
+      <div class="sub">Unofficial guide to courses, eligibility, fees, hostel and placements.</div>
     </div>
 
     <div class="rail-scroll">
-      <div class="rail-label">Browse topics</div>
+      <div class="rail-label">Topics</div>
       <div id="railTopics"></div>
 
-      <div class="rail-label">Quick actions</div>
-      <button class="nav-btn" type="button" data-ask="What can you help me with?">
-        <span class="ico">❓</span> What can I ask?
-      </button>
-      <button class="nav-btn" type="button" data-ask="Give me a complete admission checklist">
-        <span class="ico">✅</span> Admission checklist
-      </button>
-      <button class="nav-btn" type="button" data-ask="What documents are required for admission?">
-        <span class="ico">📄</span> Documents needed
-      </button>
-      <button class="nav-btn" type="button" data-ask="Contact details of the admission office">
-        <span class="ico">📞</span> Contact office
-      </button>
+      <div class="rail-label">Shortcuts</div>
+      <button class="nav-btn" type="button" data-ask="What can you help me with?">What can I ask</button>
+      <button class="nav-btn" type="button" data-ask="Admission process">Admission checklist</button>
+      <button class="nav-btn" type="button" data-ask="What documents are required for admission?">Documents needed</button>
+      <button class="nav-btn" type="button" data-ask="Contact the admission office">Contact the office</button>
     </div>
 
     <div class="rail-foot">
-      <span class="offline-pill">● 100% offline · no API</span>
-      Unofficial study aid. Figures are indicative and change every admission
-      cycle — always confirm on
-      <a href="https://www.amity.edu/lucknow" target="_blank" rel="noopener">amity.edu/lucknow</a>.
+      <div class="status-line" id="statusLine">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Offline knowledge base</span>
+      </div>
+      Figures are indicative and change every admission cycle. Confirm at
+      <a href="https://www.amity.edu/lucknow" target="_blank" rel="noopener">amity.edu/lucknow</a>
+      before acting on anything here.
     </div>
   </aside>
 
-  <!-- ================= Main ================= -->
   <div class="main">
     <div class="topbar">
-      <button class="icon-btn hamburger" id="menuBtn" type="button" aria-label="Open topics" aria-expanded="false">☰</button>
-      <div class="topbar-avatar" aria-hidden="true">🎓</div>
-      <div class="topbar-title">
-        <h1>Amity Lucknow — Admission Assistant</h1>
-        <p><span class="dot"></span> Online · answers stored on your device</p>
+      <button class="ghost-btn menu-btn" id="menuBtn" type="button" aria-label="Topics" aria-expanded="false">Topics</button>
+      <div>
+        <h2>Admission Assistant</h2>
+        <div class="where">Amity University, Lucknow Campus</div>
       </div>
       <div class="topbar-actions">
-        <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch theme" title="Switch light / dark">🌙</button>
-        <button class="icon-btn" id="saveBtn" type="button" aria-label="Download transcript" title="Download this chat">⭳</button>
-        <button class="icon-btn" id="resetBtn" type="button" aria-label="Start a new chat" title="New chat">↻</button>
+        <button class="ghost-btn" id="themeBtn" type="button" title="Switch light or dark">Theme</button>
+        <button class="ghost-btn" id="saveBtn" type="button" title="Download this conversation">Save</button>
+        <button class="ghost-btn" id="resetBtn" type="button" title="Start a new conversation">New</button>
       </div>
     </div>
 
     <div class="chat-wrap">
-      <div class="chat" id="chat" role="log" aria-live="polite" aria-label="Conversation"></div>
-      <button class="to-bottom" id="toBottom" type="button" aria-label="Scroll to latest message">↓</button>
+      <div class="chat" id="chat">
+        <div class="thread" id="thread" role="log" aria-live="polite" aria-label="Conversation"></div>
+      </div>
+      <button class="to-bottom" id="toBottom" type="button">Latest</button>
     </div>
 
     <div class="chips" id="chips" aria-label="Suggested questions"></div>
@@ -545,17 +438,12 @@
     <form class="composer" id="form">
       <div class="field">
         <textarea id="input" rows="1" placeholder="Ask about courses, eligibility, fees, hostel, scholarships, placements…"
-                  autocomplete="off" autocapitalize="sentences" spellcheck="false" aria-label="Type your question"></textarea>
+                  autocomplete="off" spellcheck="false" aria-label="Your question"></textarea>
       </div>
-      <button class="send" id="sendBtn" type="submit" aria-label="Send message">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M3.4 11.6 20 4l-7.6 16.6-2.5-6.5-6.5-2.5Z" stroke="currentColor" stroke-width="1.7"
-                stroke-linejoin="round" stroke-linecap="round"/>
-        </svg>
-      </button>
+      <button class="send" id="sendBtn" type="submit">Ask</button>
     </form>
     <div class="composer-foot">
-      <span><span class="kbd">Enter</span> send · <span class="kbd">Shift</span>+<span class="kbd">Enter</span> new line</span>
+      <span>Enter to send · Shift + Enter for a new line</span>
       <span id="kbCount"></span>
     </div>
   </div>
@@ -589,19 +477,19 @@
    only — confirm on amity.edu/lucknow before acting on it.
 
    ANSWER MARK-UP (rendered by render() further down)
-     ### Heading      -> small caps heading
-     - bullet         -> list item
+     ### Heading -> small caps heading
+     - bullet -> list item
      **bold**         -> bold
-     > note           -> muted footnote line
+     > note -> muted footnote line
    ========================================================================= */
 
 const KB = [
 
 /* ------------------------------ small talk ------------------------------ */
 {
-  id:'greeting', topic:'General', icon:'👋', title:'Say hello', hidden:true,
+  id:'greeting', topic:'General', title:'Say hello', hidden:true,
   q:['hi','hello','hey','namaste','hii','helo','good morning','good afternoon','good evening','yo','hola','start','greetings'],
-  a:`Hello! 👋 I'm the **Amity Lucknow admission assistant** — a fully offline helper for prospective students and parents.
+  a:`Hello! I'm the **Amity Lucknow admission assistant** — a fully offline helper for prospective students and parents.
 
 I can answer questions on courses, eligibility, entrance tests, fees, scholarships, hostel, placements, campus life and the application process.
 
@@ -609,7 +497,7 @@ Ask in plain English (typos are fine) or pick a topic from the sidebar.`,
   chips:['What courses are offered?','B.Tech eligibility','What are the fees?','How do I apply?']
 },
 {
-  id:'help', topic:'General', icon:'❓', title:'What can I ask?',
+  id:'help', topic:'General', title:'What can I ask?',
   q:['help','what can you do','what can i ask','what can you help me with','topics','options','menu','how do you work','commands','guide me','i need help'],
   a:`Here's everything I cover — ask about any of it in your own words:
 
@@ -633,7 +521,7 @@ Ask in plain English (typos are fine) or pick a topic from the sidebar.`,
   chips:['What courses are offered?','Fees for B.Tech','Hostel facilities','Placement record']
 },
 {
-  id:'identity', topic:'General', icon:'🤖', title:'Who are you?',
+  id:'identity', topic:'General', title:'Who are you?',
   q:['who are you','are you a bot','are you human','are you ai','do you use chatgpt','which model are you','are you official','who made you','is this official','are you real'],
   a:`I'm a **rule-and-retrieval chatbot**, not a live AI service — there's no API key, no server and no internet call behind me. Everything I know is written into this single HTML file, so I keep working on aeroplane mode.
 
@@ -641,26 +529,26 @@ That also means: I'm **not an official Amity University channel**. I'm a study a
   chips:['Contact the admission office','What can you help me with?']
 },
 {
-  id:'howareyou', topic:'General', icon:'🙂', title:'How are you?', hidden:true,
+  id:'howareyou', topic:'General', title:'How are you?', hidden:true,
   q:['how are you','how are you doing','whats up','how is it going','kaise ho'],
-  a:`Running offline and ready to help. 🙂 What would you like to know about Amity Lucknow admissions?`,
+  a:`Running offline and ready to help. What would you like to know about Amity Lucknow admissions?`,
   chips:['What can you help me with?','Courses offered','Fee structure']
 },
 {
-  id:'thanks', topic:'General', icon:'🙏', title:'Thanks', hidden:true,
+  id:'thanks', topic:'General', title:'Thanks', hidden:true,
   q:['thank','thanks','thank you','thx','thanku','thanks a lot','shukriya','great help','appreciate it'],
-  a:`You're welcome! 😊 Anything else — fees, hostel, entrance tests, placements?`,
+  a:`You're welcome! Anything else — fees, hostel, entrance tests, placements?`,
   chips:['Scholarship options','Hostel fees','Placement record']
 },
 {
-  id:'bye', topic:'General', icon:'👋', title:'Goodbye', hidden:true,
+  id:'bye', topic:'General', title:'Goodbye', hidden:true,
   q:['bye','goodbye','see you','exit','quit','good night','tata','thats all'],
-  a:`All the best with your admission journey! 🎓 Come back any time — the chat stays saved on this device.`
+  a:`All the best with your admission journey! Come back any time — the chat stays saved on this device.`
 },
 
 /* --------------------------- university basics --------------------------- */
 {
-  id:'about', topic:'University', icon:'🏛️', title:'About Amity Lucknow',
+  id:'about', topic:'University', title:'About Amity Lucknow',
   q:['about amity','what is amity','amity lucknow','tell me about the university','overview','introduction','university info','when was amity established','history','who owns amity'],
   a:`**Amity University Uttar Pradesh, Lucknow Campus** is a private university run by the Ritnand Balved Education Foundation (the Amity Education Group), operating in Lucknow since 2010.
 
@@ -673,7 +561,7 @@ It is part of the same university as the Noida campus, so degrees are awarded by
   chips:['Is the degree UGC approved?','Where exactly is the campus?','What courses are offered?','Campus facilities']
 },
 {
-  id:'approval', topic:'University', icon:'✅', title:'Approvals & accreditation',
+  id:'approval', topic:'University', title:'Approvals & accreditation',
   q:['ugc approved','is amity recognised','recognition','accreditation','naac grade','aicte approved','bci approved','pci approved','is the degree valid','valid for government jobs','degree validity','is amity fake','is amity legit'],
   a:`### Recognition
 - Amity University Uttar Pradesh is a **state private university established by an Act of the UP legislature** and recognised by the **UGC**.
@@ -687,7 +575,7 @@ Degrees are valid for government jobs, higher studies and competitive exams like
   chips:['About Amity Lucknow','Placement record','Contact the admission office']
 },
 {
-  id:'ranking', topic:'University', icon:'🏅', title:'Rankings & reputation',
+  id:'ranking', topic:'University', title:'Rankings & reputation',
   q:['ranking','rank','nirf','is amity good','reputation','how good is amity','best private university','rating','reviews','what do students say'],
   a:`Amity University Uttar Pradesh regularly appears in **NIRF** listings in the university and management bands, and in private-university rankings by Indian magazines. The Lucknow campus is usually assessed as part of the parent university rather than separately, so a "Lucknow rank" on its own is rarely meaningful.
 
@@ -699,7 +587,7 @@ Degrees are valid for government jobs, higher studies and competitive exams like
   chips:['Placement record','Is Amity worth the fees?','Fee structure']
 },
 {
-  id:'worth', topic:'University', icon:'⚖️', title:'Is it worth it?',
+  id:'worth', topic:'University', title:'Is it worth it?',
   q:['is amity worth it','worth the money','should i join amity','pros and cons','advantages disadvantages','is it good for me','value for money','should i take admission'],
   a:`A balanced view, so you can decide for yourself:
 
@@ -720,7 +608,7 @@ Compare your likely **total cost after scholarship** against the realistic **ave
   chips:['Scholarship options','Placement record','Fee structure','Education loan']
 },
 {
-  id:'vs_noida', topic:'University', icon:'🔀', title:'Lucknow vs Noida campus',
+  id:'vs_noida', topic:'University', title:'Lucknow vs Noida campus',
   q:['lucknow or noida','amity noida vs lucknow','which campus is better','difference between campuses','noida campus','other campuses','compare campus'],
   a:`Both campuses belong to **Amity University Uttar Pradesh**, so the degree and academic structure are the same. Practical differences:
 
@@ -731,7 +619,7 @@ Compare your likely **total cost after scholarship** against the realistic **ave
   chips:['What courses are offered?','Fee structure','Placement record']
 },
 {
-  id:'location', topic:'University', icon:'📍', title:'Campus address',
+  id:'location', topic:'University', title:'Campus address',
   q:['where is amity lucknow','address','location','campus address','where is the campus','pin code','which city'],
   a:`**Amity University Lucknow Campus**
 Malhaur (near Malhaur Railway Station), Gomti Nagar Extension, Lucknow – 226028, Uttar Pradesh, India.
@@ -740,7 +628,7 @@ It sits on the eastern edge of Lucknow in the Gomti Nagar Extension belt, a few 
   chips:['How do I reach the campus?','Can I visit the campus?','Contact the admission office']
 },
 {
-  id:'reach', topic:'University', icon:'🚉', title:'How to reach',
+  id:'reach', topic:'University', title:'How to reach',
   q:['how to reach','how do i get there','nearest railway station','nearest airport','distance from station','distance from airport','how far is the airport','how far is the station','travel to campus','directions','metro','bus to amity','route to campus'],
   a:`### Getting to campus
 - **Nearest railway station:** Malhaur — practically next door (a short auto ride).
@@ -753,7 +641,7 @@ The university also runs campus buses on city routes for day scholars.`,
   chips:['Bus and transport facility','Campus address','Can I visit the campus?']
 },
 {
-  id:'visit', topic:'University', icon:'🚶', title:'Campus visit',
+  id:'visit', topic:'University', title:'Campus visit',
   q:['can i visit','campus visit','campus tour','open house','see the campus','visit before admission','walk in'],
   a:`Yes — walk-in campus visits are normally welcome on working days during office hours, and the admission cell arranges guided tours for prospective students and parents.
 
@@ -769,7 +657,7 @@ Call ahead on **+91-7303789789** to fix a slot, especially during the peak admis
 ,
 /* -------------------------------- courses -------------------------------- */
 {
-  id:'courses', topic:'Courses', icon:'📚', title:'All courses offered',
+  id:'courses', topic:'Courses', title:'All courses offered',
   q:['course','courses','programs','programmes','degrees','what can i study','streams','branches','what is offered','subjects','list of courses','course list','ug courses','pg courses'],
   a:`Amity Lucknow runs undergraduate, postgraduate and doctoral programmes across these schools:
 
@@ -791,7 +679,7 @@ Call ahead on **+91-7303789789** to fix a slot, especially during the peak admis
   chips:['B.Tech branches','MBA specialisations','Eligibility criteria','Fee structure']
 },
 {
-  id:'c_btech', topic:'Courses', icon:'⚙️', title:'B.Tech branches',
+  id:'c_btech', topic:'Courses', title:'B.Tech branches',
   q:['btech branches','engineering branches','btech courses','which branches in engineering','cse','computer science','ai ml','artificial intelligence course','data science course','mechanical','civil','ece','electronics','it branch','engineering courses'],
   a:`### B.Tech specialisations (4 years, 8 semesters)
 - **Computer Science & Engineering (CSE)** — the largest and most sought-after branch
@@ -810,7 +698,7 @@ Most branches offer industry-certification modules, a summer internship after th
   chips:['B.Tech eligibility','B.Tech fees','Which branch is best?','Lateral entry']
 },
 {
-  id:'c_mgmt', topic:'Courses', icon:'📈', title:'Management programmes',
+  id:'c_mgmt', topic:'Courses', title:'Management programmes',
   q:['management courses','bba','mba','mba specialisations','mba specializations','specialisations in mba','mba in analytics','business analytics','mba in marketing','mba in finance','mba in hr','business courses','management programs','bba specialisation','integrated mba','marketing finance hr'],
   a:`### BBA (3 years)
 General BBA plus specialisation tracks that usually include marketing, finance, HR, international business and entrepreneurship. Integrated BBA+MBA (5 years) is offered in some sessions.
@@ -829,7 +717,7 @@ The MBA includes a summer internship between the two years, live projects, and a
   chips:['MBA eligibility','BBA eligibility','MBA fees','Placement record']
 },
 {
-  id:'c_law', topic:'Courses', icon:'⚖️', title:'Law programmes',
+  id:'c_law', topic:'Courses', title:'Law programmes',
   q:['law courses','llb','ba llb','bba llb','llm','law school','integrated law','law programs','5 year law'],
   a:`### Law at Amity Law School, Lucknow
 - **BA LLB (Hons)** — 5-year integrated
@@ -840,7 +728,7 @@ Programmes are run under **Bar Council of India** norms, with moot courts, inter
   chips:['Law eligibility','Law course fees','Entrance exam for law','Placement record']
 },
 {
-  id:'c_commerce', topic:'Courses', icon:'💼', title:'Commerce & economics',
+  id:'c_commerce', topic:'Courses', title:'Commerce & economics',
   q:['bcom','b com','commerce courses','commerce','bcom hons','economics','ba economics','accounting course','finance course','ca along with degree'],
   a:`- **B.Com (Hons)** — 3 years, covering accounting, taxation, corporate law, financial management and analytics; popular with students preparing for **CA/CS/CMA** alongside the degree.
 - **BA (Hons) Economics** — 3 years, with econometrics, statistics and data-analysis modules.
@@ -850,7 +738,7 @@ Both UG programmes are open to any Class 12 stream, though a maths or commerce b
   chips:['B.Com eligibility','Commerce course fees','Placement record']
 },
 {
-  id:'c_computer', topic:'Courses', icon:'💻', title:'BCA & MCA',
+  id:'c_computer', topic:'Courses', title:'BCA & MCA',
   q:['bca','mca','computer application','computer applications','bca course','mca course','software course without maths','it courses'],
   a:`- **BCA** — 3 years: programming, data structures, DBMS, web and mobile development, with an optional specialisation track in some sessions.
 - **MCA** — 2 years: advanced programming, software engineering, cloud, data science electives and a final-semester industry project.
@@ -859,7 +747,7 @@ BCA is a common route for students who want software work without a PCM/B.Tech p
   chips:['BCA eligibility','MCA eligibility','BCA vs B.Tech','Fee structure']
 },
 {
-  id:'c_science', topic:'Courses', icon:'🧬', title:'Sciences & biotechnology',
+  id:'c_science', topic:'Courses', title:'Sciences & biotechnology',
   q:['bsc','b sc','msc','science courses','biotechnology','microbiology','forensic science','nutrition','life sciences','physics chemistry maths course','research course'],
   a:`### Amity Institute of Biotechnology & allied sciences
 - **B.Sc / B.Sc (Hons)** in Biotechnology, Microbiology, Forensic Science, Nutrition & Dietetics — the exact list varies by session
@@ -870,7 +758,7 @@ These programmes are lab-heavy, with dissertation/summer-project work and links 
   chips:['B.Sc eligibility','M.Sc eligibility','PhD programmes','Fee structure']
 },
 {
-  id:'c_pharmacy', topic:'Courses', icon:'💊', title:'Pharmacy',
+  id:'c_pharmacy', topic:'Courses', title:'Pharmacy',
   q:['pharmacy','b pharm','bpharm','m pharm','mpharm','pharma course','d pharm','pharmacist'],
   a:`- **B.Pharm** — 4 years, under **Pharmacy Council of India** norms, with pharmaceutics, pharmacology, pharmaceutical chemistry and a compulsory industrial training component.
 - **M.Pharm** — 2 years, in specialisations such as pharmaceutics or pharmacology (availability varies by session).
@@ -879,7 +767,7 @@ Graduates typically go into pharma manufacturing and QA/QC, clinical research, r
   chips:['Pharmacy eligibility','Pharmacy fees','Placement record']
 },
 {
-  id:'c_design', topic:'Courses', icon:'🎨', title:'Design & fashion',
+  id:'c_design', topic:'Courses', title:'Design & fashion',
   q:['design','fashion design','interior design','product design','m des','mdes','b des','design course','fine arts','textile'],
   a:`Design programmes at Lucknow typically include **fashion design**, **interior design** and **product/communication design** at UG level, and **M.Des** at PG level — the exact combination changes by session.
 
@@ -889,7 +777,7 @@ Admission normally involves a **portfolio review and/or a design aptitude test p
   chips:['Design eligibility','Design course fees','How do I apply?']
 },
 {
-  id:'c_media', topic:'Courses', icon:'🎬', title:'Journalism & mass communication',
+  id:'c_media', topic:'Courses', title:'Journalism & mass communication',
   q:['journalism','mass communication','media course','bjmc','ba jmc','film making','advertising course','pr course','media studies','ma mass communication'],
   a:`**BA/B.Sc (Hons) Journalism & Mass Communication** (3 years) and **MA Mass Communication** (2 years) cover print, broadcast, digital media, advertising, public relations, film studies and media production.
 
@@ -897,7 +785,7 @@ Facilities usually include a studio/edit lab, and the course carries internships
   chips:['Journalism eligibility','Media course fees','Placement record']
 },
 {
-  id:'c_psych', topic:'Courses', icon:'🧠', title:'Psychology & social sciences',
+  id:'c_psych', topic:'Courses', title:'Psychology & social sciences',
   q:['psychology','ba psychology','ma psychology','clinical psychology','social science','political science','english honours','sociology','behavioural science','counselling course'],
   a:`- **BA (Hons) Applied Psychology** — 3 years, with practical labs, case work and field placements
 - **MA / M.Sc Applied Psychology** — 2 years, often with clinical, counselling or organisational tracks
@@ -907,7 +795,7 @@ Career paths include counselling (with further clinical training and RCI-recogni
   chips:['Psychology eligibility','Arts course fees','Placement record']
 },
 {
-  id:'c_arch', topic:'Courses', icon:'🏗️', title:'Architecture & planning',
+  id:'c_arch', topic:'Courses', title:'Architecture & planning',
   q:['architecture','b arch','barch','nata','planning course','interior architecture'],
   a:`Where **B.Arch** is offered, it is a 5-year programme under **Council of Architecture** norms, requiring 10+2 with Mathematics and a valid **NATA** score (or JEE Paper 2, as per COA rules for that year).
 
@@ -915,7 +803,7 @@ Career paths include counselling (with further clinical training and RCI-recogni
   chips:['Design & fashion courses','Contact the admission office','Entrance exams accepted']
 },
 {
-  id:'c_medical', topic:'Courses', icon:'🩺', title:'Medical / MBBS',
+  id:'c_medical', topic:'Courses', title:'Medical / MBBS',
   q:['mbbs','medical course','doctor','bds','nursing','neet','md','allied health','physiotherapy','medical college'],
   a:`Amity Lucknow does **not** run an MBBS/BDS medical college, so NEET-based medical admission isn't available here.
 
@@ -928,7 +816,7 @@ If your goal is specifically MBBS, you'll need a NEET-based route at a medical c
   chips:['Sciences & biotechnology','Pharmacy','What courses are offered?']
 },
 {
-  id:'c_phd', topic:'Courses', icon:'🔬', title:'PhD & research',
+  id:'c_phd', topic:'Courses', title:'PhD & research',
   q:['phd','doctorate','research programme','doctoral','phd admission','research scholar','part time phd','m phil'],
   a:`### PhD at Amity Lucknow
 - Offered across engineering, management, law, sciences, biotechnology, pharmacy and social sciences
@@ -940,7 +828,7 @@ Intakes are usually announced once or twice a year with a formal research-admiss
   chips:['PhD eligibility','Contact the admission office','Sciences & biotechnology']
 },
 {
-  id:'c_online', topic:'Courses', icon:'🌐', title:'Online & distance programmes',
+  id:'c_online', topic:'Courses', title:'Online & distance programmes',
   q:['online course','distance learning','correspondence','online mba','part time degree','amity online','work while studying','evening classes','weekend classes'],
   a:`On-campus programmes at Lucknow are **regular, full-time and attendance-bound** — they aren't designed for working professionals.
 
@@ -950,7 +838,7 @@ Part-time options on campus are largely limited to **PhD** and occasional execut
   chips:['PhD & research','What courses are offered?','Contact the admission office']
 },
 {
-  id:'c_duration', topic:'Courses', icon:'⏳', title:'Course durations',
+  id:'c_duration', topic:'Courses', title:'Course durations',
   q:['duration','how long is the course','how many years','course length','semesters','years of study','how many semesters'],
   a:`### Typical durations
 - **B.Tech / B.Pharm** — 4 years (8 semesters)
@@ -964,7 +852,7 @@ All programmes follow a **semester system** with two main semesters a year.`,
   chips:['Grading and CGPA','Attendance rules','What courses are offered?']
 },
 {
-  id:'c_bestbranch', topic:'Courses', icon:'🧭', title:'Which branch to choose',
+  id:'c_bestbranch', topic:'Courses', title:'Which branch to choose',
   q:['which branch is best','which branch to choose','best course','best branch','cse or it','cse vs ai ml','which course should i take','what should i study','suggest a course','best for placement','which branch has best placement','help me choose a branch'],
   a:`There's no single "best" branch, but here's how students usually decide:
 
@@ -979,7 +867,7 @@ All programmes follow a **semester system** with two main semesters a year.`,
   chips:['B.Tech branches','Placement record','B.Tech eligibility','Fee structure']
 },
 {
-  id:'c_lateral', topic:'Courses', icon:'↗️', title:'Lateral entry & transfers',
+  id:'c_lateral', topic:'Courses', title:'Lateral entry & transfers',
   q:['lateral entry','diploma to btech','second year admission','direct second year','transfer from another college','credit transfer','migration from another university','switch college','branch change','can i change my branch','change branch later','switch branch','branch change after first year'],
   a:`### Lateral entry
 Diploma holders (3-year polytechnic in a relevant branch) and B.Sc graduates can usually apply for **direct entry into the 2nd year of B.Tech**, subject to seat availability and the year's policy. BCA/B.Sc graduates similarly feed into MCA.
@@ -995,7 +883,7 @@ Internal branch change is sometimes allowed after the first year, on merit (CGPA
 }
 ,
 {
-  id:'c_bca_btech', topic:'Courses', icon:'⚖️', title:'BCA vs B.Tech',
+  id:'c_bca_btech', topic:'Courses', title:'BCA vs B.Tech',
   q:['bca vs btech','bca or btech','difference between bca and btech','which is better bca or btech','bca better than btech','btech or bca','compare bca btech'],
   a:`Both lead to software jobs; they differ in depth, cost and recruiter access.
 
@@ -1015,7 +903,7 @@ Internal branch change is sometimes allowed after the first year, on merit (CGPA
   chips:['BCA eligibility','B.Tech eligibility','BCA fees','Placement record']
 },
 {
-  id:'vs_other', topic:'University', icon:'🆚', title:'Amity vs other colleges',
+  id:'vs_other', topic:'University', title:'Amity vs other colleges',
   q:['amity vs','which college is better','compare colleges','amity or other university','should i choose amity or','better than other private colleges','lpu vs amity','integral university','babu banarasi das','srm vs amity','private college comparison'],
   a:`I can't rank other institutions for you, but here's the checklist students actually use when comparing private universities:
 
@@ -1034,7 +922,7 @@ Score each college on those eight points and the decision usually makes itself.`
 ,
 /* ------------------------------ eligibility ------------------------------ */
 {
-  id:'el_general', topic:'Eligibility', icon:'🎯', title:'Eligibility at a glance',
+  id:'el_general', topic:'Eligibility', title:'Eligibility at a glance',
   q:['eligibility','eligible','criteria','who can apply','qualification','minimum marks','minimum percentage','cut off','cutoff','requirements','do i qualify','am i eligible','marks required','i scored','my percentage is','can i get admission with','will i get admission','i got 60 percent','i got 70 percent','is my percentage enough','with low marks'],
   a:`Eligibility is course-specific. Quick reference (minimums; actual cut-offs can be higher):
 
@@ -1054,7 +942,7 @@ Ask me about a specific course — for example **"eligibility for BBA"** — for
   chips:['B.Tech eligibility','MBA eligibility','Law eligibility','Entrance exams accepted']
 },
 {
-  id:'el_btech', topic:'Eligibility', icon:'⚙️', title:'B.Tech eligibility',
+  id:'el_btech', topic:'Eligibility', title:'B.Tech eligibility',
   q:['btech eligibility','engineering eligibility','eligibility for btech','btech requirement','btech criteria','btech marks required','can i get btech','btech admission criteria','btech without jee'],
   a:`### B.Tech (4 years)
 - **Class 12** with **Physics, Chemistry and Mathematics** (English as a subject), from a recognised board
@@ -1069,7 +957,7 @@ Selection is on entrance score plus Class 12 marks; CSE and AI/ML close earliest
   chips:['B.Tech fees','Entrance exams accepted','ASAT test details','B.Tech branches']
 },
 {
-  id:'el_mtech', topic:'Eligibility', icon:'🔧', title:'M.Tech eligibility',
+  id:'el_mtech', topic:'Eligibility', title:'M.Tech eligibility',
   q:['mtech eligibility','m tech eligibility','eligibility for mtech','mtech requirement','mtech admission','gate score','mtech criteria'],
   a:`### M.Tech (2 years)
 - **B.Tech / B.E. in a relevant branch** (or an equivalent recognised qualification) with usually **60%** aggregate
@@ -1080,7 +968,7 @@ Specialisations available vary by session — confirm your stream is running bef
   chips:['M.Tech fees','Entrance exams accepted','PhD eligibility']
 },
 {
-  id:'el_bba', topic:'Eligibility', icon:'📈', title:'BBA eligibility',
+  id:'el_bba', topic:'Eligibility', title:'BBA eligibility',
   q:['bba eligibility','eligibility for bba','bba criteria','bba requirement','bba marks','can i do bba','bba admission criteria','management eligibility'],
   a:`### BBA (3 years)
 - **Class 12 in any stream** (science, commerce or arts) from a recognised board
@@ -1092,7 +980,7 @@ Applicants awaiting results can apply provisionally.`,
   chips:['BBA fees','MBA eligibility','ASAT test details','Placement record']
 },
 {
-  id:'el_mba', topic:'Eligibility', icon:'💼', title:'MBA eligibility',
+  id:'el_mba', topic:'Eligibility', title:'MBA eligibility',
   q:['mba eligibility','eligibility for mba','mba criteria','mba requirement','mba admission','mba without cat','cat score for mba','mba entrance','mba percentage'],
   a:`### MBA (2 years)
 - **Bachelor's degree in any discipline** (3 years or more) from a recognised university, usually **50–60%** aggregate
@@ -1105,7 +993,7 @@ Applicants awaiting results can apply provisionally.`,
   chips:['MBA fees','MBA specialisations','Entrance exams accepted','Placement record']
 },
 {
-  id:'el_bcom', topic:'Eligibility', icon:'🧾', title:'B.Com & economics eligibility',
+  id:'el_bcom', topic:'Eligibility', title:'B.Com & economics eligibility',
   q:['bcom eligibility','b com eligibility','eligibility for bcom','commerce eligibility','economics eligibility','bcom criteria','bcom marks','ba economics eligibility'],
   a:`### B.Com (Hons) / BA (Hons) Economics — 3 years
 - **Class 12 in any stream**, typically **50–60% aggregate**
@@ -1116,7 +1004,7 @@ Many students run **CA/CS/CMA** preparation alongside B.Com (Hons).`,
   chips:['Commerce course fees','Placement record','How do I apply?']
 },
 {
-  id:'el_bca', topic:'Eligibility', icon:'💻', title:'BCA eligibility',
+  id:'el_bca', topic:'Eligibility', title:'BCA eligibility',
   q:['bca eligibility','eligibility for bca','bca criteria','bca requirement','bca without maths','bca marks','can i do bca'],
   a:`### BCA (3 years)
 - **Class 12 from a recognised board**, usually **50–60% aggregate**
@@ -1127,7 +1015,7 @@ BCA is the common non-PCM route into software; it feeds naturally into MCA.`,
   chips:['BCA fees','MCA eligibility','BCA vs B.Tech']
 },
 {
-  id:'el_mca', topic:'Eligibility', icon:'🖥️', title:'MCA eligibility',
+  id:'el_mca', topic:'Eligibility', title:'MCA eligibility',
   q:['mca eligibility','eligibility for mca','mca criteria','mca requirement','mca admission','mca marks'],
   a:`### MCA (2 years)
 - **BCA / B.Sc (CS or IT) / B.Com with computer subjects / any bachelor's degree with Mathematics** at Class 12 or graduation level
@@ -1137,7 +1025,7 @@ BCA is the common non-PCM route into software; it feeds naturally into MCA.`,
   chips:['MCA fees','BCA eligibility','Placement record']
 },
 {
-  id:'el_law', topic:'Eligibility', icon:'⚖️', title:'Law (BA LLB / BBA LLB) eligibility',
+  id:'el_law', topic:'Eligibility', title:'Law (BA LLB / BBA LLB) eligibility',
   q:['law eligibility','llb eligibility','ba llb eligibility','bba llb eligibility','eligibility for law','law criteria','law admission requirement','clat needed','law marks'],
   a:`### BA LLB (Hons) / BBA LLB (Hons) — 5 years
 - **Class 12 in any stream**, typically **50–60% aggregate** (BCI prescribes the floor)
@@ -1149,7 +1037,7 @@ BCA is the common non-PCM route into software; it feeds naturally into MCA.`,
   chips:['Law course fees','Law programmes','Entrance exam for law']
 },
 {
-  id:'el_science', topic:'Eligibility', icon:'🧪', title:'B.Sc / M.Sc eligibility',
+  id:'el_science', topic:'Eligibility', title:'B.Sc / M.Sc eligibility',
   q:['bsc eligibility','b sc eligibility','msc eligibility','science eligibility','biotech eligibility','biotechnology eligibility','microbiology eligibility','forensic science eligibility','eligibility for bsc'],
   a:`### B.Sc / B.Sc (Hons) — 3 years
 - **Class 12 with science subjects** (PCB or PCM depending on the programme — biotech and microbiology normally need Biology)
@@ -1162,7 +1050,7 @@ BCA is the common non-PCM route into software; it feeds naturally into MCA.`,
   chips:['Science course fees','Sciences & biotechnology','PhD eligibility']
 },
 {
-  id:'el_pharm', topic:'Eligibility', icon:'💊', title:'Pharmacy eligibility',
+  id:'el_pharm', topic:'Eligibility', title:'Pharmacy eligibility',
   q:['pharmacy eligibility','b pharm eligibility','bpharm eligibility','m pharm eligibility','eligibility for pharmacy','pharma eligibility'],
   a:`### B.Pharm — 4 years
 - **Class 12 with Physics, Chemistry and Biology or Mathematics**, typically **50–60% aggregate**
@@ -1173,7 +1061,7 @@ BCA is the common non-PCM route into software; it feeds naturally into MCA.`,
   chips:['Pharmacy fees','Pharmacy courses','Placement record']
 },
 {
-  id:'el_arts', topic:'Eligibility', icon:'🎭', title:'Arts, psychology & media eligibility',
+  id:'el_arts', topic:'Eligibility', title:'Arts, psychology & media eligibility',
   q:['ba eligibility','arts eligibility','psychology eligibility','ma eligibility','journalism eligibility','mass communication eligibility','english honours eligibility','design eligibility','media eligibility','ba hons eligibility'],
   a:`### BA (Hons) — Psychology, English, Political Science, JMC
 - **Class 12 in any stream**, typically **50–60% aggregate**
@@ -1187,7 +1075,7 @@ BCA is the common non-PCM route into software; it feeds naturally into MCA.`,
   chips:['Arts course fees','Psychology & social sciences','Design & fashion courses']
 },
 {
-  id:'el_phd', topic:'Eligibility', icon:'🔬', title:'PhD eligibility',
+  id:'el_phd', topic:'Eligibility', title:'PhD eligibility',
   q:['phd eligibility','eligibility for phd','doctorate eligibility','phd criteria','phd requirement','phd entrance','net jrf'],
   a:`### PhD
 - **Master's degree in a relevant discipline with at least 55%** (relaxation for reserved categories as per UGC norms)
@@ -1199,7 +1087,7 @@ Some departments prefer candidates with publications or relevant industry/resear
   chips:['PhD & research','Contact the admission office']
 },
 {
-  id:'el_age', topic:'Eligibility', icon:'🎂', title:'Age limit',
+  id:'el_age', topic:'Eligibility', title:'Age limit',
   q:['age limit','maximum age','too old','age criteria','how old can i be','is there an age bar','minimum age'],
   a:`There is generally **no upper age limit** for admission to Amity's UG and PG programmes; eligibility is based on your qualifying examination, not your age.
 
@@ -1211,7 +1099,7 @@ Exceptions to watch for:
   chips:['Gap year','Documents required','How do I apply?']
 },
 {
-  id:'el_gap', topic:'Eligibility', icon:'🕰️', title:'Gap year / dropper',
+  id:'el_gap', topic:'Eligibility', title:'Gap year / dropper',
   q:['gap year','drop year','dropper','study gap','one year gap','2 year gap','will gap affect admission','after a break'],
   a:`A gap of **one or two years is normally accepted** for admission — droppers preparing for JEE/NEET/CLAT are common in every batch.
 
@@ -1223,7 +1111,7 @@ Longer gaps aren't an automatic disqualification, but expect a question about th
   chips:['Documents required','Age limit','Placement process']
 },
 {
-  id:'el_compartment', topic:'Eligibility', icon:'📝', title:'Compartment / improvement / re-appear',
+  id:'el_compartment', topic:'Eligibility', title:'Compartment / improvement / re-appear',
   q:['compartment','supplementary','failed one subject','improvement exam','re appear','reattempt board exam','backlog in 12th','result awaited','result not out','result is pending','result not declared yet','can i apply before result','provisional admission'],
   a:`- **Compartment/supplementary in Class 12:** you must clear it and meet the aggregate requirement before enrolment. Most cases are handled as a **provisional admission** that becomes final once you submit the passing marksheet.
 - **Improvement exam:** improved marks are usually accepted if the improvement is from the same recognised board and submitted within the deadline.
@@ -1233,7 +1121,7 @@ Longer gaps aren't an automatic disqualification, but expect a question about th
   chips:['Documents required','Admission process','Eligibility at a glance']
 },
 {
-  id:'el_intl', topic:'Eligibility', icon:'🌍', title:'International & NRI applicants',
+  id:'el_intl', topic:'Eligibility', title:'International & NRI applicants',
   q:['international students','foreign students','nri quota','nri admission','overseas applicant','from nepal','from abroad','student visa','equivalence certificate'],
   a:`### International / NRI admissions
 - Applications are handled by the university's **international office** under a separate NRI/foreign-national category
@@ -1246,7 +1134,7 @@ Longer gaps aren't an automatic disqualification, but expect a question about th
   chips:['Contact the admission office','Hostel facilities','Fee structure']
 },
 {
-  id:'el_quota', topic:'Eligibility', icon:'🎗️', title:'Reservation & special categories',
+  id:'el_quota', topic:'Eligibility', title:'Reservation & special categories',
   q:['reservation','sc st quota','obc quota','ews','pwd','disability','defence quota','kashmiri migrant','category','management quota','sports quota','minority quota'],
   a:`As a **private university**, Amity does not follow the government reservation matrix used by state institutions; admission is primarily merit- and entrance-based.
 
@@ -1263,7 +1151,7 @@ Special consideration does exist in the form of **concessions and scholarships**
 ,
 /* ---------------------------- entrance exams ---------------------------- */
 {
-  id:'exam_overview', topic:'Entrance exams', icon:'🧾', title:'Entrance exams accepted',
+  id:'exam_overview', topic:'Entrance exams', title:'Entrance exams accepted',
   q:['entrance exam','entrance test','which exam','exams accepted','admission test','do i need an entrance exam','national exam','exam required','asat or jee'],
   a:`### Accepted routes by programme
 - **B.Tech** — JEE Main **or** ASAT/AUEET (Amity's own test)
@@ -1279,7 +1167,7 @@ Special consideration does exist in the form of **concessions and scholarships**
   chips:['ASAT test details','B.Tech eligibility','Admission without entrance exam','MBA eligibility']
 },
 {
-  id:'exam_asat', topic:'Entrance exams', icon:'🖊️', title:'ASAT / AUEET details',
+  id:'exam_asat', topic:'Entrance exams', title:'ASAT / AUEET details',
   q:['asat','aueet','aset exam','amity entrance test','amity scholarship test','asat pattern','asat syllabus','asat date','asat fee','how to register for asat','asat online','amity test'],
   a:`**ASAT** (Amity Scholarship-cum-Admission Test; the engineering variant is often called **AUEET**) is Amity's own entrance and scholarship test.
 
@@ -1297,7 +1185,7 @@ Apply online at amity.edu/lucknow, choose your programme, pay the application fe
   chips:['How to prepare for ASAT','Scholarship options','How do I apply?','Application fee']
 },
 {
-  id:'exam_prep', topic:'Entrance exams', icon:'📖', title:'Preparing for the test',
+  id:'exam_prep', topic:'Entrance exams', title:'Preparing for the test',
   q:['how to prepare','preparation','study material','syllabus for asat','is asat difficult','how hard is asat','mock test','tips for entrance','pass marks'],
   a:`### What to expect
 ASAT is an **aptitude-level test, not a JEE-Advanced-level one**. Students who are comfortable with their Class 12 syllabus and basic reasoning usually find it manageable.
@@ -1314,7 +1202,7 @@ Since the same score drives your **scholarship slab**, treat it as a fee-reducti
   chips:['ASAT test details','Scholarship options','B.Tech eligibility']
 },
 {
-  id:'exam_none', topic:'Entrance exams', icon:'🚪', title:'Admission without an entrance exam',
+  id:'exam_none', topic:'Entrance exams', title:'Admission without an entrance exam',
   q:['without entrance exam','no jee','without jee','admission without jee','can i get admission without jee','direct admission','without cat','without clat','admission without test','admission without entrance exam','merit based admission','can i get admission without exam','direct entry','is entrance exam compulsory'],
   a:`You don't need a national entrance exam for most programmes here — but you do normally need **some** assessment.
 
@@ -1326,7 +1214,7 @@ Since the same score drives your **scholarship slab**, treat it as a fee-reducti
   chips:['ASAT test details','How do I apply?','Reservation & special categories']
 },
 {
-  id:'exam_dates', topic:'Entrance exams', icon:'📅', title:'Important dates & deadlines',
+  id:'exam_dates', topic:'Entrance exams', title:'Important dates & deadlines',
   q:['dates','important dates','deadline','last date','when does admission start','admission timeline','when to apply','session start','academic calendar','when do classes begin','when do classes start','when does the session start','admission open','cut off date'],
   a:`Amity runs a **rolling admission cycle** rather than a single deadline, but the usual rhythm is:
 
@@ -1344,7 +1232,7 @@ Popular branches (CSE, AI/ML) fill well before the final date, so early applicat
 
 /* --------------------------- application process --------------------------- */
 {
-  id:'process', topic:'Admissions', icon:'🧭', title:'Admission process',
+  id:'process', topic:'Admissions', title:'Admission process',
   q:['admission process','how to get admission','process','procedure','steps','how does admission work','admission steps','what is the process','admission checklist','complete admission checklist'],
   a:`### Step by step
 1. **Apply online** at amity.edu/lucknow — create a login, choose campus (Lucknow) and programme, and pay the application fee.
@@ -1361,7 +1249,7 @@ Popular branches (CSE, AI/ML) fill well before the final date, so early applicat
   chips:['Documents required','Application fee','Important dates','Fee structure']
 },
 {
-  id:'apply', topic:'Admissions', icon:'🖱️', title:'How to apply online',
+  id:'apply', topic:'Admissions', title:'How to apply online',
   q:['how to apply','how do i apply','how can i apply','where do i apply','i want to apply','apply online','application form','fill the form','registration','where to apply','application process','sign up','apply now','online form','filling the form'],
   a:`### Applying
 1. Go to **amity.edu/lucknow** and open the admissions/apply section.
@@ -1380,7 +1268,7 @@ Popular branches (CSE, AI/ML) fill well before the final date, so early applicat
   chips:['Application fee','Documents required','ASAT test details','Admission process']
 },
 {
-  id:'app_fee', topic:'Admissions', icon:'🧾', title:'Application fee',
+  id:'app_fee', topic:'Admissions', title:'Application fee',
   q:['application fee','form fee','registration fee','cost to apply','how much to apply','application charges','is the form free'],
   a:`The **application/registration fee is a small one-time amount** (commonly in the ₹1,000–₹2,000 range for on-campus programmes) paid online when you submit the form. It is **non-refundable** and separate from tuition.
 
@@ -1392,7 +1280,7 @@ Popular branches (CSE, AI/ML) fill well before the final date, so early applicat
   chips:['How to apply online','Fee structure','Refund policy']
 },
 {
-  id:'documents', topic:'Admissions', icon:'📄', title:'Documents required',
+  id:'documents', topic:'Admissions', title:'Documents required',
   q:['documents','documents required','what documents','paperwork','certificates needed','document list','what to bring','verification documents','original documents'],
   a:`### Bring originals + two sets of photocopies
 - **Class 10** marksheet & certificate (date-of-birth proof)
@@ -1412,7 +1300,7 @@ Popular branches (CSE, AI/ML) fill well before the final date, so early applicat
   chips:['Admission process','Gap year','Hostel booking','Fee payment options']
 },
 {
-  id:'interview', topic:'Admissions', icon:'🗣️', title:'Interview & GD-PI',
+  id:'interview', topic:'Admissions', title:'Interview & GD-PI',
   q:['interview','personal interview','gd pi','group discussion','what do they ask','interview questions','is interview difficult','pi round','how to prepare for interview'],
   a:`Most programmes end with a **personal interview**; management courses add a **group discussion**.
 
@@ -1429,7 +1317,7 @@ Prepare a crisp self-introduction, revise your strongest subject, read the news 
   chips:['Admission process','MBA eligibility','Law eligibility']
 },
 {
-  id:'seat', topic:'Admissions', icon:'🪑', title:'Seat confirmation & offer letter',
+  id:'seat', topic:'Admissions', title:'Seat confirmation & offer letter',
   q:['offer letter','seat confirmation','block my seat','admission letter','how to confirm admission','booking amount','token amount','provisional admission letter','seat availability','are seats left'],
   a:`Once you're selected:
 
@@ -1444,7 +1332,7 @@ Seats per branch are limited and CSE/AI-ML close earliest. There's no public liv
   chips:['Fee payment options','Documents required','Refund policy','Contact the admission office']
 },
 {
-  id:'cancel', topic:'Admissions', icon:'↩️', title:'Cancellation & refund',
+  id:'cancel', topic:'Admissions', title:'Cancellation & refund',
   q:['refund','cancellation','cancel admission','withdraw','money back','refund policy','leave after admission','fee refund','if i cancel'],
   a:`### How refunds usually work
 - Refunds follow **UGC/AICTE norms**: cancel well before the session starts and most of the fee (minus a processing deduction) is refundable.
@@ -1458,7 +1346,7 @@ Submit a **written cancellation request** through the admission office (keep the
   chips:['Fee structure','Fee payment options','Contact the admission office']
 },
 {
-  id:'status', topic:'Admissions', icon:'🔎', title:'Tracking your application',
+  id:'status', topic:'Admissions', title:'Tracking your application',
   q:['application status','track application','check status','admission status','did i get selected','result of application','no response','shortlisted or not'],
   a:`Everything is tracked on the **applicant dashboard** you created when applying:
 
@@ -1473,7 +1361,7 @@ Also check your **registered email and SMS** (including spam) — deadlines are 
 ,
 /* ---------------------------------- fees ---------------------------------- */
 {
-  id:'fee_overview', topic:'Fees', icon:'💰', title:'Fee structure',
+  id:'fee_overview', topic:'Fees', title:'Fee structure',
   q:['fee','fees','fee structure','cost','how much does it cost','tuition','price','expensive','charges','total fees','annual fee','yearly fee','per semester fee','how much money'],
   a:`Indicative **tuition** ranges (per year unless stated; revised every session):
 
@@ -1493,7 +1381,7 @@ Add to tuition: **one-time admission charges**, **exam fees**, a refundable **se
   chips:['B.Tech fees','Hostel fees','Scholarship options','Can I pay in instalments?']
 },
 {
-  id:'fee_btech', topic:'Fees', icon:'⚙️', title:'B.Tech fees',
+  id:'fee_btech', topic:'Fees', title:'B.Tech fees',
   q:['btech fees','engineering fees','fees for btech','btech cost','how much is btech','btech fee structure','cse fees','ai ml fees','mtech fees'],
   a:`### B.Tech (indicative)
 - **Tuition:** roughly **₹2.2–4.0 lakh per year**, varying by branch (CSE and AI/ML sit at the upper end)
@@ -1507,7 +1395,7 @@ A strong **ASAT score or Class 12 percentage** can earn a scholarship slab that 
   chips:['Scholarship options','Hostel fees','Can I pay in instalments?','B.Tech eligibility']
 },
 {
-  id:'fee_mgmt', topic:'Fees', icon:'📈', title:'BBA & MBA fees',
+  id:'fee_mgmt', topic:'Fees', title:'BBA & MBA fees',
   q:['mba fees','bba fees','management fees','fees for mba','fees for bba','mba cost','how much is mba','bba cost'],
   a:`### BBA (indicative)
 About **₹1.5–2.5 lakh per year**, so roughly **₹4.5–7 lakh** across 3 years.
@@ -1521,7 +1409,7 @@ Extras: one-time admission charges, exam fees, and hostel/transport if opted. Su
   chips:['Scholarship options','MBA eligibility','Hostel fees','Education loan']
 },
 {
-  id:'fee_law', topic:'Fees', icon:'⚖️', title:'Law course fees',
+  id:'fee_law', topic:'Fees', title:'Law course fees',
   q:['law fees','llb fees','ba llb fees','bba llb fees','llm fees','fees for law','law cost'],
   a:`### Indicative
 - **BA LLB (Hons) / BBA LLB (Hons)** — about **₹1.5–2.5 lakh per year**, across 5 years
@@ -1531,7 +1419,7 @@ Add one-time admission charges, exam fees, and hostel/transport if you opt in. M
   chips:['Law eligibility','Scholarship options','Hostel fees']
 },
 {
-  id:'fee_computer', topic:'Fees', icon:'💻', title:'BCA & MCA fees',
+  id:'fee_computer', topic:'Fees', title:'BCA & MCA fees',
   q:['bca fees','mca fees','fees for bca','fees for mca','computer application fees','bca cost','mca cost'],
   a:`### Indicative
 - **BCA (3 years)** — about **₹1.2–2.0 lakh per year**
@@ -1541,7 +1429,7 @@ BCA plus MCA together typically lands well below a 4-year B.Tech in total cost, 
   chips:['BCA eligibility','MCA eligibility','BCA vs B.Tech','Scholarship options']
 },
 {
-  id:'fee_science', topic:'Fees', icon:'🧪', title:'Science & pharmacy fees',
+  id:'fee_science', topic:'Fees', title:'Science & pharmacy fees',
   q:['bsc fees','msc fees','science fees','biotech fees','pharmacy fees','b pharm fees','m pharm fees','fees for bsc','biotechnology fees'],
   a:`### Indicative
 - **B.Sc / B.Sc (Hons)** — about **₹1.2–2.0 lakh per year**
@@ -1553,7 +1441,7 @@ Lab-based programmes may carry small additional consumable/lab charges per semes
   chips:['Science eligibility','Pharmacy eligibility','Scholarship options']
 },
 {
-  id:'fee_arts', topic:'Fees', icon:'🎨', title:'Commerce, arts, media & design fees',
+  id:'fee_arts', topic:'Fees', title:'Commerce, arts, media & design fees',
   q:['bcom fees','ba fees','arts fees','commerce fees','journalism fees','mass communication fees','design fees','psychology fees','economics fees','media fees','m des fees'],
   a:`### Indicative
 - **B.Com (Hons) / BA (Hons)** — about **₹1.0–1.8 lakh per year**
@@ -1566,7 +1454,7 @@ Design and media students should budget separately for materials, software, shoo
   chips:['Arts eligibility','Design & fashion courses','Scholarship options']
 },
 {
-  id:'fee_hostel', topic:'Fees', icon:'🛏️', title:'Hostel fees',
+  id:'fee_hostel', topic:'Fees', title:'Hostel fees',
   q:['hostel fees','hostel cost','how much is hostel','accommodation cost','room rent','hostel charges','ac room cost','non ac hostel','hostel fee per year'],
   a:`### Indicative hostel charges (per year)
 - **Non-AC room:** about **₹75,000**
@@ -1579,7 +1467,7 @@ Add laundry, and any extra charges for appliances. Hostel fees are payable annua
   chips:['Hostel facilities','Mess & food','Can I pay in instalments?','Hostel booking']
 },
 {
-  id:'fee_mess', topic:'Fees', icon:'🍽️', title:'Mess & food charges',
+  id:'fee_mess', topic:'Fees', title:'Mess & food charges',
   q:['mess fees','food cost','mess charges','canteen cost','food expense','mess plan','monthly food cost'],
   a:`Mess charges are either **included in the hostel package** or billed as a separate annual/semester plan — commonly in the **₹40,000–₹70,000 per year** band for three meals a day.
 
@@ -1587,7 +1475,7 @@ Beyond the mess, students typically spend on cafeteria and food outlets on campu
   chips:['Hostel fees','Mess & food','Monthly living cost']
 },
 {
-  id:'fee_transport', topic:'Fees', icon:'🚌', title:'Transport charges',
+  id:'fee_transport', topic:'Fees', title:'Transport charges',
   q:['transport fees','bus fees','bus charges','transport cost','college bus fee','shuttle cost'],
   a:`University buses run on fixed city routes for day scholars. Charges are **route-distance based**, usually quoted **per year** and paid with the tuition instalment — commonly in the **₹25,000–₹50,000 per year** band depending on the pickup point.
 
@@ -1595,7 +1483,7 @@ You opt in at admission time and select your stop; changing routes mid-session d
   chips:['Bus and transport facility','Fee structure','Hostel fees']
 },
 {
-  id:'fee_other', topic:'Fees', icon:'🧮', title:'Other charges & hidden costs',
+  id:'fee_other', topic:'Fees', title:'Other charges & hidden costs',
   q:['other charges','hidden costs','extra fees','one time charges','security deposit','caution money','exam fee','admission fee','what else do i pay','total cost of studying'],
   a:`Budget for these beyond tuition:
 
@@ -1614,7 +1502,7 @@ For a hostel student, **tuition + hostel + mess + personal spending** is usually
   chips:['Hostel fees','Mess & food','Education loan','Scholarship options']
 },
 {
-  id:'fee_living', topic:'Fees', icon:'🧾', title:'Monthly living cost',
+  id:'fee_living', topic:'Fees', title:'Monthly living cost',
   q:['monthly expenses','living cost','cost of living','pocket money','monthly budget','how much per month','expenses in lucknow'],
   a:`Lucknow is comparatively inexpensive. For a hosteller, once hostel and mess are paid:
 
@@ -1627,7 +1515,7 @@ Off-campus PG accommodation near Gomti Nagar Extension generally runs **₹6,000
   chips:['Hostel fees','Mess & food','PG and off-campus stay']
 },
 {
-  id:'fee_instal', topic:'Fees', icon:'📆', title:'Instalments & payment schedule',
+  id:'fee_instal', topic:'Fees', title:'Instalments & payment schedule',
   q:['instalment','installment','emi','pay in parts','semester wise payment','can i pay in instalments','payment schedule','part payment','yearly or semester'],
   a:`- Tuition is normally billed **semester-wise or annually**, not as a single lump sum for the whole course.
 - The **first payment** (seat confirmation + first semester) is due at admission; subsequent semesters are due before each semester begins.
@@ -1637,7 +1525,7 @@ Off-campus PG accommodation near Gomti Nagar Extension generally runs **₹6,000
   chips:['Education loan','Fee payment options','Fee structure']
 },
 {
-  id:'fee_pay', topic:'Fees', icon:'💳', title:'Fee payment options',
+  id:'fee_pay', topic:'Fees', title:'Fee payment options',
   q:['how to pay fees','how do i pay the fees','how to pay the fee','payment methods','pay fees online','payment modes','net banking','upi','dd','cheque','payment portal','where to pay','fee payment'],
   a:`Fees are paid **online through the university's official portal/Amizone** — net banking, debit/credit card, UPI, and demand draft in favour of the university where permitted.
 
@@ -1649,7 +1537,7 @@ Off-campus PG accommodation near Gomti Nagar Extension generally runs **₹6,000
   chips:['Instalments & payment schedule','Refund policy','Education loan']
 },
 {
-  id:'loan', topic:'Fees', icon:'🏦', title:'Education loan',
+  id:'loan', topic:'Fees', title:'Education loan',
   q:['education loan','study loan','bank loan','loan facility','emi for fees','loan assistance','financial help','can i get a loan'],
   a:`### How it works
 - Indian banks (SBI, PNB, BoB, HDFC, Axis and others) lend for professional programmes at recognised universities; Amity's programmes qualify.
@@ -1665,7 +1553,7 @@ The admission/accounts office can issue the documents banks ask for — request 
 
 /* ------------------------------ scholarships ------------------------------ */
 {
-  id:'scholarship', topic:'Scholarships', icon:'🏆', title:'Scholarship options',
+  id:'scholarship', topic:'Scholarships', title:'Scholarship options',
   q:['scholarship','scholarships','waiver','fee waiver','discount','financial aid','concession','free seat','how to get scholarship','merit scholarship','reduce fees'],
   a:`Amity's scholarships are mostly **merit-linked through ASAT**, and they can move the fee substantially.
 
@@ -1685,7 +1573,7 @@ Apply early, take ASAT seriously (it *is* the scholarship exam), and submit cate
   chips:['ASAT test details','Scholarship renewal rules','Fee structure','Education loan']
 },
 {
-  id:'scholarship_keep', topic:'Scholarships', icon:'📉', title:'Scholarship renewal rules',
+  id:'scholarship_keep', topic:'Scholarships', title:'Scholarship renewal rules',
   q:['scholarship renewal','keep scholarship','maintain scholarship','cgpa for scholarship','will scholarship continue','scholarship every year','lose scholarship','conditions for scholarship'],
   a:`A scholarship is usually granted **for the full course but reviewed every year**, and it can be withdrawn.
 
@@ -1699,7 +1587,7 @@ If your CGPA slips below the bar, the waiver can be reduced or withdrawn for the
   chips:['Scholarship options','Grading and CGPA','Attendance rules']
 },
 {
-  id:'scholarship_sports', topic:'Scholarships', icon:'🥇', title:'Sports & special scholarships',
+  id:'scholarship_sports', topic:'Scholarships', title:'Sports & special scholarships',
   q:['sports scholarship','sports quota','defence scholarship','army quota','sibling discount','brother sister discount','alumni discount','special scholarship','single girl child'],
   a:`### Sports
 State, national or international level achievers can apply with **verified certificates** (from a recognised federation/board). Trials or a sports-committee review may apply, and continuation is usually tied to representing the university.
@@ -1714,7 +1602,7 @@ A concession is commonly available where a sibling is currently enrolled or a pa
   chips:['Scholarship options','Documents required','Fee structure']
 },
 {
-  id:'scholarship_govt', topic:'Scholarships', icon:'🏛️', title:'Government scholarships',
+  id:'scholarship_govt', topic:'Scholarships', title:'Government scholarships',
   q:['government scholarship','nsp','national scholarship portal','sc st scholarship','obc scholarship','minority scholarship','ews scholarship','state scholarship','post matric'],
   a:`You can usually claim **central and state government schemes** while studying here, applied for **outside** the university:
 
@@ -1728,7 +1616,7 @@ The university issues the **bonafide certificate, fee receipts and institute det
 ,
 /* -------------------------------- hostel -------------------------------- */
 {
-  id:'hostel', topic:'Hostel', icon:'🛏️', title:'Hostel facilities',
+  id:'hostel', topic:'Hostel', title:'Hostel facilities',
   q:['hostel','hostels','accommodation','stay','residence','dorm','hostel facility','is hostel available','living on campus','hostel details'],
   a:`On-campus hostels run for boys and girls in **separate blocks** (around six blocks, roughly 2,000 beds in total).
 
@@ -1746,7 +1634,7 @@ Hostel is optional but recommended for first-years, especially students from out
   chips:['Hostel fees','Hostel rules','Mess & food','Hostel booking']
 },
 {
-  id:'hostel_book', topic:'Hostel', icon:'🗝️', title:'Hostel booking & allotment',
+  id:'hostel_book', topic:'Hostel', title:'Hostel booking & allotment',
   q:['hostel booking','how to get hostel','hostel allotment','apply for hostel','is hostel guaranteed','room allotment','choose roommate','hostel form'],
   a:`- You **opt for hostel at admission time**, on the same portal where you confirm your seat.
 - Allotment is on a **first-come, first-served basis** against room type (AC/non-AC, single/double/triple) — popular categories go early, so opt in as soon as you accept the offer.
@@ -1759,7 +1647,7 @@ Hostel is optional but recommended for first-years, especially students from out
   chips:['Hostel fees','Hostel rules','Documents required']
 },
 {
-  id:'hostel_rules', topic:'Hostel', icon:'📏', title:'Hostel rules',
+  id:'hostel_rules', topic:'Hostel', title:'Hostel rules',
   q:['hostel rules','curfew','timings','in time','visitors allowed','can parents stay','can parents visit','can my parents visit me','rules and regulations','discipline','night out','leave from hostel','can i keep a bike','can i keep a car'],
   a:`Expect a **fairly strict, well-supervised** environment:
 
@@ -1776,7 +1664,7 @@ Rules are detailed in the hostel handbook you sign at allotment — read it befo
   chips:['Hostel facilities','Anti-ragging policy','Mess & food','Attendance rules']
 },
 {
-  id:'mess', topic:'Hostel', icon:'🍛', title:'Mess & food',
+  id:'mess', topic:'Hostel', title:'Mess & food',
   q:['mess','food','mess food','canteen','cafeteria','dining','is food good','veg non veg','food quality','meals','breakfast lunch dinner'],
   a:`- The hostel mess serves **breakfast, lunch, snacks and dinner** on a weekly rotating menu — largely North Indian, with a mix of vegetarian and (on specified days) non-vegetarian options.
 - Special meals are typically served on festivals.
@@ -1788,7 +1676,7 @@ Rules are detailed in the hostel handbook you sign at allotment — read it befo
   chips:['Mess & food charges','Hostel facilities','Campus visit']
 },
 {
-  id:'hostel_girls', topic:'Hostel', icon:'🛡️', title:'Girls hostel & safety',
+  id:'hostel_girls', topic:'Hostel', title:'Girls hostel & safety',
   q:['girls hostel','is it safe for girls','safety','security','women safety','ladies hostel','female hostel','warden'],
   a:`Girls' hostels are in **separate blocks with dedicated wardens and attendants**, controlled entry, CCTV at entry points and 24×7 security staff.
 
@@ -1802,7 +1690,7 @@ Parents are usually welcome to meet the warden during admission — worth doing 
   chips:['Hostel rules','Anti-ragging policy','Medical facilities','Campus visit']
 },
 {
-  id:'pg', topic:'Hostel', icon:'🏘️', title:'PG and off-campus stay',
+  id:'pg', topic:'Hostel', title:'PG and off-campus stay',
   q:['pg near amity','rent near campus','flat near college','off campus stay','room outside','paying guest','can i stay outside','apartment'],
   a:`Plenty of PGs, shared flats and hostels operate in **Gomti Nagar Extension, Malhaur, Chinhat and Indira Nagar**.
 
@@ -1817,7 +1705,7 @@ Parents are usually welcome to meet the warden during admission — worth doing 
 
 /* ------------------------------ campus life ------------------------------ */
 {
-  id:'campus', topic:'Campus life', icon:'🏫', title:'Campus facilities',
+  id:'campus', topic:'Campus life', title:'Campus facilities',
   q:['campus','facilities','infrastructure','what is on campus','amenities','campus facility','is the campus good','buildings'],
   a:`### On a roughly 40-acre campus
 - **210+ laboratories** across engineering, sciences, pharmacy, media and design
@@ -1834,7 +1722,7 @@ Parents are usually welcome to meet the warden during admission — worth doing 
   chips:['Library','Sports facilities','Hostel facilities','Clubs and societies']
 },
 {
-  id:'library', topic:'Campus life', icon:'📖', title:'Library',
+  id:'library', topic:'Campus life', title:'Library',
   q:['library','books','e journals','reading room','digital library','library timings','journals','study space'],
   a:`The central library holds **70,000+ printed volumes** plus subscriptions to **e-journals and databases** (IEEE, ScienceDirect/Elsevier-type packages, legal databases such as Manupatra/SCC for law students — exact subscriptions vary).
 
@@ -1847,7 +1735,7 @@ Law, management and design typically have additional departmental collections.`,
   chips:['Campus facilities','Labs','Wi-Fi and IT']
 },
 {
-  id:'labs', topic:'Campus life', icon:'🔬', title:'Labs & equipment',
+  id:'labs', topic:'Campus life', title:'Labs & equipment',
   q:['labs','laboratory','equipment','computer lab','workshop','practical','lab facility','machines'],
   a:`**210+ labs** support the practical syllabus:
 
@@ -1863,7 +1751,7 @@ Lab sessions carry their own credits and attendance — practical records and vi
   chips:['Campus facilities','Grading and CGPA','B.Tech branches']
 },
 {
-  id:'wifi', topic:'Campus life', icon:'📶', title:'Wi-Fi & IT',
+  id:'wifi', topic:'Campus life', title:'Wi-Fi & IT',
   q:['wifi','internet','network','amizone','student portal','login','laptop required','computer required','it support','is laptop necessary','do they provide laptops','is laptop provided','which laptop to buy'],
   a:`- **Campus-wide Wi-Fi** covers academic blocks, library and hostels, with per-student login credentials.
 - **Amizone** is the student portal: attendance, timetable, marks, assignments, fee status, library records and notices. Your login is issued at enrolment, and there's a mobile app.
@@ -1872,7 +1760,7 @@ Lab sessions carry their own credits and attendance — practical records and vi
   chips:['Campus facilities','Other charges & hidden costs','Labs']
 },
 {
-  id:'sports', topic:'Campus life', icon:'⚽', title:'Sports facilities',
+  id:'sports', topic:'Campus life', title:'Sports facilities',
   q:['sports','games','gym','cricket','football','basketball','playground','fitness','tennis','athletics','swimming pool'],
   a:`Grounds and courts for **cricket, football, basketball, volleyball, lawn tennis and athletics**, plus indoor games (table tennis, badminton, chess, carrom) and a **gymnasium**.
 
@@ -1883,7 +1771,7 @@ Lab sessions carry their own credits and attendance — practical records and vi
   chips:['Sports & special scholarships','Clubs and societies','Campus facilities']
 },
 {
-  id:'clubs', topic:'Campus life', icon:'🎭', title:'Clubs and societies',
+  id:'clubs', topic:'Campus life', title:'Clubs and societies',
   q:['clubs','societies','extracurricular','activities','cultural club','coding club','dance music drama','student chapter','committee','robotics club'],
   a:`Student life runs through clubs and chapters, typically including:
 
@@ -1897,7 +1785,7 @@ Clubs recruit in the first weeks of the session, and activity points/certificate
   chips:['Fests and events','NCC and NSS','Campus facilities']
 },
 {
-  id:'fests', topic:'Campus life', icon:'🎉', title:'Fests and events',
+  id:'fests', topic:'Campus life', title:'Fests and events',
   q:['fest','festival','cultural fest','tech fest','events','annual function','celebration','freshers party','sports fest'],
   a:`The calendar usually includes:
 
@@ -1911,7 +1799,7 @@ These are largely student-organised — joining an organising committee is one o
   chips:['Clubs and societies','Campus facilities','Sports facilities']
 },
 {
-  id:'ncc', topic:'Campus life', icon:'🎖️', title:'NCC and NSS',
+  id:'ncc', topic:'Campus life', title:'NCC and NSS',
   q:['ncc','nss','social service','army training','volunteering','community service','ncc certificate'],
   a:`**NSS** units run regular social-outreach work — cleanliness drives, blood-donation camps, village outreach, awareness campaigns — and count toward co-curricular credits.
 
@@ -1921,7 +1809,7 @@ Availability of an NCC unit varies by campus and year, so confirm with the stude
   chips:['Clubs and societies','Sports facilities']
 },
 {
-  id:'transport', topic:'Campus life', icon:'🚌', title:'Bus and transport facility',
+  id:'transport', topic:'Campus life', title:'Bus and transport facility',
   q:['bus','transport','shuttle','college bus','bus routes','pick up','day scholar','commute','how do students travel'],
   a:`University buses cover major Lucknow routes — **Gomti Nagar, Indira Nagar, Chinhat, Alambagh, Charbagh, Aliganj, Hazratganj** and nearby areas — with fixed morning and evening timings.
 
@@ -1932,7 +1820,7 @@ Availability of an NCC unit varies by campus and year, so confirm with the stude
   chips:['Transport charges','How to reach','PG and off-campus stay']
 },
 {
-  id:'medical', topic:'Campus life', icon:'🩺', title:'Medical facilities',
+  id:'medical', topic:'Campus life', title:'Medical facilities',
   q:['medical','clinic','doctor','hospital','health centre','ambulance','first aid','if i fall sick','medical insurance'],
   a:`- An on-campus **medical room/clinic** with a visiting doctor and first-aid support during working hours
 - **Ambulance access** and tie-ups with nearby hospitals in Gomti Nagar for emergencies
@@ -1944,7 +1832,7 @@ Bring your own prescription medicines, doctor's notes and any chronic-condition 
   chips:['Girls hostel & safety','Hostel rules','Campus facilities']
 },
 {
-  id:'ragging', topic:'Campus life', icon:'🚫', title:'Anti-ragging policy',
+  id:'ragging', topic:'Campus life', title:'Anti-ragging policy',
   q:['ragging','anti ragging','bullying','is there ragging','senior harassment','safety from seniors','discipline policy','complaint'],
   a:`Ragging is a **criminal offence under UGC regulations**, and the university follows a zero-tolerance policy:
 
@@ -1957,7 +1845,7 @@ Harassment complaints of other kinds go to the **Internal Complaints Committee (
   chips:['Girls hostel & safety','Hostel rules','Contact the admission office']
 },
 {
-  id:'dresscode', topic:'Campus life', icon:'👔', title:'Dress code & ID',
+  id:'dresscode', topic:'Campus life', title:'Dress code & ID',
   q:['dress code','uniform','formals','what to wear','id card','identity card','blazer','is uniform compulsory'],
   a:`Amity follows a **formal/semi-formal dress code** on academic days — formal shirt/trousers or the prescribed university attire, with a blazer for presentations, seminars and winter. Sportswear and casual wear are restricted to designated activities and days.
 
@@ -1969,7 +1857,7 @@ Exact norms are in the student handbook issued at induction.`,
 
 /* ------------------------------- academics ------------------------------- */
 {
-  id:'attendance', topic:'Academics', icon:'📋', title:'Attendance rules',
+  id:'attendance', topic:'Academics', title:'Attendance rules',
   q:['attendance','attendance percentage','75 percent','can i bunk','attendance rule','short attendance','minimum attendance','detained'],
   a:`- Minimum attendance is normally **75% per subject**, checked through Amizone.
 - Falling short can mean **detention from the end-semester exam**, a fine, or loss of scholarship — and it's enforced here more strictly than at many colleges.
@@ -1981,7 +1869,7 @@ If you're heading below the line, raise it with your faculty guide **before** th
   chips:['Grading and CGPA','Exams & backlogs','Scholarship renewal rules']
 },
 {
-  id:'grading', topic:'Academics', icon:'📊', title:'Grading and CGPA',
+  id:'grading', topic:'Academics', title:'Grading and CGPA',
   q:['grading','cgpa','sgpa','grade system','marks system','how is cgpa calculated','credit system','grade points','evaluation'],
   a:`Amity uses a **credit-based semester system with letter grades and a 10-point CGPA**.
 
@@ -1994,7 +1882,7 @@ A CGPA above 7 keeps most scholarships and placement eligibility criteria comfor
   chips:['Exams & backlogs','Attendance rules','Placement process']
 },
 {
-  id:'exams', topic:'Academics', icon:'📝', title:'Exams & backlogs',
+  id:'exams', topic:'Academics', title:'Exams & backlogs',
   q:['exams','examination','backlog','fail','supplementary exam','re exam','mid term','end semester','what if i fail','arrears','repeat year'],
   a:`- **Two mid-terms/internal cycles** plus an **end-semester exam** per semester, with practical exams and vivas for lab courses.
 - Failing a paper creates a **backlog**, cleared through a **re-examination/supplementary attempt** in a later cycle, on payment of a re-exam fee.
@@ -2006,7 +1894,7 @@ A CGPA above 7 keeps most scholarships and placement eligibility criteria comfor
   chips:['Grading and CGPA','Placement process','Attendance rules']
 },
 {
-  id:'faculty', topic:'Academics', icon:'👩‍🏫', title:'Faculty & teaching',
+  id:'faculty', topic:'Academics', title:'Faculty & teaching',
   q:['faculty','teachers','professors','teaching quality','student teacher ratio','phd faculty','how is teaching','mentor'],
   a:`The campus has **800+ faculty members**, with a substantial share holding PhDs and many carrying industry experience alongside academics.
 
@@ -2019,7 +1907,7 @@ As anywhere, quality varies by department — ask current students of your speci
   chips:['Labs','Grading and CGPA','Campus visit']
 },
 {
-  id:'internship', topic:'Academics', icon:'🧑‍💼', title:'Internships & training',
+  id:'internship', topic:'Academics', title:'Internships & training',
   q:['internship','summer training','industrial training','project work','internship compulsory','how to get internship','nttf','live project','industry exposure'],
   a:`Internships are **built into the curriculum**, not optional extras:
 
@@ -2032,7 +1920,7 @@ The **corporate resource centre** shares openings, but the strongest internships
   chips:['Placement record','Placement process','Clubs and societies']
 },
 {
-  id:'abroad', topic:'Academics', icon:'✈️', title:'Study abroad & exchange',
+  id:'abroad', topic:'Academics', title:'Study abroad & exchange',
   q:['study abroad','exchange program','foreign university','semester abroad','international exposure','mou','twinning','credit transfer abroad','ms after btech'],
   a:`Amity maintains **MoUs with overseas universities**, which in various years support:
 
@@ -2046,7 +1934,7 @@ For higher studies abroad after graduation, the university issues transcripts, b
   chips:['Higher studies support','Internships & training','Grading and CGPA']
 },
 {
-  id:'certs', topic:'Academics', icon:'📜', title:'Certifications & skill training',
+  id:'certs', topic:'Academics', title:'Certifications & skill training',
   q:['certification','certificate courses','skill development','extra courses','training programs','value added course','coursera','industry certification'],
   a:`Most programmes carry **built-in certification and skill modules** alongside the core syllabus — tool and platform certifications for IT/CSE, analytics tools for management, domain software for design and media, instrumentation training for sciences.
 
@@ -2057,7 +1945,7 @@ The university also runs value-added and soft-skill courses (communication, apti
 }
 ,
 {
-  id:'coding', topic:'Academics', icon:'⌨️', title:'Coding & technical prep',
+  id:'coding', topic:'Academics', title:'Coding & technical prep',
   q:['coding','programming','is coding taught','do they teach coding','which programming languages','dsa','data structures','competitive programming','hackathon','coding culture','placement preparation coding','github projects'],
   a:`Coding is taught as part of the CSE/IT/BCA/MCA syllabus — typically C/C++, Python, Java, DBMS/SQL, web development, and electives in AI/ML, cloud and mobile development. Other branches get at least a programming fundamentals course.
 
@@ -2072,7 +1960,7 @@ The campus gives you labs, clubs, mentors and drives; the consistent daily pract
   chips:['Placement process','Internships & training','Which branch to choose','B.Tech branches']
 },
 {
-  id:'city', topic:'Campus life', icon:'🌆', title:'Living in Lucknow',
+  id:'city', topic:'Campus life', title:'Living in Lucknow',
   q:['lucknow city','about lucknow','how is lucknow','weather','climate','is lucknow safe','places to visit','city life','cost of living in lucknow','winter summer','language spoken'],
   a:`Lucknow is a comfortable student city — considerably cheaper than Delhi NCR, Bengaluru or Pune, with good food, decent public transport and a metro line through the central corridor.
 
@@ -2084,7 +1972,7 @@ The campus gives you labs, clubs, mentors and drives; the consistent daily pract
   chips:['Monthly living cost','PG and off-campus stay','How to reach','Campus facilities']
 },
 {
-  id:'packing', topic:'Hostel', icon:'🎒', title:'What to bring to hostel',
+  id:'packing', topic:'Hostel', title:'What to bring to hostel',
   q:['what to bring','what to bring to hostel','what should i bring to hostel','packing list','what should i carry','hostel essentials','things to bring','luggage','what to pack','first day in hostel','joining checklist'],
   a:`### Bring
 - **Documents:** originals + 2 photocopy sets, 8–10 passport photos, offer letter and fee receipts
@@ -2101,7 +1989,7 @@ Most daily items are easy to buy near campus, so travel light on the first trip.
   chips:['Hostel rules','Hostel facilities','Documents required']
 },
 {
-  id:'records', topic:'Academics', icon:'🗂️', title:'Certificates after admission',
+  id:'records', topic:'Academics', title:'Certificates after admission',
   q:['bonafide certificate','degree certificate','transcript','marksheet after course','convocation','provisional certificate','character certificate','how to get documents','id card lost','duplicate marksheet','name correction'],
   a:`Once you're enrolled, the **examination cell / student services** office handles:
 
@@ -2118,7 +2006,7 @@ Apply through Amizone or the office counter; most routine documents take a few w
 ,
 /* ------------------------------ placements ------------------------------ */
 {
-  id:'placement', topic:'Placements', icon:'🎯', title:'Placement record',
+  id:'placement', topic:'Placements', title:'Placement record',
   q:['placement','placements','package','salary','job','jobs','average package','highest package','placement record','placement percentage','lpa','do they place students','campus placement','how many students get placed','placement statistics','is placement good'],
   a:`Indicative recent figures (verify the current year's report with the placement cell):
 
@@ -2135,7 +2023,7 @@ Apply through Amizone or the office counter; most routine documents take a few w
   chips:['Top recruiters','Placement process','Which branch to choose','Internships & training']
 },
 {
-  id:'recruiters', topic:'Placements', icon:'🏢', title:'Top recruiters',
+  id:'recruiters', topic:'Placements', title:'Top recruiters',
   q:['recruiters','companies','which companies visit','hiring companies','top companies','who recruits','placement companies','mnc'],
   a:`Companies that have recruited from Amity campuses include (indicative, varies by year and branch):
 
@@ -2150,7 +2038,7 @@ Apply through Amizone or the office counter; most routine documents take a few w
   chips:['Placement record','Placement process','Internships & training']
 },
 {
-  id:'placement_process', topic:'Placements', icon:'🧩', title:'Placement process',
+  id:'placement_process', topic:'Placements', title:'Placement process',
   q:['placement process','how does placement work','eligibility for placement','placement criteria','when does placement start','how many offers','dream company','placement rules','training and placement cell'],
   a:`### How it runs
 - The **Corporate Resource Centre / T&P cell** coordinates drives, mostly in the **pre-final and final year**.
@@ -2164,7 +2052,7 @@ Consistent CGPA, a clean backlog record, real projects on GitHub, DSA practice, 
   chips:['Placement record','Internships & training','Grading and CGPA','Higher studies support']
 },
 {
-  id:'higher_studies', topic:'Placements', icon:'🎓', title:'Higher studies support',
+  id:'higher_studies', topic:'Placements', title:'Higher studies support',
   q:['higher studies','ms abroad','gate preparation','cat preparation','mba after btech','gre','study after graduation','competitive exams','upsc preparation'],
   a:`Plenty of students go on to **MS/MBA or competitive exams** instead of placements.
 
@@ -2177,7 +2065,7 @@ Consistent CGPA, a clean backlog record, real projects on GitHub, DSA practice, 
   chips:['Study abroad & exchange','Placement process','PhD & research']
 },
 {
-  id:'entrepreneur', topic:'Placements', icon:'🚀', title:'Startups & incubation',
+  id:'entrepreneur', topic:'Placements', title:'Startups & incubation',
   q:['startup','entrepreneurship','incubation','business idea','e cell','funding','innovation centre','patent'],
   a:`Amity runs **innovation and incubation support** through its entrepreneurship cell and technology business incubator network — mentoring, workspace, pitch events, and links to funding programmes and government startup schemes.
 
@@ -2187,7 +2075,7 @@ If you're serious about building something, join the E-Cell in year one and use 
   chips:['Clubs and societies','Internships & training','PhD & research']
 },
 {
-  id:'alumni', topic:'Placements', icon:'🤝', title:'Alumni network',
+  id:'alumni', topic:'Placements', title:'Alumni network',
   q:['alumni','alumni network','pass out students','where are graduates now','alumni association','referral'],
   a:`Amity's alumni base spans the whole group and is large — graduates work across IT services, banking, consulting, pharma, law firms, media and the public sector, in India and abroad.
 
@@ -2200,13 +2088,13 @@ Practical use of it:
 
 /* -------------------------------- contact -------------------------------- */
 {
-  id:'contact', topic:'Contact', icon:'📞', title:'Contact the admission office',
+  id:'contact', topic:'Contact', title:'Contact the admission office',
   q:['contact','phone number','helpline','email','call','admission office','whom to contact','contact details','customer care','enquiry','talk to someone'],
   a:`### Amity University, Lucknow Campus
-- 📍 Malhaur (near Malhaur Railway Station), Gomti Nagar Extension, Lucknow – 226028, Uttar Pradesh
-- 📞 Admission helpline: **+91-7303789789**
-- 🌐 Website: **amity.edu/lucknow**
-- 🕘 Office hours: typically **9:30 am – 5:30 pm**, Monday to Saturday (extended during peak admission season)
+-  Malhaur (near Malhaur Railway Station), Gomti Nagar Extension, Lucknow – 226028, Uttar Pradesh
+-  Admission helpline: **+91-7303789789**
+-  Website: **amity.edu/lucknow**
+-  Office hours: typically **9:30 am – 5:30 pm**, Monday to Saturday (extended during peak admission season)
 
 When you call, keep your **application number, programme name and Class 12/graduation marks** ready — it saves a second call.
 
@@ -2214,7 +2102,7 @@ When you call, keep your **application number, programme name and Class 12/gradu
   chips:['Campus visit','Admission process','Documents required']
 },
 {
-  id:'scam', topic:'Contact', icon:'⚠️', title:'Avoiding admission scams',
+  id:'scam', topic:'Contact', title:'Avoiding admission scams',
   q:['agent','broker','donation','fake admission','scam','guaranteed seat','paid seat','is it safe to pay','consultant'],
   a:`Protect yourself during admission season:
 
@@ -2227,6 +2115,449 @@ When you call, keep your **application number, programme name and Class 12/gradu
 
 If something feels off, stop and confirm with the university directly before paying.`,
   chips:['Contact the admission office','Fee payment options','How to apply online']
+}
+,
+/* ===================== extended knowledge base (v3) ===================== */
+
+/* -------------------------- admissions, part 2 -------------------------- */
+{
+  id:'adm_waitlist', topic:'Admissions', title:'Waiting list & later rounds',
+  q:['waiting list','waitlist','not selected','second round','later round','spot admission','spot round','vacant seat','seat not available','rejected application','what if i dont get a seat'],
+  a:`If your preferred branch is full, you usually have three options:
+
+- **Waiting list** — you're kept in order of merit and called if a confirmed candidate withdraws. Withdrawals cluster just after national counselling rounds, so movement often happens late.
+- **Second/later rounds** — Amity admits on a rolling basis, so fresh applications continue while seats remain.
+- **A related branch now, branch change later** — take an open branch and apply for an internal change after the first year, on CGPA and availability.
+
+Keep your application live, respond to every email within the deadline, and call the admission office weekly during peak season rather than waiting for a call.`,
+  chips:['Seat confirmation & offer letter','Lateral entry & transfers','Contact the admission office']
+},
+{
+  id:'adm_defer', topic:'Admissions', title:'Deferring or changing your admission',
+  q:['defer admission','postpone admission','join next year','change programme after admission','change course after admission','switch campus','lucknow to noida transfer','change branch before classes','edit application'],
+  a:`- **Deferring to the next session** is not routine; it's decided case by case and usually treated as a fresh application, with fee-refund rules applying to the current one. Ask in writing before assuming.
+- **Changing programme before classes start** is often possible if the new programme has seats and you meet its eligibility — the fee difference is adjusted.
+- **Moving between Amity campuses** (e.g. Lucknow to Noida) after admission is an inter-campus transfer request, subject to seats and both campuses' approval; it is not guaranteed.
+- **Correcting application details** (name spelling, category, contact) is done through the applicant dashboard or the admission office before document verification.
+
+Get any of these confirmed by email — a verbal assurance at a counter is not a record.`,
+  chips:['Cancellation & refund','Admission process','Contact the admission office']
+},
+{
+  id:'adm_nri_fee', topic:'Admissions', title:'NRI & foreign-national fees',
+  q:['nri fees','foreign student fees','international fees','fees in dollars','nri quota fees','fees for foreign nationals','saarc student fees'],
+  a:`NRI and foreign-national admissions are quoted under a **separate fee schedule**, often in **USD**, and are typically higher than the domestic fee for the same programme.
+
+- The package usually bundles tuition with hostel and some services
+- Payment is normally annual or per semester, through banking channels the international office specifies
+- A separate registration/processing fee applies
+- SAARC-country applicants sometimes have a distinct slab — confirm your category
+
+Ask the international admissions office for the current year's written schedule before transferring any money, and never pay an agent directly.`,
+  chips:['International & NRI applicants','Avoiding admission scams','Contact the admission office']
+},
+{
+  id:'adm_first_day', topic:'Admissions', title:'Reporting day & induction',
+  q:['first day','reporting day','induction','orientation','when do i report','joining day','what happens on the first day','induction programme'],
+  a:`### Reporting
+You'll get a reporting date with your admission confirmation. Bring **all original documents**, photographs, fee receipts and the offer letter — verification happens on or around that day.
+
+### Induction week
+Usually 3–5 days of orientation: campus tour, department introduction, Amizone and library access setup, anti-ragging and code-of-conduct briefing, ID card issue, hostel allotment, and club/society introductions.
+
+Parents are generally welcome on reporting day. Arrive early — queues are long in the first week — and keep a digital copy of every document on your phone.`,
+  chips:['Documents required','What to bring to hostel','Hostel booking']
+},
+
+/* ------------------------------ fees, part 2 ------------------------------ */
+{
+  id:'fee_due', topic:'Fees', title:'Fee due dates & late fees',
+  q:['fee due date','last date to pay fees','late fee','fine for late payment','when to pay semester fee','missed fee deadline','fee reminder'],
+  a:`- Semester fees are due **before the semester begins**; exact dates are published on Amizone and emailed to students and parents.
+- Paying late attracts a **late fee**, and continued default can block exam registration, result access and hostel renewal.
+- If you have a genuine delay (loan disbursal, family emergency), apply **in writing before the due date** — extensions are sometimes granted, but almost never retrospectively.
+- Keep the payment reference; if the portal doesn't reflect a payment within 2–3 working days, raise it with the accounts office immediately.`,
+  chips:['Fee payment options','Instalments & payment schedule','Education loan']
+},
+{
+  id:'fee_receipt', topic:'Fees', title:'Fee receipts & tax benefit',
+  q:['fee receipt','invoice','80e','tax benefit','income tax deduction','fee certificate','proof of payment','duplicate receipt','fee structure letter for bank'],
+  a:`- Every payment generates a **receipt on Amizone** — download and keep them all; you'll need them for the security-deposit refund, loan disbursals and visa applications.
+- A consolidated **fee-paid certificate** for a financial year can be requested from the accounts office (useful for employers and tax filing).
+- **Section 80E** allows a deduction on the *interest* paid on an education loan (not on tuition itself) for up to 8 years — your bank issues that interest certificate, not the university.
+- Tuition-fee deduction under **80C** applies to school-level tuition for children, not to your own higher-education fees.
+
+> This is general information, not tax advice — check with a tax professional for your own case.`,
+  chips:['Education loan','Fee payment options','Certificates after admission']
+},
+{
+  id:'fee_scholarship_pay', topic:'Fees', title:'How the scholarship is applied',
+  q:['scholarship disbursal','when do i get scholarship money','is scholarship deducted','scholarship adjustment','do i pay full fee first','scholarship credited'],
+  a:`Amity's merit scholarships are normally **adjusted against tuition** rather than paid out as cash — your semester invoice simply shows the reduced amount.
+
+- The waiver percentage and its conditions appear on your **offer/award letter**
+- It applies to **tuition only**, not to hostel, mess, transport, exam or one-time charges
+- It is re-checked each year against CGPA and attendance
+- **Government scholarships** (NSP/state portals) work differently: you usually pay first and the amount is credited to your bank account later, so budget for the gap
+
+If an invoice doesn't reflect your slab, raise it with accounts before paying.`,
+  chips:['Scholarship options','Scholarship renewal rules','Government scholarships']
+},
+
+/* ---------------------------- academics, part 2 ---------------------------- */
+{
+  id:'ac_registration', topic:'Academics', title:'Semester registration & electives',
+  q:['semester registration','register for semester','course registration','elective selection','choose electives','add drop course','minor specialisation','honours specialisation','credit requirement'],
+  a:`- Each semester opens with a **registration window on Amizone** — you confirm courses, pick electives and clear dues. Missing it can mean a late-registration fee or a lost elective seat.
+- **Electives** fill on a first-come basis; popular ones close within hours, so log in the moment the window opens.
+- Many programmes allow a **minor/specialisation track** (e.g. an AI minor with a core branch) if you take a defined set of electives — plan it from the 2nd year, not the last.
+- A programme has a fixed **total credit requirement**, including non-teaching credits from clubs, NSS and certifications. Track your credit sheet every semester rather than discovering a shortfall in the final year.`,
+  chips:['Grading and CGPA','Exams & backlogs','Attendance rules']
+},
+{
+  id:'ac_revaluation', topic:'Academics', title:'Revaluation & re-checking',
+  q:['revaluation','rechecking','recheck paper','challenge marks','marks wrong','answer script','re evaluation','improve my marks'],
+  a:`- **Re-checking** verifies totalling and unmarked answers; **revaluation** (where offered) is a fresh assessment. Both carry a per-paper fee and a **short application window** after results.
+- Apply through Amizone within the stated days — late requests are not entertained.
+- Marks can go **up, down or stay the same** in a revaluation; re-checking generally only corrects errors.
+- If the issue is an internal-assessment mark, raise it with the faculty and department head first — that's usually faster than a formal application.`,
+  chips:['Exams & backlogs','Grading and CGPA','Grievance & complaints']
+},
+{
+  id:'ac_integrity', topic:'Academics', title:'Academic integrity & UFM',
+  q:['cheating','ufm','unfair means','plagiarism','copying','turnitin','caught in exam','academic misconduct','copied assignment'],
+  a:`Amity treats exam misconduct and plagiarism seriously.
+
+- **Unfair means (UFM)** in an exam — notes, phones, communication — leads to a UFM case: the paper can be cancelled, with penalties up to suspension for repeat offences.
+- **Assignments and theses** are checked with plagiarism software; over the permitted similarity limit means resubmission, mark penalties or a misconduct case.
+- **Proxy attendance** and fabricated internship certificates are treated as misconduct too.
+- Cite your sources, keep your own drafts, and if you're stuck on a deadline ask for an extension rather than copying — the penalty is far worse than a late mark.`,
+  chips:['Exams & backlogs','Grievance & complaints','Attendance rules']
+},
+{
+  id:'ac_calendar', topic:'Academics', title:'Timetable, holidays & term dates',
+  q:['timetable','class timings','college timings','holidays','holiday list','academic calendar','vacation','summer break','winter break','when do exams start','class schedule'],
+  a:`- The **academic calendar** for each session (term start, mid-terms, end-semester exams, breaks, fest dates) is published on Amizone at the start of the semester.
+- Classes typically run **Monday to Friday, roughly 9 am to 5 pm**, with Saturdays used for labs, events, make-up classes or club activities.
+- Expect a **winter break** around late December, a **summer break** after the even-semester exams (often used for internships/training), plus national and festival holidays.
+- Your personal **timetable** — including lab slots and faculty-wise sessions — is on your Amizone dashboard and can change in the first two weeks.`,
+  chips:['Attendance rules','Exams & backlogs','Internships & training']
+},
+{
+  id:'ac_medical_leave', topic:'Academics', title:'Medical & emergency leave',
+  q:['medical leave','sick leave','missed exam','could not attend exam','emergency leave','hospitalised','leave application','absent due to illness','death in family'],
+  a:`- Apply through your **faculty guide/department** with supporting documents (medical certificate, prescriptions, hospital papers) as soon as you can — ideally before the absence, otherwise immediately after.
+- Genuine medical absence can be **condoned for attendance** within the limits the university sets; it does not erase the requirement entirely.
+- Missing an **exam** on medical grounds is handled as a make-up/special exam case, subject to approval and documentation — not automatic.
+- Hostellers should also inform the **warden**, and parents are usually notified.
+
+Keep copies of everything you submit; these cases are decided on paperwork.`,
+  chips:['Attendance rules','Exams & backlogs','Medical facilities']
+},
+{
+  id:'ac_cgpa_convert', topic:'Academics', title:'Converting CGPA to percentage',
+  q:['cgpa to percentage','convert cgpa','percentage formula','what is my percentage','cgpa conversion','equivalent percentage','cgpa 8 means'],
+  a:`Universities use different multipliers, so **use the official conversion**, not a rule of thumb from a forum.
+
+- Amity publishes a conversion formula/table for transcripts — the examination cell issues an official conversion certificate on request.
+- A common convention in Indian universities is roughly **CGPA × 9.5**, but that is *not* automatically Amity's formula.
+- Employers and foreign universities usually want the **official certificate**, and WES-type evaluators require the university's own statement.
+
+Request the conversion certificate from the exam cell well before an application deadline.`,
+  chips:['Certificates after admission','Grading and CGPA','Study abroad & exchange']
+},
+
+/* ---------------------------- campus services ---------------------------- */
+{
+  id:'amizone', topic:'Campus life', title:'Amizone portal & login issues',
+  q:['amizone','amizone login','forgot password','portal not working','student login','cant login','reset password','amizone app','enrollment number'],
+  a:`**Amizone** is the student portal and app: attendance, timetable, marks, assignments, fee status, library records, registration and notices.
+
+- Your login is your **enrolment number**, issued at admission; the first password comes from the department/IT helpdesk.
+- **Forgot password / locked account:** use the reset option, and if that fails contact the **IT helpdesk** with your enrolment number and ID card — passwords aren't reset over an unverified phone call.
+- Attendance and marks are updated by faculty, so a missing entry is usually a faculty-side correction, not a portal bug — raise it with the subject teacher first.
+- Parents get their own view/credentials in most cases.`,
+  chips:['Wi-Fi and IT','Attendance rules','Grievance & complaints']
+},
+{
+  id:'it_support', topic:'Campus life', title:'IT helpdesk, printing & software',
+  q:['it helpdesk','printing','printer','photocopy','software license','office 365','matlab','autocad','free software','laptop repair','wifi password','internet not working'],
+  a:`- **Wi-Fi access** uses per-student credentials; for connection problems or a password reset, go to the IT helpdesk with your ID card.
+- **Printing and photocopying** are available at the campus reprographics centre and nearby shops; keep a soft copy of reports for last-minute reprints.
+- **Licensed software** for coursework (engineering/design tools, productivity suites) is usually provided through university licences on lab machines, and sometimes for student laptops — ask your department, and never install cracked software on the campus network.
+- **Laptop repair** is not a campus service; service centres are a short ride away in Gomti Nagar/Indira Nagar.`,
+  chips:['Wi-Fi and IT','Labs','Coding & technical prep']
+},
+{
+  id:'library_rules', topic:'Campus life', title:'Library rules, fines & e-resources',
+  q:['library timings','library fine','book return','renew book','how many books can i issue','e resources','off campus access','journal access','library card','late return'],
+  a:`- Books are issued against your **student ID**, with a per-category limit on how many and for how long; renewals are done on Amizone or at the counter if no one has reserved the title.
+- **Late returns attract a daily fine**, and dues block clearance certificates at the end of the year.
+- **E-journals and databases** are accessible on campus; off-campus access is usually via a remote-login/proxy account the library issues on request.
+- Reference books, previous-year papers and project reports are **reading-room only**.
+- Reading rooms typically extend their hours during exams.`,
+  chips:['Library','Exams & backlogs','Wi-Fi and IT']
+},
+{
+  id:'campus_services', topic:'Campus life', title:'ATM, stationery, salon & daily needs',
+  q:['atm','bank on campus','stationery','shop','salon','barber','laundry','general store','courier','lost and found','where to buy'],
+  a:`Day-to-day services on or beside campus usually include an **ATM**, a **stationery and book shop**, **photocopy/printing**, a **salon**, **laundry**, and the cafeteria outlets. Gomti Nagar Extension markets cover everything else within a short ride.
+
+- **Laundry** is included in some hostel plans and charged separately in others
+- **Lost and found** is handled by the security office — report losses the same day
+- **Couriers and deliveries** are usually accepted at the gate or hostel reception, not at room doors
+
+Keep a small amount of cash for shops that don't take UPI, though most now do.`,
+  chips:['Hostel facilities','Monthly living cost','Living in Lucknow']
+},
+{
+  id:'parking', topic:'Campus life', title:'Vehicles, parking & gate rules',
+  q:['parking','bike on campus','car','vehicle permit','can i bring my scooter','driving licence','gate pass','entry rules','visitor entry'],
+  a:`- **Day scholars** can usually bring two-wheelers/cars with a **parking sticker** issued by the security office against a valid driving licence and registration.
+- **Hostellers are generally not permitted** to keep vehicles — check your hostel handbook before bringing one.
+- Helmets, speed limits and designated parking are enforced inside campus; repeated violations mean the permit is withdrawn.
+- **Entry** requires your ID card. Visitors sign in at the gate and are escorted to the visitors' area; students leaving during college hours may need a gate pass.`,
+  chips:['Hostel rules','Bus and transport facility','Dress code & ID']
+},
+{
+  id:'guest_stay', topic:'Campus life', title:'Where parents can stay',
+  q:['guest house','parents stay','hotel near campus','accommodation for parents','visitors stay','where do parents stay','guest room'],
+  a:`- Some campuses have a **guest house** for parents and official visitors, bookable in advance through the administration — availability is limited, especially around admission and convocation.
+- Otherwise there are **hotels and service apartments in Gomti Nagar, Indira Nagar and Vibhuti Khand**, from budget to mid-range, 10–25 minutes from campus.
+- Parents **cannot stay in hostel rooms**; visiting hours in the hostel are fixed.
+
+Book early for reporting day, convocation and fest weekends — local hotels fill up.`,
+  chips:['Campus visit','Hostel rules','How to reach']
+},
+
+/* ------------------------------ hostel, part 2 ------------------------------ */
+{
+  id:'hostel_change', topic:'Hostel', title:'Room change & roommate issues',
+  q:['room change','change room','roommate problem','shift room','room transfer','not comfortable with roommate','single room request'],
+  a:`- Room or roommate changes are handled by the **warden** on a written application, subject to vacancy — usually considered after the first few weeks, once allotments settle.
+- Genuine issues (harassment, health, serious incompatibility) are treated on priority; raise them early and in writing rather than enduring them.
+- Upgrading category (non-AC to AC, triple to double) depends on availability and the **fee difference**.
+- Swapping rooms informally without warden approval is a discipline issue — always route it through the office.`,
+  chips:['Hostel rules','Hostel booking & allotment','Grievance & complaints']
+},
+{
+  id:'hostel_vacate', topic:'Hostel', title:'Vacating, vacations & security deposit',
+  q:['vacate hostel','leave hostel','summer stay','can i stay during vacation','hostel during holidays','security deposit refund','hostel refund','checkout'],
+  a:`- Hostels usually **close or run minimal services during long breaks**; staying through a vacation needs prior permission and may carry a charge (common for students doing summer projects or internships nearby).
+- **Vacating** requires a clearance process: hand over the room, settle mess and other dues, and get the warden's sign-off.
+- The **refundable security deposit** is returned after clearance — expect a few weeks, and keep your receipts and bank details updated.
+- Leaving belongings in a closed hostel is at your own risk and often not permitted.`,
+  chips:['Hostel fees','Hostel rules','Fee receipts & tax benefit']
+},
+{
+  id:'hostel_gatepass', topic:'Hostel', title:'Outings, gate pass & going home',
+  q:['gate pass','outing','going home','weekend leave','night out','when can i go out','permission to leave','leave from hostel for home','local guardian'],
+  a:`- Day outings are logged at the hostel gate with in/out timings, within permitted hours.
+- **Overnight or home leave** requires an application with **parental consent**, usually through the warden or the hostel portal; a **local guardian** can be registered at admission for approvals.
+- Parents are generally informed of leaves and of any late returns.
+- Plan long-weekend travel around your attendance — leave approval is not the same as attendance being condoned.`,
+  chips:['Hostel rules','Attendance rules','Medical & emergency leave']
+},
+
+/* ------------------------- student support & rights ------------------------- */
+{
+  id:'grievance', topic:'Campus life', title:'Grievance & complaints',
+  q:['grievance','complaint','who do i complain to','unfair treatment','problem with faculty','grievance cell','student council','escalate an issue','feedback'],
+  a:`Escalate in order, keeping a written record at each step:
+
+1. **Faculty guide / subject teacher** — academic and attendance issues
+2. **Head of department / programme leader**
+3. **Student affairs office or the grievance redressal cell** — a formal written complaint
+4. **Specialised committees** — anti-ragging committee, **Internal Complaints Committee (ICC)** for harassment under POSH, or the SC/ST and disability cells as applicable
+5. **Director/Dean** for unresolved matters
+
+Email rather than verbal complaints, keep copies, and note dates. There are also **semester feedback forms** for teaching quality and a student council/class representative route for collective issues.`,
+  chips:['Anti-ragging policy','Girls hostel & safety','Counselling & wellbeing']
+},
+{
+  id:'counselling', topic:'Campus life', title:'Counselling & wellbeing',
+  q:['counsellor','mental health','stress','anxiety','homesick','depression','psychological support','someone to talk to','wellbeing','exam stress'],
+  a:`- A **student counsellor/psychologist** is available on campus; sessions are confidential and free. First-year homesickness, exam stress, relationship and family issues are the most common reasons students go — it is ordinary, not a mark against you.
+- Your **faculty guide** and hostel warden are the usual first points of contact and can route you quickly.
+- The **medical room** handles physical health and can refer you onward to hospitals in Gomti Nagar.
+- In a crisis outside campus hours, national helplines such as **Tele-MANAS (14416)** operate 24×7 in India.
+
+If a friend is struggling, tell the warden or counsellor — discretion is maintained.`,
+  chips:['Medical facilities','Grievance & complaints','Anti-ragging policy']
+},
+{
+  id:'accessibility', topic:'Campus life', title:'Support for students with disability',
+  q:['disability','divyang','pwd','wheelchair','accessible','special needs','ramp','learning disability','scribe','extra time in exam'],
+  a:`- Campus buildings generally provide **ramps and lifts**, with accessible washrooms in the main blocks; tell the admission office your specific requirements early so hostel and classroom allotment can be planned.
+- **Exam accommodations** — a scribe, extra time, or a separate room — are granted on submission of a valid disability certificate, applied for before the exam schedule is fixed.
+- Statutory **fee concessions and relaxations** may apply per UGC/government norms.
+- Raise access barriers with the student affairs office; they're usually fixable once reported.
+
+Confirm the specific facilities you depend on during a campus visit rather than from a brochure.`,
+  chips:['Reservation & special categories','Campus visit','Grievance & complaints']
+},
+{
+  id:'conduct', topic:'Campus life', title:'Code of conduct & prohibited items',
+  q:['code of conduct','rules','discipline','smoking','alcohol','drugs','banned items','suspension','punishment','mobile phone in class','fighting'],
+  a:`The campus and hostels are governed by a code of conduct you sign at admission:
+
+- **Alcohol, drugs, smoking and tobacco** are prohibited on campus and in hostels; violations lead to disciplinary action and parents are informed
+- **Ragging** carries statutory penalties up to expulsion and FIR
+- **Physical altercations, harassment and damage to property** are treated seriously
+- **Phones** are typically not allowed in exam halls and restricted in some labs
+- Attendance, dress code and gate rules are enforced rather than nominal
+
+Discipline cases go to a committee, where a written explanation is invited — respond to any notice on time rather than ignoring it.`,
+  chips:['Anti-ragging policy','Hostel rules','Dress code & ID']
+},
+
+/* --------------------------- careers, part 2 --------------------------- */
+{
+  id:'car_resume', topic:'Placements', title:'Resume, portfolio & LinkedIn',
+  q:['resume','cv','portfolio','linkedin','how to make a resume','resume review','profile building','github profile','what to put on resume'],
+  a:`### What a recruiting panel actually reads
+- **One page** until you have real work experience; no photos, no grade-school achievements
+- **Projects with outcomes** — what you built, the stack, and what it does; a live link or GitHub repo beats a description
+- **Internships** with one line on what you delivered, not the company's boilerplate
+- **Skills you can defend in an interview** — anything on the page is fair game
+- CGPA, backlog status and a clean, consistent format
+
+The training & placement cell runs resume workshops and mock interviews before the drive season; go early, not in the week of your first test. Keep a **LinkedIn profile** matching your resume — recruiters check it, and alumni referrals start there.`,
+  chips:['Placement process','Internships & training','Coding & technical prep']
+},
+{
+  id:'car_offcampus', topic:'Placements', title:'Off-campus jobs & internships',
+  q:['off campus','off campus placement','apply outside','job portals','internshala','can i apply outside','external offer','not placed on campus','job after graduation'],
+  a:`On-campus drives are one channel, not the only one.
+
+- **Off-campus applications** are allowed; check whether your acceptance of an on-campus offer restricts further participation in campus drives.
+- Useful routes: company career pages, **Internshala/LinkedIn/Naukri**, hackathons, open-source contributions, and **alumni referrals** (the highest hit-rate of the lot).
+- Ask the T&P cell for a **bonafide/NOC letter** if an employer asks for one.
+- Start applying a semester before you need the job — off-campus cycles are slower and more competitive.`,
+  chips:['Placement process','Resume, portfolio & LinkedIn','Alumni network']
+},
+{
+  id:'car_exams', topic:'Placements', title:'Government jobs & competitive exams',
+  q:['government job','psu','upsc','ssc','banking exam','gate coaching','cat coaching','competitive exam preparation','civil services','railway job'],
+  a:`- An Amity degree is **valid for government recruitment and competitive exams** (UGC-recognised university), so UPSC, SSC, banking, state PSC, PSU and defence routes are all open.
+- **PSU recruitment** for engineers largely goes through **GATE** — plan for it from the 3rd year.
+- **CAT/GMAT** for MBA, **NET/JRF** for academia, and **GRE/IELTS** for overseas study follow the same rule: early, consistent preparation beats last-semester cramming.
+- The campus runs some preparation and guidance sessions with external partners, and student groups usually form study circles — but the bulk of this preparation is self-driven.`,
+  chips:['Higher studies support','Approvals & accreditation','Placement process']
+},
+{
+  id:'car_stipend', topic:'Placements', title:'Internship stipends & campus work',
+  q:['stipend','paid internship','unpaid internship','part time job','earn while studying','teaching assistant','campus job','research assistant','can i work while studying'],
+  a:`- **Internship stipends** vary widely: many summer internships in the 2nd/3rd year are unpaid or token-paid, while final-semester industry internships in software often pay a monthly stipend.
+- **Research/teaching assistantships** exist informally at department level — ask faculty whose work interests you, especially in labs with funded projects.
+- **Part-time outside work** is not the norm for full-time students here; attendance and lab schedules leave limited room, and international students are further restricted by visa rules.
+- Freelancing and open-source work is the more practical way students earn and build a portfolio.`,
+  chips:['Internships & training','Coding & technical prep','Placement process']
+},
+
+/* ------------------------------- research ------------------------------- */
+{
+  id:'research', topic:'Academics', title:'Research, publications & patents',
+  q:['research','publication','paper','journal publication','patent','research centre','project funding','conference','ipr','can i do research as a student'],
+  a:`- Amity runs **research centres and labs** across biotech, nanotechnology, computing and applied sciences, and the group is active on **patent filing and publications**.
+- **UG/PG students can join research** by approaching a faculty member with a specific interest — the usual path is a minor project, then a paper or patent application with the supervisor.
+- The university supports **conference participation** (sometimes with partial funding) and runs internal seminars and research days.
+- **PhD scholars** have publication requirements built into the programme, with an IPR/research office handling patent filings.
+
+If research is your goal, start in the 2nd year: read your department's recent publications and approach that faculty member directly.`,
+  chips:['PhD & research','Internships & training','Higher studies support']
+},
+{
+  id:'exchange_intl', topic:'Academics', title:'International exposure & MoUs',
+  q:['mou','foreign tie up','international conference','summer school abroad','global exposure','international programme','semester exchange cost'],
+  a:`Amity maintains agreements with overseas universities that, in various years, support **short-term study-abroad modules, summer schools, semester exchange and credit-transfer routes**.
+
+- Selection is competitive and usually needs a good CGPA and a clean disciplinary record
+- **The overseas cost is borne by the student** — tuition abroad, travel, visa and living expenses
+- Some programmes are structured as "part here, part abroad" with a foreign degree component at a much higher fee
+- Short international conferences and cultural exchanges are a cheaper way to get exposure
+
+Ask the international affairs office for the **current** list of active partners — brochures often list historical ones.`,
+  chips:['Study abroad & exchange','Higher studies support','Research, publications & patents']
+},
+
+/* ------------------------------ course detail ------------------------------ */
+{
+  id:'c_syllabus', topic:'Courses', title:'Syllabus & course structure',
+  q:['syllabus','course structure','curriculum','what will i study','subjects in first year','semester wise subjects','course content','books needed'],
+  a:`- Programme structures follow a **credit system**: core subjects, programme electives, open electives, labs, projects and non-teaching credits (clubs/NSS/certifications).
+- The **first year** is usually foundational — for B.Tech, maths, physics/chemistry, programming basics, engineering graphics and communication skills; specialisation deepens from the 3rd semester.
+- Detailed **semester-wise syllabi** are published by each department and available on Amizone; the admission office can share the programme structure before you join.
+- Recommended textbooks are listed per subject, and the library stocks most of them — buy selectively after the first week of classes.
+
+Ask for the current syllabus PDF for your exact programme; syllabi are revised every few years.`,
+  chips:['Course durations','Grading and CGPA','Semester registration & electives']
+},
+{
+  id:'c_first_year', topic:'Courses', title:'What first year is like',
+  q:['first year','how is first year','fresher','what to expect','is it difficult','college life first year','freshers advice','how hard is engineering'],
+  a:`### The shape of it
+- Common foundation subjects, lab sessions, and a heavy dose of adjusting to a semester system with continuous internal assessment
+- **Attendance is tracked from day one** — the 75% rule catches most first-years off guard
+- Clubs recruit in the first month; joining one or two is the best early decision you can make
+- Internal marks accumulate from quizzes and assignments, so the first mid-term is not "practice"
+
+### Advice that actually helps
+Start DSA/coding or your core-subject fundamentals early, keep CGPA high in the first two years (it's much harder to pull up later), and use the faculty guide system rather than drifting.`,
+  chips:['Attendance rules','Coding & technical prep','Clubs and societies','What to bring to hostel']
+},
+{
+  id:'c_department', topic:'Courses', title:'Institutes & departments',
+  q:['department','institute','school of engineering','aset','abs','amity law school','which department','faculty of','institute name'],
+  a:`Programmes at Lucknow are run by named institutes under the university, commonly including:
+
+- **Amity School of Engineering & Technology (ASET)** — B.Tech/M.Tech
+- **Amity Business School (ABS)** — BBA/MBA
+- **Amity Law School** — BA LLB, BBA LLB, LLM
+- **Amity Institute of Biotechnology** and allied science institutes
+- **Amity Institute of Pharmacy**
+- **Amity School of Communication** — journalism and media
+- **Amity Institute of Behavioural & Allied Sciences** — psychology
+- Institutes for design, education and other disciplines depending on the session
+
+Your enrolment, faculty guide and departmental office all sit within one of these — that office is your first stop for academic matters.`,
+  chips:['What courses are offered?','Faculty & teaching','Grievance & complaints']
+},
+
+/* --------------------------- university, part 2 --------------------------- */
+{
+  id:'uni_safety_city', topic:'University', title:'Is the campus safe?',
+  q:['is campus safe','security on campus','is it safe','crime','night safety','cctv','guards','safety for outstation students'],
+  a:`- The campus is **gated with 24×7 security**, ID-checked entry, CCTV in common areas and separate warden-supervised hostel blocks for boys and girls.
+- Statutory committees exist for **anti-ragging** and **harassment (ICC/POSH)**, with defined complaint routes.
+- Gomti Nagar Extension is a newer residential belt and generally quiet; ordinary city precautions apply after dark, as anywhere.
+- Emergency contacts (security office, warden, medical room, ambulance) are issued at induction — save them on day one.
+
+If you're a parent assessing this, ask the warden directly during your visit about gate timings, escalation and how leave is approved.`,
+  chips:['Girls hostel & safety','Anti-ragging policy','Living in Lucknow']
+},
+{
+  id:'uni_parents', topic:'University', title:'Information for parents',
+  q:['for parents','parent portal','how will i know my childs attendance','parent teacher meeting','parent login','updates to parents','my son my daughter'],
+  a:`Amity keeps parents relatively closely informed:
+
+- **Parent access to Amizone** shows attendance, internal marks, fee status and notices
+- **Attendance and result alerts** are sent by SMS/email; low attendance triggers a notification home
+- **Parent-teacher interactions** are held periodically, and the faculty guide is a named point of contact for your child
+- Hostel wardens inform parents of leave, late returns, medical issues and discipline matters
+- Fee schedules and dues notices go to the registered parent contact
+
+Register a phone number and email you actually check at admission, and keep them updated — most escalations start with a missed notification.`,
+  chips:['Attendance rules','Hostel rules','Contact the admission office']
+},
+{
+  id:'uni_convocation', topic:'University', title:'Convocation & degree award',
+  q:['convocation','degree ceremony','when do i get my degree','graduation ceremony','gown','degree certificate timeline','alumni id'],
+  a:`- After your final results you receive a **provisional certificate**; the **degree** is conferred at the annual **convocation**.
+- Registration for convocation is done online with a fee; graduands collect gowns and confirm name spelling in advance — check it against your Class 10 certificate.
+- If you can't attend, the degree can normally be collected or couriered afterwards on application.
+- **Transcripts, migration and alumni membership** are handled around the same time — request sealed transcripts then if you plan to study abroad.`,
+  chips:['Certificates after admission','Alumni network','Study abroad & exchange']
 }
 
 ];
@@ -2384,7 +2715,7 @@ const INDEX = (() => {
     d.vec = vec;
     d.norm = Math.sqrt(norm) || 1;
   }
-  return { docs, idf, vocab: Array.from(vocab), byId: Object.fromEntries(KB.map(e => [e.id, e])) };
+  return { docs, idf, vocab: Array.from(vocab), vocabSet: vocab, byId: Object.fromEntries(KB.map(e => [e.id, e])) };
 })();
 
 /* --------------------------- typo repair --------------------------- */
@@ -2507,9 +2838,9 @@ function rank(text, opts){
     let score = dot / (qnorm * d.norm);
 
     /* phrase bonuses */
-    let phraseBonus = 0;
+    let phraseBonus = 0, exact = false;
     for(const p of d.phrases){
-      if(norm === p){ phraseBonus = Math.max(phraseBonus, 0.8); break; }
+      if(norm === p){ phraseBonus = Math.max(phraseBonus, 0.8); exact = true; break; }
       if(p.length > 3 && norm.includes(p)) phraseBonus = Math.max(phraseBonus, 0.26 + 0.05 * p.split(' ').length);
       else if(p.includes(norm) && norm.length > 4) phraseBonus = Math.max(phraseBonus, 0.16);
     }
@@ -2527,7 +2858,7 @@ function rank(text, opts){
     const titleBonus = titleTokens.size ? 0.12 * (titleHits / Math.max(tokens.length, 1)) : 0;
 
     score = score + phraseBonus + Math.min(bigramBonus, 0.2) + titleBonus;
-    if(d.entry.hidden && (opts && opts.noHidden)) score *= 0.4;
+    if(d.entry.hidden && !exact && (opts && opts.noHidden)) score *= 0.4;
     results.push({ entry: d.entry, score });
   }
   results.sort((a, b) => b.score - a.score);
@@ -2637,30 +2968,156 @@ function followUps(entry){
 }
 
 /* =========================================================================
+   SCOPE GATE + AI FALLBACK
+   ---------------------------------------------------------------------
+   Rule enforced here (and again on the server):
+     - Off-topic question           -> refused outright, no API call ever.
+     - Amity/campus question, KB hit -> answered offline from the KB.
+     - Amity/campus question, no KB hit -> and only then -> the AI endpoint.
+   The API is therefore a narrow overflow valve for in-scope questions the
+   knowledge base does not cover, never a general-purpose chatbot.
+
+   NOTE: DOMAIN_TERMS below is mirrored in server.js. Keep the two in sync.
+   ========================================================================= */
+
+const STRONG_SCOPE = /\b(amity|amizone|aset|abs|amity lucknow|malhaur|gomti nagar|aueet|asat)\b/;
+
+const DOMAIN_TERMS = [
+  /* institution */
+  'university','campus','college','institute','department','faculty','professor','teacher','warden',
+  'lucknow','student','freshers','senior','junior','alumni','convocation','degree','diploma',
+  'chancellor','dean','registrar','director','principal','hod','naac','ugc','aicte','nirf','ranking',
+  'accreditation','batch','class','lecture','assignment','campus life','amity edu',
+  /* admission */
+  'admission','apply','application','form','eligibility','criteria','entrance','exam','test','merit',
+  'counselling','interview','document','certificate','marksheet','migration','deadline','prospectus',
+  'seat','quota','reservation','cutoff','percentage','marks','result','score','dropper','gap',
+  /* programmes */
+  'course','programme','branch','stream','specialisation','syllabus','curriculum','semester','elective',
+  'btech','mtech','bba','mba','bca','mca','bcom','mcom','bsc','msc','ballb','llb','llm','law','bpharm',
+  'mpharm','pharmacy','barch','phd','journalism','psychology','biotech','design','engineering','commerce',
+  'management','science','arts','media','cse','ece','mechanical','civil',
+  /* money */
+  'fee','tuition','scholarship','waiver','concession','stipend','loan','instalment','refund','deposit',
+  'payment','receipt','cost','expense',
+  /* living */
+  'hostel','accommodation','room','roommate','mess','food','canteen','cafeteria','laundry','curfew',
+  'transport','bus','commute','pg','library','lab','wifi','internet','gym','sports','club','society',
+  'fest','ncc','nss','ragging','security','medical','clinic','counsellor','parking','gatepass',
+  /* academics + outcomes */
+  'attendance','cgpa','sgpa','grade','backlog','exam','revaluation','project','internship','training',
+  'placement','recruiter','package','salary','job','career','research','publication','patent','abroad',
+  'exchange','timetable','holiday','vacation','induction','orientation','portal','enrolment','id card'
+];
+const DOMAIN_SET = new Set(DOMAIN_TERMS.map(t => canon(t)));
+
+/* 'in'    -> clearly about Amity / campus life
+   'follow'-> a bare follow-up in an ongoing in-scope conversation
+   'out'   -> anything else: refused without calling the API */
+function scopeOf(text){
+  const norm = normalise(text);
+  if(STRONG_SCOPE.test(norm)) return 'in';
+
+  const tokens = tokenise(text);
+  for(const t of tokens) if(DOMAIN_SET.has(t)) return 'in';
+
+  /* A bare continuation ("and the fees?", "what about hostel") carries no
+     domain word of its own. It counts as in-scope only while an in-scope
+     answer is still the subject of the chat, AND every word in it is
+     vocabulary the knowledge base actually uses — otherwise "tell me a joke"
+     would ride in on the previous question. */
+  if(convo.lastId && tokens.length && tokens.length <= 4){
+    const continuation = tokens.length <= 2 ||
+      /^(and|also|ok|okay|so|then|what about|how about|tell me more|more about|why|but)\b/.test(norm);
+    const familiar = tokens.every(t => INDEX.vocabSet.has(t));
+    if(continuation && familiar) return 'follow';
+  }
+  return 'out';
+}
+
+const OFF_TOPIC_REPLY =
+`I only answer questions about **Amity University, Lucknow** — admissions, courses, fees, hostel, campus life, academics and placements.
+
+That one falls outside it, so I haven't looked it up or sent it anywhere.
+
+Ask me something about the university and I'll either answer from my offline knowledge base or, if it isn't covered there, check with the AI assistant.`;
+
+/* ------------------------------ AI endpoint ------------------------------ */
+const AI = {
+  ready:false,
+  model:'',
+  reason:'not checked',
+  endpoint:'/api/ask'
+};
+
+async function probeAI(){
+  /* file:// pages have no server to talk to; skip the probe entirely */
+  if(location.protocol === 'file:'){
+    AI.ready = false; AI.reason = 'opened as a local file';
+    return;
+  }
+  try{
+    const res = await fetch('/api/health', { method:'GET' });
+    const data = await res.json();
+    AI.ready = !!data.ai;
+    AI.model = data.model || '';
+    AI.reason = data.reason || (AI.ready ? 'ready' : 'no api key configured');
+  }catch(e){
+    AI.ready = false; AI.reason = 'assistant server not running';
+  }
+}
+
+async function askAI(question, topicHint){
+  const res = await fetch(AI.endpoint, {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ question, topic: topicHint || '' })
+  });
+  let data = {};
+  try{ data = await res.json(); }catch(e){ /* non-JSON error page */ }
+  if(!res.ok || !data.answer){
+    const err = new Error(data.error || ('http_' + res.status));
+    err.code = data.error || ('http_' + res.status);
+    throw err;
+  }
+  return data;
+}
+
+const AI_ERROR_TEXT = {
+  out_of_scope:  'The assistant server also judged that question to be outside Amity Lucknow admissions, so it was not answered.',
+  rate_limited:  'The AI assistant has hit its request limit for now. Try again in a few minutes, or ask something the offline knowledge base covers.',
+  ai_disabled:   'The AI fallback is switched off (no API key configured on the server).',
+  too_long:      'That question is too long for the AI fallback — try asking it in a sentence or two.',
+  upstream_error:'The AI assistant could not be reached just now.'
+};
+
+/* =========================================================================
    UI LAYER
    ========================================================================= */
 
 const $ = id => document.getElementById(id);
-const chatEl = $('chat'), formEl = $('form'), inputEl = $('input'), chipsEl = $('chips'),
-      railEl = $('rail'), railTopics = $('railTopics'), scrimEl = $('scrim'),
-      toastEl = $('toast'), toBottomEl = $('toBottom'), sendBtn = $('sendBtn');
+const threadEl = $('thread'), chatEl = $('chat'), formEl = $('form'), inputEl = $('input'),
+      chipsEl = $('chips'), railEl = $('rail'), railTopics = $('railTopics'),
+      scrimEl = $('scrim'), toastEl = $('toast'), toBottomEl = $('toBottom'), sendBtn = $('sendBtn');
 
-const STORE_KEY = 'amity-chat-v2';
+const STORE_KEY = 'amity-chat-v3';
 const THEME_KEY = 'amity-theme';
 let history = [];
 let busy = false;
 
 /* ------------------------------ mark-up ------------------------------ */
-const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
 function inline(s){
   return s
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[^*\w])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>')
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
     .replace(/\b(amity\.edu\/lucknow)\b/g, '<a href="https://www.$1" target="_blank" rel="noopener">$1</a>')
     .replace(/(\+91-\d{10})/g, '<a href="tel:$1">$1</a>')
-    .replace(/\b(1800-180-5522)\b/g, '<a href="tel:$1">$1</a>');
+    .replace(/\b(1800-180-5522)\b/g, '<a href="tel:$1">$1</a>')
+    .replace(/\b(14416)\b/g, '<a href="tel:$1">$1</a>');
 }
 
 function md(text){
@@ -2683,49 +3140,54 @@ function md(text){
   return html;
 }
 
-const clockTime = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+const plain = t => String(t).replace(/\*\*/g, '').replace(/^### /gm, '').replace(/^> /gm, '');
+const clockTime = () => new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
 
-/* ------------------------------ messages ------------------------------ */
-function bubbleNode(msg){
-  const wrap = document.createElement('div');
-  wrap.className = 'msg ' + msg.who;
+/* ------------------------------ turns ------------------------------ */
+function turnNode(msg){
+  const turn = document.createElement('div');
+  turn.className = 'turn ' + msg.who;
 
-  const av = document.createElement('div');
-  av.className = 'av';
-  av.textContent = msg.who === 'bot' ? 'AU' : 'You';
-  if(msg.who === 'user') av.textContent = 'Me';
+  if(msg.who === 'user'){
+    const said = document.createElement('div');
+    said.className = 'said';
+    said.innerHTML = esc(msg.text).replace(/\n/g, '<br>');
+    turn.appendChild(said);
+    return turn;
+  }
 
-  const col = document.createElement('div');
-  col.className = 'msg-col';
+  const mark = document.createElement('div');
+  mark.className = 'mark';
+  mark.setAttribute('aria-hidden', 'true');
+  mark.textContent = '§';
 
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble';
-  bubble.innerHTML = msg.who === 'bot' ? md(msg.text) : esc(msg.text).replace(/\n/g, '<br>');
-  col.appendChild(bubble);
+  const body = document.createElement('div');
+  const answer = document.createElement('div');
+  answer.className = 'answer';
+  answer.innerHTML = md(msg.text);
+  body.appendChild(answer);
 
   const meta = document.createElement('div');
-  meta.className = 'meta';
-  if(msg.who === 'bot' && msg.topic){
-    const tag = document.createElement('span');
-    tag.className = 'tag';
-    tag.textContent = msg.topic;
-    meta.appendChild(tag);
-  }
+  meta.className = 'turn-meta';
+  const src = document.createElement('span');
+  src.className = 'src' + (msg.source === 'ai' ? ' ai' : '');
+  src.textContent = msg.source === 'ai' ? 'AI-assisted · verify'
+                  : msg.source === 'refused' ? 'Out of scope'
+                  : (msg.topic || 'Knowledge base');
+  meta.appendChild(src);
   const time = document.createElement('span');
   time.textContent = msg.time || clockTime();
   meta.appendChild(time);
-  if(msg.who === 'bot'){
-    const copy = document.createElement('button');
-    copy.type = 'button';
-    copy.textContent = 'Copy';
-    copy.addEventListener('click', () => copyText(msg.text));
-    meta.appendChild(copy);
-  }
-  col.appendChild(meta);
+  const copy = document.createElement('button');
+  copy.type = 'button';
+  copy.textContent = 'Copy';
+  copy.addEventListener('click', () => copyText(msg.text));
+  meta.appendChild(copy);
+  body.appendChild(meta);
 
-  if(msg.who === 'bot' && msg.chips && msg.chips.length){
+  if(msg.chips && msg.chips.length){
     const row = document.createElement('div');
-    row.className = 'followups';
+    row.className = 'suggest';
     msg.chips.forEach(q => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -2733,17 +3195,17 @@ function bubbleNode(msg){
       b.addEventListener('click', () => ask(q));
       row.appendChild(b);
     });
-    col.appendChild(row);
+    body.appendChild(row);
   }
 
-  wrap.appendChild(av);
-  wrap.appendChild(col);
-  return wrap;
+  turn.appendChild(mark);
+  turn.appendChild(body);
+  return turn;
 }
 
-function pushMessage(msg, save){
+function pushTurn(msg, save){
   msg.time = msg.time || clockTime();
-  chatEl.appendChild(bubbleNode(msg));
+  threadEl.appendChild(turnNode(msg));
   if(save !== false){
     history.push(msg);
     if(history.length > 80) history = history.slice(-80);
@@ -2756,77 +3218,143 @@ function scrollToEnd(){
   requestAnimationFrame(() => { chatEl.scrollTop = chatEl.scrollHeight; });
 }
 
-function showTyping(){
-  const wrap = document.createElement('div');
-  wrap.className = 'msg bot';
-  wrap.id = 'typingRow';
-  wrap.innerHTML = '<div class="av">AU</div><div class="msg-col"><div class="bubble typing"><i></i><i></i><i></i></div></div>';
-  chatEl.appendChild(wrap);
+function showThinking(label){
+  hideThinking();
+  const el = document.createElement('div');
+  el.className = 'thinking';
+  el.id = 'thinkingRow';
+  el.innerHTML = '<div class="mark" aria-hidden="true">§</div><div><em>' + esc(label) + '</em></div>';
+  threadEl.appendChild(el);
   scrollToEnd();
 }
-function hideTyping(){
-  const row = $('typingRow');
-  if(row) row.remove();
+function setThinking(label){
+  const el = $('thinkingRow');
+  if(el) el.querySelector('em').textContent = label;
+  else showThinking(label);
+}
+function hideThinking(){
+  const el = $('thinkingRow');
+  if(el) el.remove();
 }
 
 /* ------------------------------ answering ------------------------------ */
-const NOT_SURE_TAIL = `Try rephrasing, or pick a topic from the sidebar — I cover courses, eligibility, entrance tests, fees, scholarships, hostel, campus life, academics, placements and contact details.`;
+const KB_CONFIDENCE = 0.5;   // below this the knowledge base hit is only 'related'
+const AI_FOOTER = '\n\n> AI-assisted answer, generated outside the offline knowledge base. Treat it as a pointer, not a quotation — confirm anything that matters with the admission office.';
 
-function replyTo(text){
-  const results = respond(text);
-  const out = [];
-
-  results.forEach(res => {
-    if(res.entry){
-      const chips = followUps(res.entry).slice(0, 4);
-      if(res.mode === 'weak' && res.alternatives && res.alternatives.length){
-        res.alternatives.slice(0, 2).forEach(alt => {
-          if(chips.length < 5 && !chips.includes(alt.title)) chips.push(alt.title);
-        });
-      }
-      out.push({ who:'bot', text: res.entry.a, topic: res.entry.topic, chips });
-    } else {
-      const alts = (res.alternatives || []).slice(0, 4);
-      const lead = alts.length
-        ? `I'm not certain I understood that one. 🤔 Here are the closest things I can answer — tap one, or rephrase your question:`
-        : `I don't have an answer for that yet. 🙏\n\n${NOT_SURE_TAIL}`;
-      out.push({
-        who:'bot',
-        text: alts.length ? lead + '\n\n> Everything I know is offline, so I can only answer admission-related questions about Amity Lucknow.' : lead,
-        topic: 'Not sure',
-        chips: alts.map(a => a.title)
+function kbTurns(results){
+  return results.map(res => {
+    const chips = followUps(res.entry).slice(0, 4);
+    if(res.mode === 'weak' && res.alternatives){
+      res.alternatives.slice(0, 2).forEach(alt => {
+        if(chips.length < 5 && !chips.includes(alt.title)) chips.push(alt.title);
       });
     }
+    return { who:'bot', text:res.entry.a, topic:res.entry.topic, source:'kb', chips };
   });
-  return out;
 }
 
-function ask(text){
-  const clean = String(text || '').trim();
-  if(!clean || busy) return;
-  busy = true;
-  sendBtn.disabled = true;
+function noAnswerTurn(alternatives, extraNote){
+  const alts = (alternatives || []).slice(0, 4);
+  let text = alts.length
+    ? `I don't have that in the offline knowledge base. The closest things I do cover:`
+    : `I don't have that in the offline knowledge base yet.`;
+  if(extraNote) text += '\n\n> ' + extraNote;
+  return {
+    who:'bot', text, topic:'Not found', source:'kb',
+    chips: alts.map(a => a.title)
+  };
+}
 
-  pushMessage({ who:'user', text: clean });
+async function ask(text){
+  const question = String(text || '').trim();
+  if(!question || busy) return;
+  busy = true; sendBtn.disabled = true;
+
+  pushTurn({ who:'user', text:question });
   inputEl.value = '';
   autoGrow();
   closeDrawer();
-  showTyping();
 
-  const replies = replyTo(clean);
-  const delay = 260 + Math.random() * 320;
-  setTimeout(() => {
-    hideTyping();
-    replies.forEach(r => pushMessage(r));
-    busy = false;
-    sendBtn.disabled = false;
-    if(window.matchMedia('(min-width: 900px)').matches) inputEl.focus();
-  }, delay);
+  try{
+    /* ---- gate 1: is this about Amity at all? ---- */
+    const scope = scopeOf(question);
+    if(scope === 'out'){
+      showThinking('Checking scope');
+      await pause(220);
+      hideThinking();
+      pushTurn({
+        who:'bot', text:OFF_TOPIC_REPLY, source:'refused', topic:'Out of scope',
+        chips:['What can you help me with?','What courses are offered?','Fee structure','Hostel facilities']
+      });
+      return;
+    }
+
+    /* ---- gate 2: does the offline knowledge base actually answer it? ----
+       A confident hit is served offline. A loose, "related but not really
+       your question" hit is treated as a miss when the AI fallback is
+       available, and kept as a suggestion alongside the AI answer. */
+    showThinking('Searching the knowledge base');
+    await pause(240 + Math.random() * 200);
+    const results = respond(question);
+    const top = results[0];
+    const confident = top && top.entry &&
+      (top.mode === 'routed' || (top.score || 0) >= KB_CONFIDENCE || results.length > 1);
+
+    if(confident){
+      hideThinking();
+      kbTurns(results).forEach(t => pushTurn(t));
+      return;
+    }
+
+    /* ---- gate 3: in scope, not confidently covered -> AI fallback ---- */
+    const near = top && top.entry ? [top.entry] : [];
+    const alternatives = near.concat((top && top.alternatives) || []).slice(0, 4);
+
+    const serveWhatWeHave = note => {
+      if(top && top.entry){
+        const t = kbTurns([top])[0];
+        t.text = t.text + '\n\n> ' + note;
+        pushTurn(t);
+      } else {
+        pushTurn(noAnswerTurn(alternatives, note));
+      }
+    };
+
+    if(scope !== 'in'){
+      hideThinking();
+      serveWhatWeHave('That is the closest thing I have offline. Ask it with a bit more detail and I can send it to the AI assistant.');
+      return;
+    }
+    if(!AI.ready){
+      hideThinking();
+      serveWhatWeHave('That may not be exactly what you asked — the AI fallback is unavailable (' + AI.reason + '), so this is the nearest topic I hold offline.');
+      return;
+    }
+
+    setThinking('Not covered offline — asking the AI assistant');
+    try{
+      const data = await askAI(question, convo.lastTopic || '');
+      hideThinking();
+      pushTurn({
+        who:'bot', text:String(data.answer).trim() + AI_FOOTER, source:'ai', topic:'AI',
+        chips: alternatives.slice(0, 2).map(a => a.title).concat(['Contact the admission office'])
+      });
+    }catch(err){
+      hideThinking();
+      serveWhatWeHave(AI_ERROR_TEXT[err.code] || AI_ERROR_TEXT.upstream_error);
+    }
+  } finally {
+    hideThinking();
+    busy = false; sendBtn.disabled = false;
+    if(window.matchMedia('(min-width: 880px)').matches) inputEl.focus();
+  }
 }
+
+const pause = ms => new Promise(r => setTimeout(r, ms));
 
 /* ------------------------------ persistence ------------------------------ */
 function persist(){
-  try{ localStorage.setItem(STORE_KEY, JSON.stringify(history)); }catch(e){ /* private mode */ }
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(history)); }catch(e){}
 }
 function restore(){
   try{
@@ -2835,53 +3363,51 @@ function restore(){
     const saved = JSON.parse(raw);
     if(!Array.isArray(saved) || !saved.length) return false;
     history = saved.slice(-80);
-    history.forEach(m => chatEl.appendChild(bubbleNode(m)));
+    history.forEach(m => threadEl.appendChild(turnNode(m)));
     scrollToEnd();
     return true;
   }catch(e){ return false; }
 }
 
-/* ------------------------------ welcome card ------------------------------ */
-const WELCOME_TOPICS = [
-  ['📚','Courses','What courses are offered?','Programmes & branches'],
-  ['🎯','Eligibility','Eligibility at a glance','Who can apply'],
-  ['💰','Fees','Fee structure','Course-wise costs'],
-  ['🏆','Scholarships','Scholarship options','Waivers & slabs'],
-  ['🛏️','Hostel','Hostel facilities','Rooms, mess, rules'],
-  ['🎯','Placements','Placement record','Packages & recruiters'],
-  ['🧾','Entrance tests','Entrance exams accepted','ASAT, JEE, CAT, CLAT'],
-  ['🧭','Apply','Admission process','Step-by-step guide']
+/* ------------------------------ masthead ------------------------------ */
+const STARTERS = [
+  ['What courses are offered?','Courses'],
+  ['B.Tech eligibility','Eligibility'],
+  ['Fee structure','Fees'],
+  ['Scholarship options','Scholarships'],
+  ['Hostel facilities','Hostel'],
+  ['Placement record','Placements'],
+  ['Admission process','Admissions'],
+  ['ASAT test details','Entrance']
 ];
 
-function showWelcome(){
-  const card = document.createElement('div');
-  card.className = 'welcome';
-  card.innerHTML =
-    '<h2>Namaste! 👋 Ask me anything about Amity Lucknow admissions.</h2>' +
-    '<p>I answer ' + KB.length + ' admission topics completely offline — no internet, no API, no waiting. ' +
-    'Type a question in your own words (typos are fine), or start with one of these:</p>' +
-    '<div class="topic-grid" id="welcomeGrid"></div>';
-  chatEl.appendChild(card);
+function showMasthead(){
+  const head = document.createElement('div');
+  head.className = 'masthead turn';
+  head.innerHTML =
+    '<div class="kicker">Offline reference · ' + KB.length + ' topics</div>' +
+    '<h3>Everything a candidate asks about Amity Lucknow, answered without an internet connection.</h3>' +
+    '<p>Ask in your own words — spelling mistakes are fine. Answers come from a built-in knowledge base; ' +
+    'anything about the university it does not cover can be passed to an AI assistant when the server is running. ' +
+    'Questions unrelated to Amity are declined.</p>' +
+    '<div class="starters" id="starters"></div>';
+  threadEl.appendChild(head);
 
-  const grid = card.querySelector('#welcomeGrid');
-  WELCOME_TOPICS.forEach(([icon, name, q, sub]) => {
+  const list = head.querySelector('#starters');
+  STARTERS.forEach(([q, cat], i) => {
     const b = document.createElement('button');
-    b.className = 'topic-card';
+    b.className = 'starter';
     b.type = 'button';
-    b.innerHTML = '<span class="ico">' + icon + '</span><span><b>' + esc(name) + '</b><span>' + esc(sub) + '</span></span>';
+    b.innerHTML = '<span class="idx">' + String(i + 1).padStart(2, '0') + '</span>' +
+                  '<span class="q">' + esc(q) + '</span>' +
+                  '<span class="cat">' + esc(cat) + '</span>';
     b.addEventListener('click', () => ask(q));
-    grid.appendChild(b);
+    list.appendChild(b);
   });
   scrollToEnd();
 }
 
-/* ------------------------------ sidebar ------------------------------ */
-const TOPIC_ICONS = {
-  'General':'💬','University':'🏛️','Courses':'📚','Eligibility':'🎯','Entrance exams':'🧾',
-  'Admissions':'🧭','Fees':'💰','Scholarships':'🏆','Hostel':'🛏️','Campus life':'🏫',
-  'Academics':'📖','Placements':'💼','Contact':'📞'
-};
-
+/* ------------------------------ rail ------------------------------ */
 function buildRail(){
   const topics = [];
   KB.forEach(e => { if(!e.hidden && !topics.includes(e.topic)) topics.push(e.topic); });
@@ -2890,8 +3416,7 @@ function buildRail(){
     const b = document.createElement('button');
     b.className = 'nav-btn';
     b.type = 'button';
-    b.innerHTML = '<span class="ico">' + (TOPIC_ICONS[topic] || '•') + '</span>' +
-                  '<span>' + esc(topic) + '</span><span class="cnt">' + items.length + '</span>';
+    b.innerHTML = '<span>' + esc(topic) + '</span><span class="cnt">' + items.length + '</span>';
     b.addEventListener('click', () => openTopic(topic, items));
     railTopics.appendChild(b);
   });
@@ -2899,23 +3424,21 @@ function buildRail(){
 
 function openTopic(topic, items){
   closeDrawer();
-  pushMessage({ who:'user', text: 'Show me everything about ' + topic.toLowerCase() });
-  pushMessage({
-    who:'bot',
-    topic: topic,
-    text: `Here's what I can answer under **${topic}** — tap any of these:`,
+  pushTurn({ who:'user', text:'Show me ' + topic.toLowerCase() });
+  pushTurn({
+    who:'bot', topic:topic, source:'kb',
+    text:'Everything I cover under **' + topic + '** — pick one:',
     chips: items.slice(0, 8).map(e => e.title)
   });
 }
 
-/* ------------------------------ suggestion strip ------------------------------ */
+/* ------------------------------ chips ------------------------------ */
 const POPULAR = [
   'What courses are offered?','B.Tech eligibility','Fee structure','Scholarship options',
   'Hostel fees','Placement record','Admission process','Documents required',
   'ASAT test details','Important dates','Campus facilities','Education loan',
-  'Contact the admission office','Which branch to choose','Is Amity worth the fees?','Mess & food'
+  'Attendance rules','Which branch to choose','Contact the admission office'
 ];
-
 function renderChips(){
   chipsEl.innerHTML = '';
   POPULAR.forEach(q => {
@@ -2933,15 +3456,15 @@ function toast(msg){
   toastEl.textContent = msg;
   toastEl.classList.add('show');
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => toastEl.classList.remove('show'), 1900);
+  toast._t = setTimeout(() => toastEl.classList.remove('show'), 1800);
 }
 
 function copyText(text){
-  const plain = String(text).replace(/\*\*/g, '').replace(/^### /gm, '').replace(/^> /gm, '');
-  const done = () => toast('Answer copied');
+  const body = plain(text);
+  const done = () => toast('Copied');
   if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(plain).then(done).catch(() => fallbackCopy(plain, done));
-  } else fallbackCopy(plain, done);
+    navigator.clipboard.writeText(body).then(done).catch(() => fallbackCopy(body, done));
+  } else fallbackCopy(body, done);
 }
 function fallbackCopy(text, done){
   try{
@@ -2955,8 +3478,6 @@ function fallbackCopy(text, done){
 function applyTheme(mode){
   if(mode === 'dark' || mode === 'light') document.documentElement.setAttribute('data-theme', mode);
   else document.documentElement.removeAttribute('data-theme');
-  const dark = mode === 'dark' || (mode !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  $('themeBtn').textContent = dark ? '☀️' : '🌙';
 }
 function currentTheme(){
   try{ return localStorage.getItem(THEME_KEY) || 'auto'; }catch(e){ return 'auto'; }
@@ -2971,41 +3492,52 @@ function toggleTheme(){
 
 function downloadTranscript(){
   if(!history.length){ toast('Nothing to save yet'); return; }
-  const lines = history.map(m => (m.who === 'bot' ? 'Assistant' : 'You') + ' (' + (m.time || '') + '):\n' +
-    String(m.text).replace(/\*\*/g, '').replace(/^### /gm, '').replace(/^> /gm, '') + '\n');
-  const blob = new Blob(['Amity Lucknow — Admission Assistant transcript\n\n' + lines.join('\n')], { type:'text/plain' });
+  const lines = history.map(m =>
+    (m.who === 'bot' ? 'Assistant' : 'You') + ' (' + (m.time || '') +
+    (m.source === 'ai' ? ', AI-assisted' : '') + '):\n' + plain(m.text) + '\n');
+  const blob = new Blob(['Amity Lucknow — Admission Assistant\n\n' + lines.join('\n')], { type:'text/plain' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = 'amity-admission-chat.txt';
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
-  toast('Transcript downloaded');
+  toast('Transcript saved');
 }
 
 function newChat(){
   history = [];
   try{ localStorage.removeItem(STORE_KEY); }catch(e){}
   convo.lastCourse = null; convo.lastAspect = null; convo.lastTopic = null; convo.lastId = null;
-  chatEl.innerHTML = '';
-  showWelcome();
-  pushMessage({ who:'bot', text: INDEX.byId.greeting.a, topic:'General', chips: INDEX.byId.greeting.chips });
-  toast('New chat started');
+  threadEl.innerHTML = '';
+  showMasthead();
+  toast('New conversation');
 }
 
 function openDrawer(){
-  railEl.classList.add('open');
-  scrimEl.classList.add('show');
+  railEl.classList.add('open'); scrimEl.classList.add('show');
   $('menuBtn').setAttribute('aria-expanded', 'true');
 }
 function closeDrawer(){
-  railEl.classList.remove('open');
-  scrimEl.classList.remove('show');
+  railEl.classList.remove('open'); scrimEl.classList.remove('show');
   $('menuBtn').setAttribute('aria-expanded', 'false');
 }
 
 function autoGrow(){
   inputEl.style.height = 'auto';
-  inputEl.style.height = Math.min(inputEl.scrollHeight, 132) + 'px';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 128) + 'px';
+}
+
+function paintStatus(){
+  const dot = $('statusDot'), txt = $('statusText');
+  if(AI.ready){
+    dot.classList.remove('off');
+    txt.textContent = 'Offline KB + AI fallback';
+    $('statusLine').title = 'In-scope questions missing from the knowledge base go to ' + (AI.model || 'the AI assistant');
+  } else {
+    dot.classList.add('off');
+    txt.textContent = 'Offline knowledge base';
+    $('statusLine').title = 'AI fallback unavailable: ' + AI.reason;
+  }
 }
 
 /* ------------------------------ wiring ------------------------------ */
@@ -3022,7 +3554,7 @@ scrimEl.addEventListener('click', closeDrawer);
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
 toBottomEl.addEventListener('click', scrollToEnd);
 chatEl.addEventListener('scroll', () => {
-  const far = chatEl.scrollHeight - chatEl.scrollTop - chatEl.clientHeight > 220;
+  const far = chatEl.scrollHeight - chatEl.scrollTop - chatEl.clientHeight > 240;
   toBottomEl.classList.toggle('show', far);
 });
 document.querySelectorAll('[data-ask]').forEach(b => {
@@ -3033,12 +3565,11 @@ document.querySelectorAll('[data-ask]').forEach(b => {
 applyTheme(currentTheme());
 buildRail();
 renderChips();
-$('kbCount').textContent = KB.length + ' topics answered offline';
-if(!restore()){
-  showWelcome();
-  pushMessage({ who:'bot', text: INDEX.byId.greeting.a, topic:'General', chips: INDEX.byId.greeting.chips });
-}
-if(window.matchMedia('(min-width: 900px)').matches) inputEl.focus();
+$('kbCount').textContent = KB.length + ' topics offline';
+if(!restore()) showMasthead();
+paintStatus();
+probeAI().then(paintStatus);
+if(window.matchMedia('(min-width: 880px)').matches) inputEl.focus();
 </script>
 
 </body>
