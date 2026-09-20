@@ -1514,7 +1514,11 @@ setupVoice();
 buildRail();
 renderChips();
 $('kbCount').textContent = KB.length + ' topics offline';
-$('searchLabel').textContent = 'Search ' + PALETTE.length + ' topics';
+/* The palette lists every entry except a few hidden conversational ones,
+   so its count differs from the knowledge base total shown in the footer.
+   Two different numbers on one screen just reads as a bug, so the search
+   control names the action and the footer carries the authoritative count. */
+$('searchLabel').textContent = 'Search topics';
 if(!restore()) showMasthead();
 
 /* #t/<entry-id> in the URL opens that answer directly */
