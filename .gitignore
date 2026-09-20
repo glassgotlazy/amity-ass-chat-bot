@@ -2,3 +2,7 @@
 node_modules/
 *.log
 .DS_Store
+src/index.html
+src/kb.js
+src/core.js
+src/all.js
